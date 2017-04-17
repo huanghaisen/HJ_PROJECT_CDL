@@ -1,0 +1,142 @@
+<link rel="stylesheet" href="${request.contextPath}/lib/plugins/artDialog/ui-dialog.css">
+<style>
+
+.select2-container--default .select2-results>.select2-results__options {height:200px; -webkit-overflow-scrolling:touch;overflow-x:hidden;overflow-y:scroll;}
+</style>
+<div class="mainpage">
+  <div class="topnavbar">
+   <a href="#" class="topnav-back"><i class="fa fa-fw fa-angle-left"></i></a> 
+     <span class="topnav-check"><i class="fa fa-fw fa-check"></i></span>
+    <div class="topnavtitle">受理</div> 
+        
+  </div>
+ <div class="mainpagecontent" id='userId' value='${user.uid!}'>
+  <section class="m-content">    
+    <div class="mbox" id='workId' value='${work.id!}'>
+       <p>${work.orgName!}</p>
+       <div class="row">
+       <!-- 
+         <div class="col-xs-6"><small class="text-muted">静安区</small></div>
+        -->
+        
+         <div class="col-xs-6"><small class="text-muted text-right">${work.orgName!}</small></div>
+       </div>           
+    </div>
+    <div class="mbox mt10">
+       <select class="js-example-placeholder-single form-control select2" id="maintainer" style="width:100%" >
+		 <option></option>
+	   </select>
+    </div>
+    <div class="mbox mt10">      
+       <p>工单编号：${work.workCode!}</p>
+       <p>报障人：${work.creatorName!}</p>  
+       <p>维保厂商：${work.manufName!}</p>        
+    </div>
+    <div class="m-title mt10 bor-b">工单信息：</div>
+    <div class="mbox bor-b" id='deviceId' value=${work.deviceCode!}>      
+       <p>设备编号：${work.deviceCode!}</p>
+       <p>设备类型：${device.deviceTypeName!}</p>  
+       <p>出厂编号：${device.factoryCode!}</p>        
+    </div>
+    <div class="m-title bor-b">故障信息</div> 
+    <div class="mbox bor-b">      
+       <p>故障类型：${work.modelFaultNameList!}</p>
+       <p>报障级别：${work.workGradeStr!}</p>  
+       <!-- <p>状态码：${work.statusStr!}</p>  -->
+       <p>状态描述：${work.modelFaultRemark!}</p>        
+    </div>   
+    
+
+  </section>
+</div> 
+</div>
+
+<script>
+//手机点击设置
+  app.currentCompleted = true; 
+  var maintainerUrl=contextPath+"/soa/user/datas/manufUserSelect";
+  var maintainerTarget="#maintainer";
+  var manufId=${work.manufId!}
+  
+  maintainerSelect(maintainerUrl,maintainerTarget)
+  function maintainerSelect(comboxUrl,SelectTarget){
+  	$.ajax({
+     	url:comboxUrl,    
+     	type:"post",
+     	dataType:"json",
+     	data:{"manufId":manufId},
+     	async:false,
+     	success: function(result){  		
+
+     		for(var i = 0;i<result.length;i++){    	
+     			var $option = $ ('<option/>').attr('value',result[i].id).html(result[i].nickName);
+     			$option.appendTo($(SelectTarget));
+     		}
+
+     		$(SelectTarget).select2({
+     			placeholder: "请选择维保人员",
+     			allowClear: false
+     		})
+     		    		
+     	} 
+       });
+  }
+</script>
+
+<script>
+//var userId='${user.uid!}'
+//手机点击设置
+
+
+//声明所需参数
+var contextPath='${request.contextPath}';
+var maintainer=$('#maintainer').val();
+var workId=${work.id!}
+//console.log(workId);
+
+//提交事件
+$('.topnav-check').on('click',function(){
+	var maintainer=$('#maintainer').val();
+
+	
+	if (maintainer==""||maintainer==null){
+		var d = dialog({
+ 			title:'提示',
+ 			zIndex:1080,
+ 			content : '请选择维保人员后提交!'
+ 		});
+ 		d.show();
+ 		
+ 		setTimeout(function() {
+ 			d.close().remove(); 		
+ 		}, 2000);
+ 		
+ 		
+	}else{
+		$.ajax({
+	     	url:contextPath+'/soa/asmp/asmpWork/datas/acceptStep',    
+	     	type:"post",
+	     	dataType:"json",
+	     	data:{"maintainer":maintainer,"id":workId},
+	     	async:false,
+	     	success: function(obj){  		
+
+	     		var d = dialog({
+	     			title:'提示',
+	     			zIndex:1080,
+	     			content : obj.msg
+	     		});
+	     		d.show();
+	     		
+	     		setTimeout(function() {
+	     			d.close().remove();
+	     			app.currentCompleted =  true;
+	     			app.goback();
+	     		}, 2000);
+	     		    		
+	     	} 
+	       });
+	}	
+
+});
+</script>

@@ -1,0 +1,66 @@
+<div class="box-body" style="width: 95%">
+                  <div class="row" >
+                   
+                    <div class="col-xs-2">
+                      <div class="input-group">
+                       <span class="input-group-addon">机构</span>
+						<select class="form-control" id="orgId">
+	                        <option value="">全部</option>
+	                        <option value="1">机构1</option>
+	                        <option value="2">机构2</option>
+	                        <option value="3">机构3</option>
+	                        <option value="4">机构4</option>
+	                      </select>
+                        </div>                    
+                    </div>
+                    
+                    <div class="col-xs-2">
+                      <div class="input-group">
+                       <span class="input-group-addon">设备用途</span>
+						<select class="form-control" id="deviceFunctionId">
+	                        <option value="">全部</option>
+	                        <option value="1">用途1</option>
+	                        <option value="2">用途2</option>
+	                        <option value="3">用途3</option>
+	                        <option value="4">用途4</option>
+	                      </select>
+                        </div>                    
+                    </div>
+                    
+                    <div class="col-xs-2">
+                      <div class="input-group">
+                       <span class="input-group-addon">厂商</span>
+						<select class="form-control" id="manufId">
+	                        <option value="">全部</option>
+	                        <option value="1">厂商1</option>
+	                        <option value="2">厂商2</option>
+	                        <option value="3">厂商3</option>
+	                        <option value="4">厂商4</option>
+	                      </select>
+                        </div>                    
+                    </div>
+                    
+                    <div class="col-xs-2">
+                      <div class="input-group">
+                       <span class="input-group-addon">设备编号</span>
+							<input type="text" id="deviceCode" name="deviceCode" class="form-control" placeholder="设备编号">
+                        </div>                    
+                    </div>
+                    
+                    
+                    
+                    <div class="col-xs-1">
+                     <button class="btn btn-success" onclick="conditionSearch()"><i class="fa fa-search"></i> 搜索</button>
+                    </div>  
+                    <div class="col-xs-1">
+                     <button class="btn btn-info" onclick="add()"><i class="fa fa-plus-circle"></i> 新增</button>
+                    </div>  
+                    <div class="col-xs-1">
+                     <button class="btn btn-primary" onclick="exportProduct()"><i class="fa fa-download"></i> 导出</button>
+                    </div> 
+                    </div> 
+          </div>
+<script src="${request.contextPath}/lib/plugins/zTree3/js/jquery.ztree.core.js"></script>
+<script src="${request.contextPath}/lib/plugins/zTree3/js/jquery.ztree.excheck.js"></script>
+<script src="${request.contextPath}/lib/plugins/zTree3/js/jquery.ztree.exedit.js"></script>
+<script src="${request.contextPath}/js/ims/devices/drvice_info_tools.js"></script>

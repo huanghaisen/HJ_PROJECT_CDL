@@ -1,0 +1,123 @@
+<div class="mainpage">
+  <div class="topnavbar">
+    <a href="#" class="topnav-back"><i class="fa fa-fw fa-angle-left"></i></a> 
+    <!-- 
+    <span class="topnav-search-btn"><i class="fa fa-fw fa-search"></i></span>
+     --> 
+    <div class="topnavtitle">工单进度</div> 
+    <div class="box-tools pull-right">
+          <div class="has-feedback">
+            <input type="text" class="form-control input-sm" placeholder="">
+            <span class="glyphicon glyphicon-search form-control-feedback"></span>
+          </div>
+        </div>   
+    
+  </div>
+ <div class="mainpagecontent">
+  <section class="m-content">
+    
+    <div class="mbox">
+      <div class="row">
+        <div class="col-xs-8" id="workDiv" workId=${work.id!}>
+          <p>${work.orgName!}</p>
+          <p>工单编号：${work.workCode!}</p>
+        </div>
+        <div class="col-xs-4">
+          <i class="fa fa-list-ul pull-right text-aqua mt10" id="workDetail" data-pageview='${request.contextPath}/soa/webapp/progress/viewDetail'></i>
+        </div>
+      </div>
+    </div>    
+    
+
+    <div class="m-title"><b>处理步骤</b></div>
+    <div class="m-item">          
+       <ul class="mtimeline" id="stepsUl">
+         <li>
+           <i class="mtimeline-fa"></i>
+           <span class="mtimeline-tip">报障 <br>通过</span> 
+           <div class="mtimeline-item">
+            <div class="mtimeline-item-title">${work.createTime!}</div>                
+            <div class="mtimeline-item-box">
+              <p>${work.creatorName!}</p>
+              <p class="text-right">${work.creatorTel!}</p>
+            </div>
+           </div>
+         </li>
+         <!-- 
+         <li class="cur">
+           <i class="mtimeline-fa"></i>
+           <span class="mtimeline-tip">待验收 <br>验收</span> 
+           <div class="mtimeline-item">
+            <div class="mtimeline-item-title">2016-09-23</div>                
+            <div class="mtimeline-item-box">
+              <p>Xxxxx</p>
+              <p class="text-right">1342335623</p>
+            </div>
+           </div>
+         </li>
+          -->
+         
+       </ul>
+    </div> 
+
+  </section>
+</div> 
+</div>
+
+<script>
+  
+  $(function(){
+	  app.currentCompleted = true;//开启返回事件
+	  var workId=$("#workDiv").attr("workId");
+	 // alert(workId);
+	  $('#workDetail').attr('data-pageview',"${request.contextPath}/soa/webapp/progress/viewDetail?id="+workId)
+	  
+	  init(workId);
+	  
+	 
+  });
+  
+  function init(workId){
+	  //alert(1);
+	  //var workId=$("#workDiv").attr("workId");
+	  $.ajax({
+		    url:contextPath+"/soa/asmp/asmpWork/workStepData",
+	    	type:"post",
+	    	data:{"id":workId},
+	    	dataType:"json",
+	    	success: function(obj){
+			  
+			  console.log(obj);
+			  
+			  for(var i=0;i<obj.length;i++){
+	    			//console.log(works[i].orgName);
+	    			var hobj=format(obj[i]);
+	    			$("#stepsUl").append(hobj);
+	    	}
+			  
+			  $("#stepsUl").find('li:last').addClass("cur");
+		  }
+	  });
+	  
+  }
+  
+  function format(data){ //拼接工单
+      
+	   var htmlobj = '<li>'
+           +'<i class="mtimeline-fa"></i>'
+           +'<span class="mtimeline-tip">'+data.statusStr+'<br>'+data.stepStatusStr+'</span> '
+           +'<div class="mtimeline-item">'
+           +' <div class="mtimeline-item-title">'+data.lastModifiedTime+'</div> '               
+           +' <div class="mtimeline-item-box">'
+           +'   <p>'+data.dispatchUserName+'</p>'
+           +'   <p class="text-right">'+data.dispatchUserTel+'</p>'
+           +' </div>'
+           +'</div>'
+           +'</li>'
+      ;
+      
+      return htmlobj;
+      
+  };    
+
+</script>

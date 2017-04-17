@@ -1,0 +1,649 @@
+
+
+<style type="text/css">
+
+.rowtoolbar { padding:10px; }
+.rowTitle { margin:0 10px; height: 31px; background-color:#f0f0f0; border-bottom: 1px solid #D1D1D1}
+.rowtoolbar .btn { margin-right: 10px; }
+.rowTitle span { line-height: 30px; font-size: 12px; }
+.rowTitle .wr { float: right; width:60%; text-align: right; }
+.rowTitle .t { float: left; width: 40%;  font-weight: bold; }
+.rowTitle .t b { padding: 5px; }
+.rowTitle .tfield { display: block; border-left: 1px solid #fff;border-right: 1px solid #dbdbdb }
+.w1 {width: 160px; text-align: center; }
+.pre { position: relative; }
+.wb-col { float: left; width:80%; }
+.n-tect { float: left; line-height: 34px; }
+.rh { height: 400px; }
+.undis { display:none; }
+/* dataTables列内容居中 */
+.table>tbody>tr>td{
+        text-align:center;
+}
+
+/* dataTables表头居中 */
+.table>thead:first-child>tr:first-child>th{
+        text-align:center;
+}
+
+table.dataTable thead > tr > th{
+	padding-right: 0px;
+}
+
+
+</style>
+
+<div class="box box-primary">
+<!-- 第一个 -->
+<div class="box-body"> 
+   <div class="box-body" style="width: 100%">
+  <div class="row" id="mainArea">    
+    <div class="box-body">
+    <div class="row">
+
+    <div class="col-xs-3">
+    <div class="input-group">
+      <span class="input-group-addon" id="sizing-addon2">编号</span>
+        <input id="surveyCode" type="text" name="surveyCode" class="form-control" aria-describedby="sizing-addon2">
+      </div>
+    </div>    
+    
+    
+    <div class="col-xs-3">
+    <div class="input-group">
+      <span class="input-group-addon" id="sizing-addon2">状态</span>
+        <select id="status" name="status" class="form-control" class="form-control" aria-describedby="sizing-addon2">
+           <option value="">全部</option>
+  			<option value="0">已完成</option>
+        	<option value="1">进行中</option>
+        </select>
+      </div>
+    </div>
+
+    
+    <div class="col-xs-1" style="width:100px;">      
+      <button type="button" class="btn btn-block btn-default" onclick="condictionsSearch()"><i class="fa fa-search"></i> 搜索</button>
+    </div>
+    
+    <div class="col-xs-1" style="width:100px;">      
+      <button type="button" class="btn btn-block btn-primary" onclick="emptyCondition()"><i class="fa fa-trash"></i> 清空</button>
+    </div>
+    
+        <div class="col-xs-1" style="width:120px;">      
+      <button type="button" class="btn btn-success" onclick="add()"><i class="fa fa-plus-circle fz"></i> 发起调查</button>
+    </div>  
+    
+  </div>
+   <div class="box-body"> 
+  </div>
+      <table id="maintable" class="table table-bordered table-hover" cellspacing="0" width="100%">        
+             
+      </table>
+  </div>
+  </div>
+   </div>
+  <div class="row undis" id="showtubiao">
+    <div class="box-body">
+      <div><button type="submit" class="btn btn-default pull-right btn-block btn-sm" style="width:100px" id="goback">返回</button></div> 
+      <div class="rh" id="tubiao">
+       
+      </div>
+    </div>
+    <div class="box-body">
+      <table id="thetable" class="table table-bordered table-hover" cellspacing="0" width="100%">        
+             
+      </table>
+    </div>
+  </div>
+
+
+  <div class="row undis" id="detailArea">
+
+    <div class="box-body">  
+    <div><h4 style="text-align:center;">维保满意度调查详细信息</h4><button type="submit" class="btn btn-default pull-right btn-block btn-sm" style="width:100px" id="theback">返回</button></div>
+    <table id="detailtable" class="table table-bordered table-hover" cellspacing="0" width="100%">        
+      
+            
+    </table>        
+    </div>
+  </div>
+</div>
+</div>
+
+
+
+<script src="${request.contextPath}/lib/echarts/echarts.js"></script>
+<script src="${request.contextPath}/lib/echarts/theme/shine.js"></script>
+<script src="${request.contextPath}/lib/plugins/datatables/jquery.dataTables.min.js"></script>
+<script src="${request.contextPath}/lib/plugins/datatables/dataTables.bootstrap.min.js"></script>
+<script src="${request.contextPath}/lib/plugins/select2/select2.full.min.js"></script>
+<script type="text/javascript" src="${request.contextPath}/js/Form_data_Submit.js"></script>
+<script type="text/javascript">
+  
+  //初始化表格 一级
+  var mtable = $('#maintable').DataTable({
+	    ajax: {
+			"url":contextPath+"/soa/survey/datas/search",
+			"type": "post",
+			"dataType":"json",
+			"data":function(d){
+				
+			}
+		},
+		sPaginationType: "full_numbers",
+        ordering: false,
+		info: false,
+		processing: false,
+        serverSide: true,
+        scrollY: '50vh',
+		paging: true,
+		pageLength: 10,
+		lengthChange: false,  
+        searching: false,
+        language: {
+            sProcessing: "正在加载中......",
+            sLengthMenu: "每页显示 _MENU_ 条记录",
+            sInfo: "从 _START_ 到 _END_ /共 _TOTAL_ 条数据",
+            sZeroRecords: "对不起，查询不到相关数据！",
+            sEmptyTable: "表中无数据存在！",
+            search: "查询:",
+            paginate: {
+               previous: "上一页",
+               next: "下一页",
+               first: "第一页",
+               last: "最后一页"
+            }
+         },
+        columns: [
+					{ 
+						title: '编号',
+						width:"20%",
+						align: 'center',
+	                    valign: 'middle',
+	                   	data: function(e){
+								return '<a href="#" onclick="showChart('+e.surveyCode+')">'+e.surveyCode+'</a>';
+		                   	}
+						
+					},
+					{ 
+						title: '发起人',
+						width:"10%",
+						data: 'initiatorName',
+						align: 'center',
+	                    valign: 'middle'
+					},
+					{ 
+						title: '发起时间',
+						width:"15%",
+						data: 'sponsorTime',
+						align: 'center',
+	                    valign: 'middle'
+					},
+					{ 
+						title: '状态',
+						width:"10%",
+						data: function (e) {//这里给最后一列返回一个操作列表
+                     		if(e.status==1){
+								return '进行中';
+                         	}else{
+								return '已完成';
+                          }
+                  	}
+					},
+					{
+						title: '功能',
+						width:"10%",
+						data: function (e) {//这里给最后一列返回一个操作列表
+                     		return ' <a class="btn btn-default btn-xs show-detail-json" data-whatever='+e.id+' onclick="del('+e.id+')"><i class="icon-edit"></i>删除</a>';
+                  	}
+					}
+			    ]
+	});
+
+
+  
+
+  //一级表格 点击事件
+  function showChart(surveyCode){ 
+	  	//赋值
+	   	var tbdata = null;
+
+	   	$.ajax({
+  			url:contextPath+"/soa/survey/chart/datas/search", 
+  			data:{"surveyCode":surveyCode},   
+  			type:"post",
+  			dataType:"json",
+  			async:false,
+  			success: function(result){
+  				tbdata=result.data;	
+  			} 
+  		});
+	   
+	   
+	   
+  	var thename = $.map(tbdata, function(n) {
+    		return n.manufName;
+  	}); 
+  
+
+    var thevalue = $.map(tbdata, function(n) {
+    	   return n.score==null?0:n.score;
+   }); 
+    
+	var option = null;
+  		option = {
+    		title:{
+      			text:'维保满意度调查查看',
+      			textAlign:'center',
+      			textStyle: {
+        		color: '#333',
+        		fontStyle: 'normal',
+        		fontWeight: 'normal',        
+        		fontSize: 18
+      		 },
+      		 left:'50%',
+      		 right:'50%',
+      		 top:'10px'
+    		},
+    		legend: {
+      			data: ['其他']
+    		},
+    		grid: {
+      			left: '3%',
+      			right: '4%',
+      			bottom: '5%',
+      			containLabel: true
+    		},
+    		xAxis: [{
+     	 		type: 'category',
+      			data: thename
+    		}],
+    		yAxis: [{
+      			type: 'value',
+      			name: '总分',
+      			min: 0,
+      			max: 100,
+      			interval: 20,
+      		axisLabel: {
+        		formatter: '{value}'
+      		}
+    	}],
+    	itemStyle: {
+      		emphasis: {
+       			 color: 'red'
+      		}
+    	},
+    	series: [{
+        	name: '分数',
+        	type: 'bar',
+        	data: thevalue
+      }]
+  };
+	   
+	   
+  		$('#mainArea').hide();
+	    $('#showtubiao').show();
+	   var dom = document.getElementById("tubiao");
+	   var myChart = echarts.init(dom);
+	   if (option && typeof option === "object") {      
+	      myChart.setOption(option, true);
+	    }
+	  	var url=contextPath + "/soa/survey/surveymanuf/datas/search";
+	    var data = {};
+	  	data.surveyCode = surveyCode;
+	   
+	  	thetable.settings()[0].ajax.url = url;   
+	  	thetable.settings()[0].ajax.data = {"params":data};
+	  	thetable.ajax.reload(); 
+
+	}
+
+	//初始化表格 二级
+	  var thetable = $('#thetable').DataTable({
+		    ajax: {
+				"url":contextPath+"/soa/survey/surveymanuf/datas/search",
+				"type": "post",
+				"dataType":"json",
+				"data":function(d){
+					
+				}
+			},
+			sPaginationType: "full_numbers",
+	        ordering: false,
+			info: false,
+			processing: false,
+	        serverSide: true,
+	        scrollY: '50vh',
+			paging: true,
+			pageLength: 5,
+			lengthChange: false,  
+	        searching: false,
+	        language: {
+	            sProcessing: "正在加载中......",
+	            sLengthMenu: "每页显示 _MENU_ 条记录",
+	            sInfo: "从 _START_ 到 _END_ /共 _TOTAL_ 条数据",
+	            sZeroRecords: "对不起，查询不到相关数据！",
+	            sEmptyTable: "表中无数据存在！",
+	            search: "查询:",
+	            paginate: {
+	               previous: "上一页",
+	               next: "下一页",
+	               first: "第一页",
+	               last: "最后一页"
+	            }
+	         },
+	        columns: [
+						{ 
+							title: '厂商',
+							width:"15%",
+							align: 'center',
+		                    valign: 'middle',
+		                   	data: function(e){
+								return '<a href="#" onclick=show('+e.manufId+',"'+e.surveyCode+'")>'+e.manufName+'</a>';
+			                }
+						}, 
+						{ 
+							title: '受理及时率',
+							width:"10%",
+							align: 'center',
+		                    valign: 'middle',
+		                    data: function(e){
+								return e.timelinessGrade==null?0:e.timelinessGrade;
+		                   	}
+			                    
+						},
+						{ 
+							title: '维保修复率',
+							width:"10%",
+							align: 'center',
+		                    valign: 'middle',
+		                    data: function(e){
+		                    	return e.repairGrade==null?0:e.repairGrade;
+		                   	}
+						},
+						{ 
+							title: '服务状态',
+							width:"10%",
+							align: 'center',
+		                    valign: 'middle',
+		                    data: function(e){
+								return e.mannerGrade==null?0:e.mannerGrade;
+		                   	}
+						},
+						{ 
+							title: '总分',
+							width:"10%",
+							align: 'center',
+		                    valign: 'middle',
+		                    data: function(e){
+		                    	return e.score==null?0:e.score;
+		                   	}
+						}
+				    ]
+		});
+
+
+	  	//二级表格 点击事件
+  		function show(manufId,surveyCode){
+	  		$('#showtubiao').hide();
+	   		$('#detailArea').show(); 
+	   		var url=contextPath + "/soa/survey/surveybusiness/datas/search";
+		    var data = {};
+		    data.manufId = manufId;
+		  	data.surveyCode = surveyCode;
+		   
+		  	detailtable.settings()[0].ajax.url = url;   
+		  	detailtable.settings()[0].ajax.data = {"params":data};
+		  	detailtable.ajax.reload();  
+		}
+
+		
+ //初始化表格 三级
+  var detailtable = $('#detailtable').DataTable({
+	    ajax: {
+			"url":contextPath+"/soa/survey/surveybusiness/datas/search",
+			"type": "post",
+			"dataType":"json",
+			"data":function(d){
+				
+			}
+		},sPaginationType: "full_numbers",
+        ordering: false,
+		info: false,
+		processing: false,
+        serverSide: true,
+        scrollY: '50vh',
+		paging: true,
+		pageLength: 5,
+		lengthChange: false,  
+        searching: false,
+        language: {
+            sProcessing: "正在加载中......",
+            sLengthMenu: "每页显示 _MENU_ 条记录",
+            sInfo: "从 _START_ 到 _END_ /共 _TOTAL_ 条数据",
+            sZeroRecords: "对不起，查询不到相关数据！",
+            sEmptyTable: "表中无数据存在！",
+            search: "查询:",
+            paginate: {
+               previous: "上一页",
+               next: "下一页",
+               first: "第一页",
+               last: "最后一页"
+            }
+         },
+        columns: [
+					{ 
+						title: '营业厅',
+						width:"20%",
+						data: 'orgName',
+						align: 'center',
+	                    valign: 'middle'
+					}, 
+					{ 
+						title: '受理及时率',
+						width:"10%",
+						align: 'center',
+	                    valign: 'middle',
+	                    data: function(e){
+							return e.timelinessGrade==null?0:e.timelinessGrade;
+	                   	}
+					},
+					{ 
+						title: '维保修复率',
+						width:"10%",
+						data: 'repairGrade',
+						align: 'center',
+	                    valign: 'middle',
+	                    data: function(e){
+							return e.timelinessGrade==null?0:e.timelinessGrade;
+	                   	}
+					},
+					{ 
+						title: '服务状态',
+						width:"10%",
+						align: 'center',
+	                    valign: 'middle',
+	                    data: function(e){
+							return e.mannerGrade==null?0:e.mannerGrade;
+	                   	}
+					},
+					{ 
+						title: '评价人',
+						width:"10%",
+						align: 'center',
+	                    valign: 'middle',
+	                    data: function(e){
+							return e.appraiserName==null?"未评论":e.appraiserName;
+	                   	}
+					},
+					{ 
+						title: '状态',
+						width:"10%",
+						data: 'status',
+						align: 'center',
+	                    valign: 'middle',
+	                    data: function(e){
+		                    if(e.status==0){
+								return "完成";
+			                }
+		                    else{
+								return "未完成";
+				            }
+	                   	}
+					}
+			    ]
+	});
+
+  //二级返回
+  $('#goback').on('click',function(){
+      $('#mainArea').show();
+      $('#showtubiao').hide();
+  });
+  
+  //三级返回
+  $('#theback').on('click',function(){
+      $('#tableArea').show();
+      $('#showtubiao').show();         
+      $('#detailArea').hide();
+  });
+
+
+
+  //删除配件
+ 	function del(id){
+ 		 var d = dialog({
+          title:'提示',
+          content:'确认删除这条记录？',
+          okValue:'确认',
+          ok:function(){
+          	$.ajax({
+          		async: false,
+          		url:contextPath+"/soa/survey/datas/del",
+          		data: {id:id},
+          		type:"post",
+          		dataType:"json",
+          		success: function(result){
+          			if(result.status==0){
+          				var d = dialog({
+              				content : result.msg
+              			});
+              			d.show();
+              			setTimeout(function() {
+              				mtable.ajax.reload(null,false);
+              				d.close().remove();
+              			}, 2000);
+          			}else{
+          				var d = dialog({
+              				content : result.msg
+              			});
+              			d.show();
+              			setTimeout(function() {
+              				d.close().remove();
+              			}, 4000);
+          			}
+          		},
+          		});
+          },
+          cancelValue:'取消',
+          cancel:function(){}
+			
+		});
+		d.showModal();  
+  }
+
+
+  
+
+//发起调查
+  function add(){
+  	post("/soa/survey/inst","html","",function(obj){
+  		var d = dialog({
+  			drag:false,  			
+  			title : '新增满意度调查',
+  			content :obj,					
+  			width : 550,
+  			height:240,  			
+  			okValue: '保存',
+  			zIndex:1050,
+  			onshow:function(){
+  				var manufList=null;
+  				$.ajax({
+  					url:contextPath+"/soa/survey/manuf/datas/search",    
+  					type:"post",
+  					dataType:"json",
+  					async:false,
+  					success: function(result){
+  						manufList=result.data;
+  						
+  					} 
+  				});
+  				var htmlList=null;
+  				 for(var i=0;i<manufList.length;i++){
+  					 htmlList+='<option value="'+manufList[i].id+'">'+manufList[i].manufBriefName+'</option>';
+  				   }
+  				
+  				$('#select2').html(htmlList);
+  				$('#select2').select2({closeOnSelect:false});
+  	           },
+  			ok :function() {
+  					this.title('正在提交..');
+  					$('#manufIdList').val($('#select2').val());//获取select选择到的值后赋值给input能让表单序列化
+  					ajaxSubmit($('#form_Survey')[0], function(data){
+  						if(data.status==0){
+   							var c = dialog({
+   	    						content : data.msg
+   	    					});
+   	    						c.show();
+   	    						setTimeout(function() {
+   	    						c.close().remove();
+   	    						d.close().remove();
+   	    					}, 2000); 
+   	    						mtable.ajax.reload(null,false);//刷新表格
+   						}else{
+   							
+   							var e = dialog({
+   	    						content : data.msg
+   	    					});
+   	    						e.show();
+   	    						setTimeout(function() {
+   	    						e.close().remove();
+   	    					}, 2000);
+
+   						} 
+    					});
+  					this.title('新增满意度调查');
+  						return false;
+    				},
+  		     cancelValue:'取消',
+  			 cancel: function() {
+  			  }
+  			});
+  		
+  			d.showModal();
+  		}); 
+      }
+
+//清空查询条件
+	function emptyCondition(){
+		$("#surveyCode").val("");
+		$("#status").val("");
+		condictionsSearch();
+	}
+
+//条件查询配件数据
+  function condictionsSearch(){
+  	
+  	var surveyCode=$("#surveyCode").val();
+  	var status = $("#status").val();
+  	var url=contextPath + "/soa/survey/datas/search";
+    var data = {};
+    data.surveyCode = surveyCode;
+  	data.status = status;
+   
+  	mtable.settings()[0].ajax.url = url;   
+  	mtable.settings()[0].ajax.data = {"params":data};
+  	mtable.ajax.reload();
+    }
+
+</script>
+

@@ -1,0 +1,88 @@
+<div class="modal-body"  >
+    <form class="form-horizontal" method="post" name="form_part" id="form_part" action="#">
+    	<input type="hidden" value="${partId!}" id="partId"/>
+       <div class="box-body">
+       			<div class="form-group">
+					<label for="versionSel" class="col-sm-4 control-label">驱动版本</label>
+					 <div class="col-sm-8">
+					 <input type="hidden" value="" id="version" name="version">
+					 <input type="hidden" value="" id="versionID" name="versionID">
+					<select class="js-example-placeholder-single form-control select2" style="width:100%" id="versionSel" name="versionSel">
+						<option></option>
+					</select>
+				</div>
+				</div>
+      </div>
+     </form>
+</div>
+<script type="text/javascript">
+//场景套select2样式以及编辑联动
+	var deviceModelUrl=contextPath+"/soa/driver/version/datas/combox";
+ 	var deviceModel="#versionSel";
+ 	var partIds=[];
+ 	//设备型号下拉框
+ 	deviceModelSelect(deviceModelUrl,deviceModel);
+ 	var deviceModelSelVal=$("#partId").val();
+ 	if(deviceModelSelVal!=null&&deviceModelSelVal!=""){
+ 		$("#versionSel").val(deviceModelSelVal).trigger("change");
+ 	}
+ 		
+ 	//设备型号下拉框function
+ 	function deviceModelSelect(comboxUrl,SelectTarget){
+ 		$.ajax({
+ 	   	url:comboxUrl,    
+ 	   	type:"post",
+ 	   	dataType:"json",
+ 	   	data:{"pid":$("#partId").val()},
+ 	   	async:false,
+ 	   	success: function(result){ 
+ 	   		var list=result.data;
+ 	   		if(list!=null){
+	 	   		for(var i = 0;i<list.length;i++){    	
+	 	   			var $option = $('<option/>').attr('value',list[i].id).html(list[i].version);
+	 	   			$option.appendTo($(SelectTarget));
+	 	   		}
+	
+	 	   		$(SelectTarget).select2({
+	 	   			placeholder: "请选择",
+	 	   			allowClear: false
+	 	   		}).change(function(){
+	 	   		var selectedValue=$("#versionSel").text();
+		   		    $("#version").val(selectedValue);
+		   		    $("#versionID").val($("#versionSel").val());
+	 	   		});
+ 	   		}
+ 	   		    		
+ 	   	} 
+ 	     });
+ 	}
+	
+	//表单校验及提交事件
+ 	$('#form_part').bootstrapValidator({
+        message: 'This value is not valid',
+        feedbackIcons: {
+            valid: 'glyphicon glyphicon-ok',
+            invalid: 'glyphicon glyphicon-remove',
+            validating: 'glyphicon glyphicon-refresh'
+        },
+        fields: {
+        	versionSel: {
+                message: 'The versionSel is not valid',
+                validators: {
+                    notEmpty: {
+                        message: '设备型号不能为空！'
+                    }
+                }
+            }
+        }
+    }).on('success.form.bv', function(e) {
+    	console.log("1111111");
+    	showDailog("操作成功",2000);
+		objClick.parent().find('.versionNum').html($('#version').val());
+		objClick.parent().find('.versionNum').attr('versionID',$('#versionID').val());
+		setTimeout(function() {
+			modelThat.close().remove();
+		}, 1000); 	
+		return false;
+    });	
+</script>     

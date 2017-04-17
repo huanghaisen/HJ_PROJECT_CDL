@@ -1,0 +1,105 @@
+<div class="modal-body"  >
+    <form class="form-horizontal" method="post" name="form_role" id="form_role" action="${request.contextPath}/soa/role/datas/save">
+       <input type="hidden" id="id" name="id" value="${model.id!}">              
+       <input type="hidden" id="createUser" name="createUser" value="${model.createUser!}">              
+       <input type="hidden" id="roleLevel" name="roleLevel" value="${model.roleLevel!}">              
+        <div class="box-body">
+                <div class="form-group">
+                  <label for="exampleLoginName1"  class="col-sm-3 control-label">角色编码</label>
+                   <div class="col-sm-9">
+                  <input type="text" class="form-control" id="roleName" name="roleName" value="${model.roleName!}">  
+                  </div>            
+                </div>
+                
+                <div class="form-group">                       
+                  <label for="exampleNickname1"  class="col-sm-3 control-label">角色描述</label>
+                   <div class="col-sm-9">
+                  <input type="text" class="form-control" id="roleDesc" name="roleDesc" value="${model.roleDesc!}">
+                  </div>
+                </div>
+                
+                
+                <div class="form-group">
+                  <label for="roleSenceSel"  class="col-sm-3 control-label">场景</label>
+                   <div class="col-sm-9">
+                  <input type="hidden" value="${model.roleSence!}" id="roleSence" name="roleSence">
+                  <select  id="roleSenceSel" class="js-example-placeholder-single form-control select2"   style="width:100%" >
+                 	 <option></option>
+                 	 <option value="soa">soa</option>
+        			 <option value="coa">coa</option>
+                  </select>
+                  </div>
+                </div>  
+
+             
+      </div>
+     </form>
+</div>	
+<script type="text/javascript">
+//场景套select2样式以及编辑联动
+$("#roleSenceSel").select2({
+		placeholder: "请选择",
+		allowClear: false
+	}).change(function(){
+		var selectedValue=$("#roleSenceSel").val();
+	    $("#roleSence").val(selectedValue);
+	});
+	var roleSence=$("#roleSence").val();
+	if(roleSence!=null&&roleSence!=""){
+		$("#roleSenceSel").val(roleSence).trigger("change");
+	}
+	
+	//表单校验及提交事件
+ 	$('#form_role').bootstrapValidator({
+        message: 'This value is not valid',
+        feedbackIcons: {
+            valid: 'glyphicon glyphicon-ok',
+            invalid: 'glyphicon glyphicon-remove',
+            validating: 'glyphicon glyphicon-refresh'
+        },
+        fields: {
+        	roleName: {
+                message: 'The roleName is not valid',
+                validators: {
+                    notEmpty: {
+                        message: '角色名不能为空！'
+                    },
+                    stringLength: {
+                        min: 2,
+                        max: 10,
+                        message: '角色名长度请控制在2-10个字节！'
+                    }
+                }
+            },
+            roleDesc: {
+                message: 'The roleDesc is not valid',
+                validators: {
+                    notEmpty: {
+                        message: '角色描述不能为空！'
+                    }
+                }
+            },
+            roleSence: {
+                message: 'The roleSence is not valid',
+                validators: {
+                    notEmpty: {
+                        message: '请选择场景！'
+                    }
+                }
+            }
+        }
+    }).on('success.form.bv', function(e) {
+		ajaxSubmit($('#form_role')[0], function(data){
+            //alert(data);
+        });
+		showDailog("操作成功",2000);
+		//var that=$(".ui-popup-modal ui-popup-show");
+		 //updateUser(id);
+		setTimeout(function() {
+			DTrefresh();
+			//table.ajax.reload(null,false);//刷新datatable页面  table对应建表的var 命名
+			modelThat.close().remove();
+		}, 1000); 
+		return false;
+    });	
+</script>     

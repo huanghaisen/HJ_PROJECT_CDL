@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>二维码打印</title>
+</head>
+<body>
+	<div id="body_main">
+		<button onclick="window.print();">打印</button>
+		<ul style="height: auto;">
+		<#list dlist as item>
+		<li style=" float:left; height:130px; width:360px; padding-bottom:30px;">
+      		<span style="background-position:-87px -1px; float:left; padding-right: 5px; padding-left: 5px;">
+      		<img width="150" height="150" id="imgs" src="${request.contextPath}/soa/device/info/singleQrcode?id=${item.id}">
+     		</span>
+      		<p style="font-size:14px; padding-top: 5px; margin-top: 5px;">
+      			<span>设备ID:${item.id?string}</span><br>
+	      		<span>设备编号:${item.deviceCode?string}</span><br>
+	      		<span>设备型号:${item.deviceModelName?string}</span><br>
+	      		<span>出厂编号:${item.factoryCode?string}</span><br>
+	      		<span>属营业厅:${item.orgName?string}</span><br>
+	      		<span>生产厂商:${item.manufName?string}</span><br>
+      	    </p>
+       </li>
+       </#list>
+		</ul>
+	</div>
+</body>
+</html>

@@ -1,0 +1,67 @@
+<div class="mainpage">
+  <div class="topnavbar">
+    <a href="#" class="topnav-back"><i class="fa fa-fw fa-angle-left"></i></a> 
+    <span class="topnav-search-btn"><i class="fa fa-fw fa-search"></i></span>
+    <div class="topnavtitle">受理</div> 
+    <div class="box-tools pull-right">
+          <div class="has-feedback">
+            <input type="text" class="form-control input-sm" placeholder="">
+            <span class="glyphicon glyphicon-search form-control-feedback"></span>
+          </div>
+        </div>  
+    
+  </div>
+ <div class="mainpagecontent">
+  <section class="m-content">    
+    <div class="mbox">
+       <p>静安营业厅</p>
+       <div class="row">
+         <div class="col-xs-6"><small class="text-muted">静安区</small></div>
+         <div class="col-xs-6"><small class="text-muted text-right">2016-10-28 09:28:06</small></div>
+       </div>           
+    </div>
+    <div class="mbox mt10">
+      <select class="form-control select2" multiple="multiple">
+            <optgroup label="集团总部">              
+                <option value="AK">诺恩维保员</option>
+                <option value="HI">中晶维保员</option> 
+                <option value="HI">海信维保员</option>          
+            </optgroup>
+            <optgroup label="维保厂商">
+              <option value="AK">深圳凯欣达公司</option>
+              <option value="HI">凯欣达上海分公司</option>
+            </optgroup>            
+          </select>
+    </div>
+    <div class="mbox mt10">      
+       <p>工单编号：2105058888</p>
+       <p>报障人：营业厅负责人</p>  
+       <p>维保厂商：凯欣达</p>        
+    </div>
+    <div class="m-title mt10 bor-b">工单信息：</div>
+    <div class="mbox bor-b">      
+       <p>设备编号：1180010001</p>
+       <p>设备类型：大堂式单屏</p>  
+       <p>出厂编号：kl4545554566</p>        
+    </div>
+    <div class="m-title bor-b">故障信息</div> 
+    <div class="mbox bor-b">      
+       <p>配件类型：凭条打印机</p>
+       <p>报障级别：告警</p>  
+       <p>状态码：101</p> 
+       <p>状态描述：纸将尽（纸少）</p>        
+    </div>   
+    
+
+  </section>
+</div> 
+</div>
+
+<script src="plugins/select2/select2.full.min.js"></script>
+<script>
+  
+  $(function(){
+       $(".select2").select2({placeholder: "选择维修人"});
+  });
+
+</script>

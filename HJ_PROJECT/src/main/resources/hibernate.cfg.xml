@@ -1,0 +1,42 @@
+<?xml version='1.0' encoding='utf-8'?>
+<!DOCTYPE hibernate-configuration PUBLIC
+    "-//Hibernate/Hibernate Configuration DTD//EN"
+    "http://www.hibernate.org/dtd/hibernate-configuration-3.0.dtd">
+<hibernate-configuration>
+  <session-factory>
+    <property name="connection.url">jdbc:mysql://localhost:3306/hj</property>
+    <property name="connection.driver_class">com.mysql.jdbc.Driver</property>
+    <mapping class="com.model.TActivity"/>
+      <mapping class="com.model.TBrand"/>
+      <mapping class="com.model.TCarType"/>
+      <mapping class="com.model.TCheck"/>
+      <mapping class="com.model.TCreateModul"/>
+      <mapping class="com.model.TDistributionReward"/>
+      <mapping class="com.model.TDuration"/>
+      <mapping class="com.model.TFreightFree"/>
+      <mapping class="com.model.TGoods"/>
+      <mapping class="com.model.TGoodsArea"/>
+      <mapping class="com.model.TGoodsType"/>
+      <mapping class="com.model.TIntegral"/>
+      <mapping class="com.model.TLibrary"/>
+      <mapping class="com.model.TLibraryGoods"/>
+      <mapping class="com.model.TLogistics"/>
+      <mapping class="com.model.TMerchant"/>
+      <mapping class="com.model.TMessage"/>
+      <mapping class="com.model.TOrder"/>
+      <mapping class="com.model.TOrderAction"/>
+      <mapping class="com.model.TOrderGoods"/>
+      <mapping class="com.model.TOverdue"/>
+      <mapping class="com.model.TPay"/>
+      <mapping class="com.model.TReward"/>
+      <mapping class="com.model.TRewardType"/>
+      <mapping class="com.model.TShelves"/>
+      <mapping class="com.model.TShip"/>
+      <mapping class="com.model.TStorage"/>
+      <mapping class="com.model.TStroageGoods"/>
+      <mapping class="com.model.TSupplier"/>
+    <mapping class="com.model.TScore"/>
+    <!-- DB schema will be updated if needed -->
+    <!-- <property name="hbm2ddl.auto">update</property> -->
+  </session-factory>
+</hibernate-configuration>

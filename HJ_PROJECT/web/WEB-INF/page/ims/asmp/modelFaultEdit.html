@@ -1,0 +1,150 @@
+<!-- 编辑模态框 -->
+<div class="modal-body">
+    <form class="form-horizontal" style="height:480px;" method="post" name="form_submit" id="form_submit" action="${request.contextPath}/soa/asmp/modelFault/datas/save">
+       <input type="hidden" id="id" name="id" value="${TAsmpModelFault.id!}">     
+      <div class="box-body">
+               <div class="form-group">
+					<label for="deviceModelSelect"  class="col-sm-3 control-label">设备型号</label>
+					<div class="col-sm-9">
+					<select class="js-example-placeholder-single form-control select2 orgSelect" style="width:100%" id="deviceModelSelect" >
+						<option></option>
+					</select>
+					</div>
+				</div>
+                
+                <div class="form-group">               
+                  <label for="modelFaultName"  class="col-sm-3 control-label">故障现象名称</label>
+                  <div class="col-sm-9">
+                  <input type="text" class="form-control" id=modelFaultName name="modelFaultName"  value="${TAsmpModelFault.modelFaultName!}">
+                  </div>
+                </div>                
+                
+                <div class="form-group">
+					<label for="statusSel"  class="col-sm-3 control-label">状态</label>
+					<div class="col-sm-9">
+					<select class="js-example-placeholder-single form-control select2 " style="width:100%" id="statusSel" >
+						<option></option>
+						<option value="0">有效</option>
+						<option value="1">无效</option>
+					
+					</select>
+					</div>
+				</div>              
+                
+                <div class="form-group">
+					<label for="workGradeSel"  class="col-sm-3 control-label">故障等级</label>
+					<div class="col-sm-9">
+					<select class="js-example-placeholder-single form-control select2 " style="width:100%" id="workGradeSel" >
+						<option></option>
+						<option value="2">意外</option>
+						<option value="3">告警</option>
+						<option value="4">故障</option>
+						<option value="5">灾难</option>
+						
+					</select>
+					</div>
+				</div>
+                
+                <div  class="form-group" style="display:none">
+                  <label for="modifier" class="col-sm-3 control-label">修改人</label>
+                  <div class="col-sm-9">
+                  <input type="text" class="form-control" id="modifier" name="modifier" value="${TAsmpModelFault.modifier!}">
+                  </div>
+                </div>
+                  
+               <div class="form-group">
+                  <label for="workGrade" class="col-sm-3 control-label">故障等级</label>
+                  <div class="col-sm-9">
+                  <input type="text" class="form-control" id="workGrade" name="workGrade" value="${TAsmpModelFault.workGrade!}">
+                  </div>
+                </div>
+                  
+                <div class="form-group">
+                  <label for="status" class="col-sm-3 control-label">状态</label>
+                  <div class="col-sm-9">
+                  <input type="text" class="form-control" id="status" name="status" value="${TAsmpModelFault.status!}">
+                  </div>
+                </div>
+                
+                <div class="form-group">
+                  <label for="deviceModel"  class="col-sm-3 control-label">设备型号</label>
+                  <div class="col-sm-9">
+                  <input type="text" class="form-control" id="deviceModelInput" name="deviceModelId" value="${TAsmpModelFault.deviceModelId!}" >              
+                  </div>                
+                </div>
+                
+              
+     
+      </div>
+     </form>
+     </div>	
+     <script>
+    var deviceModelUrl=contextPath+"/soa/device/model/datas/combox";
+  	var deviceModelSelect="#deviceModelSelect";
+  	
+  	//设备型号下拉框
+   	function DMSelect(comboxUrl,SelectTarget){
+   		$.ajax({
+   	   	url:comboxUrl,    
+   	   	type:"post",
+   	   	dataType:"json",
+   	   	async:false,
+   	   	success: function(result){ 
+   	   		for(var i = 0;i<result.length;i++){    	
+   	   			var $option = $('<option/>').attr('value',result[i].id).html(result[i].deviceModelName);
+   	   			$option.appendTo($(SelectTarget));
+   	   		}
+
+   	   		$(SelectTarget).select2({
+   	   			placeholder: "请选择",
+   	   			allowClear: false
+   	   		}).change(function(){
+   	   		var selectedValue=$("#deviceModelSelect").val();   	   		
+  	   		    $("#deviceModelInput").val(selectedValue);
+   	   		});
+   	   		    		
+   	   	} 
+   	     });
+   	}
+  	
+  	//设备型号下拉框
+  	DMSelect(deviceModelUrl,deviceModelSelect);
+  	var deviceModelSelVal=$("#deviceModelInput").val();
+  	if(deviceModelSelVal!=null&&deviceModelSelVal!=""){
+  		$("#deviceModelSelect").val(deviceModelSelVal).trigger("change");
+  	}
+      
+
+  	
+     
+     </script>
+   <script>
+   
+   var statusSelVal=$("#status").val();
+	if(statusSelVal!=null&&statusSelVal!=""){
+		$("#statusSel").val(statusSelVal).trigger("change");
+	}
+	
+		$("#statusSel").select2({
+	   			placeholder: "请选择",
+	   			allowClear: false
+	   		}).change(function(){
+	   		var selectedValue=$("#statusSel").val();
+	   		    $("#status").val(selectedValue);
+	   		});
+		
+		
+	var workGradeSelVal=$("#workGrade").val();
+	 if(workGradeSelVal!=null&&workGradeSelVal!=""){
+	 	$("#workGradeSel").val(workGradeSelVal).trigger("change");
+	  }
+	 	
+	 $("#workGradeSel").select2({
+		placeholder: "请选择",
+		allowClear: false
+		}).change(function(){
+		var selectedValue=$("#workGradeSel").val();
+		$("#workGrade").val(selectedValue);
+		});	 
+	  
+   </script>

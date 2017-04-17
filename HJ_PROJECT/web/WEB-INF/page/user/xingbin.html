@@ -1,0 +1,488 @@
+
+<link rel="stylesheet"href="//cdn.bootcss.com/bootstrap/3.3.5/css/bootstrap.min.css">
+<script src="//cdn.bootcss.com/bootstrap/3.3.5/js/bootstrap.min.js"></script>
+
+<script type="text/javascript" src="${request.contextPath}/js/user/aboutForm.js"></script>
+<script type="text/javascript" src="${request.contextPath}/js/user/user_buttons.js"></script>
+<script type="text/javascript"src="${request.contextPath}/js/user/user_tableCreation.js"></script>
+<script>
+
+
+//元素属性数据
+//表格 工具类数据 由后台根据权限生成
+var toolbuttonsdata = [ {
+	'name' : '新增',
+	'value' : 'inst',
+	'type' : '列表域',
+	'className' : 'btn btn-primary margin btn-sm'
+}, {
+	'name' : '修改',
+	'value' : 'edit',
+	'type' : '列表域',
+	'className' : 'btn btn-primary margin btn-sm'
+}, {
+	'name' : '查询',
+	'value' : 'search',
+	'type' : '列表域',
+	'className' : 'btn btn-primary margin btn-sm'
+}, {
+	'name' : '删除',
+	'value' : 'del',
+	'type' : '列表域',
+	'className' : 'btn btn-warning margin btn-sm'
+}, {
+	'name' : '提交',
+	'value' : 'sub',
+	'type' : '列表域 表单域',
+	'className' : 'btn btn-success margin btn-sm'
+}, {
+	'name' : '审核',
+	'value' : 'chk',
+	'type' : '列表域',
+	'className' : 'btn btn-primary margin btn-sm'
+}, {
+	'name' : '查看',
+	'value' : 'show',
+	'type' : '列表域',
+	'className' : 'btn btn-info margin btn-sm'
+}, {
+	'name' : '保存',
+	'value' : 'save',
+	'type' : '表单域',
+	'className' : 'btn btn-success margin btn-sm'
+}, {
+	'name' : '导出',
+	'value' : 'exp',
+	'type' : '列表域',
+	'className' : 'btn btn-primary margin btn-sm'
+}, {
+	'name' : '打印',
+	'value' : 'print',
+	'type' : '列表域 表单域',
+	'className' : 'btn btn-primary margin btn-sm'
+} ];
+
+// 表格行选择数组
+var rows_selected = [];
+
+//设置表格头部 列标题
+var tableTitle = [ {
+	//   'title': '<input name="select_all" value="1" type="checkbox">'
+	// }, {
+	'login' : "登录名"
+}, {
+	'title' : "用户名"
+}, {
+	'title' : "Email"
+}, {
+	'title' : "phoneNum"
+}, {
+	'title' : "创建日期"
+} ];
+</script>
+
+
+
+   <script>
+
+	//工具按钮事件表
+	var buttonsAction = {
+			'inst' : function(e, dt, node, conf){
+				post("/soa/user/inst","html","",function(obj){
+					//console.log(obj);
+					var d = dialog({
+						title : '新增用户',
+						content :obj,					
+						width : 550,
+						height : 500,
+						okValue: '保存',
+						zIndex:999999,
+						ok : 
+							function() {
+							var that = this;
+							this.title('正在提交..');
+							ajaxSubmit($('#form_user')[0], function(data){
+					            //alert(data);
+					        });
+							
+							//table.ajax.reload(null,false);//刷新datatable页面  table对应建表的var 命名
+							
+							//addUser();
+							setTimeout(function() {
+								table.ajax.reload(null,false);
+								that.close().remove();
+							}, 2000);
+							return false;
+						 cancel: false
+						},
+				     cancelValue:'取消',
+					 cancel: function() {
+					  }
+					});
+					d.showModal();
+				});
+				},
+			
+		'edit' : function(e, dt, node, conf){
+			
+			var $table = table.table().node();
+			var $chkbox_all = $('tbody input[type="checkbox"]', $table);
+			var $chkbox_checked = $('tbody input[type="checkbox"]:checked', $table);
+			if($chkbox_checked.length<1){
+				var d = dialog({
+					title:'提示',
+					content : '请勾选要修改的记录！'
+				});
+				d.show();
+				setTimeout(function() {
+					d.close().remove();
+				}, 2000);
+			}else
+			if($chkbox_checked.length>1){
+				var d = dialog({
+					title:'提示',
+					content : '请不要勾选多条记录修改！'
+				});
+				d.show();
+				setTimeout(function() {
+					d.close().remove();
+				}, 2000);
+			}else{
+				var data={"id":$chkbox_checked.val()};
+				var id=$chkbox_checked.val();
+				post("/soa/user/edit","html",data,function(obj){
+					//console.log(obj);
+					var d = dialog({
+						title : '修改用户',
+						content :obj,					
+						width : 550,
+						height : 500,
+						okValue: '保存',
+						zIndex:999999,
+						ok : 
+							function() {
+							var that = this;
+							this.title('正在提交..');
+							ajaxSubmit($('#form_user')[0], function(data){
+					            //alert(data);
+					        });
+                        	 //updateUser(id);
+							setTimeout(function() {
+								table.ajax.reload(null,false);//刷新datatable页面  table对应建表的var 命名
+								that.close().remove();
+							}, 2000);
+							return false;
+						 cancel: false
+						},
+				     cancelValue:'取消',
+					 cancel: function() {
+						 
+					  }
+					});
+					d.showModal();
+				});
+			}
+			
+			},
+		'search' : function(e, dt, node, conf) {
+			var d = dialog({
+				title : '昵称查客户',
+				content : 'nickname: <input autofocus />',
+				ok : function() {
+					
+					data={"nickNmae":"ADAN"};
+					table.search("ADAN").draw();
+					alert("1111111111111111");
+				},
+				statusbar : '<label><input type="checkbox">不再提醒</label>'
+			});
+			d.show();
+		},
+		'del' : function(e, dt, node, conf) {
+			var $table = table.table().node();
+			var $chkbox_all = $('tbody input[type="checkbox"]', $table);
+			var $chkbox_checked = $('tbody input[type="checkbox"]:checked', $table);
+			
+			var data={"id":$chkbox_checked.val()};
+			var id=$chkbox_checked.val();
+			
+			if($chkbox_checked.length<1){
+			var t = dialog({
+				title:'提示',
+				content : '请勾选要删除的记录！'
+			});
+			t.show();
+			setTimeout(function() {
+				t.close().remove();
+			}, 2000);
+		    }else if($chkbox_checked.length>1){
+				var t = dialog({
+					title:'提示',
+					content : '暂无删除多条记录权限'
+				});
+				t.show();
+				setTimeout(function() {
+					t.close().remove();
+				}, 2000);
+			    }else{
+				//alert(id);//测试可拿到id
+				var d = dialog({
+	                 title:'提示',
+	                 content:'确认删除id为：'+id+' 的这条记录？',
+	                 okValue:'确认',
+	                 ok:function(){
+	                	delUser(id);
+	                	setTimeout(function() {
+							table.ajax.reload(null,false);
+							that.close().remove();
+						}, 1000);
+	                	
+	                 },
+	                 cancelValue:'取消',
+	                 cancel:function(){
+	                	 
+	                 }
+					
+				});
+				d.showModal();	
+		    }
+		},
+		
+		'sub' : function(e, dt, node, conf) {
+			var d = dialog({
+				content : '对话框将在两秒内关闭'
+			});
+			d.show();
+			setTimeout(function() {
+				d.close().remove();
+			}, 2000);
+		},
+		'chk' : function(e, dt, node, conf) {
+			var d = dialog({
+				title : 'message',
+				content : '<input autofocus />'
+			});
+			d.showModal();
+		},
+		'show' : function(e, dt, node, conf) {
+			var d = dialog({
+				onclose : function() {
+					alert('对话框已经关闭');
+				},
+				ok : function() {
+				}
+			});
+			d.show();
+		},
+		'save' : function(e, dt, node, conf) {
+			var d = dialog({
+				okValue : '数据保存中',
+				ok : function() {
+				},
+
+			});
+			d.show();
+			setTimeout(function() {
+				d.close().remove();
+			}, 1000);
+		},
+		'exp' : function(e, dt, node, conf) {
+			console.log('导出');
+		},
+		'print' : function(e, dt, node, conf) {
+			console.log('打印');
+		}
+
+	}
+
+	//按钮属性事件 数据
+	var buttonsActiondata = madeToolbuttons(toolbuttonsdata, buttonsAction);
+
+	//取消 排序 搜索
+	// $.extend(true, $.fn.dataTable.defaults, {
+	//    "searching": false,
+	//    "ordering": false
+	// });
+	var data={};
+	//初始化表格
+	var table = $('#user').DataTable({
+		// 'dom': 'Bfrtip',      
+		//调用pageSerach 取得user表数据
+		'ajax' : {
+			"url":contextPath + "/soa/user/datas/pageSearch",
+			"type": "post",
+			"data":data
+		},
+		"processing": false,
+        "serverSide": true,
+		'columns' : [ {
+			"title" : '<input name="select_all" type="checkbox">',
+			data : function(e) {//这里给最后一列返回一个操作列表
+				return '<input value="'+e.id+'" type="checkbox">';
+			}
+		},{
+			"id" : "编号",
+			"data" : 'id'
+		}, {
+			"title" : "登录名",
+			"data" : 'loginName'
+		}, {
+			"title" : "昵称",
+			"data" : 'nickName'
+		},
+
+		{
+			"title" : "邮箱",
+			"data" : 'email'
+		},
+
+		{
+			"title" : "性别",
+			"data" : 'sex'
+		},
+
+		{
+			"title" : "密码",
+			"data" : 'password'
+		},
+
+		{
+			"title" : "电话",
+			"data" : 'phone'
+		}
+
+		],
+		'columnDefs' : [ {
+			'targets' : 0,
+			'searchable' : true,
+			'orderable' : false,
+			'width' : '1%',
+			'className' : 'dt-body-center',
+			'render' : function(data, type, full, meta) {
+				return data;
+			}
+		} ],
+		'paging' : true,
+		'info' : false,
+		//"lengthMenu": [[10, 25, 50, -1], [10, 25, 50, "All"]],
+		'lengthChange' : false,   //可变分页组件
+		'pageLength' : 7,
+		'searching' : true,      //搜索栏，失效
+		'order' : [ [ 1, 'desc' ] ],
+		'rowCallback' : function(row, data, dataIndex) {
+			//获取行id
+			var rowId = data[0];
+			// 行已经在选择行的组里面
+			if ($.inArray(rowId, rows_selected) !== -1) {
+				$(row).find('input[type="checkbox"]').prop('checked', true);
+				$(row).addClass('selected');
+				
+			}
+		}
+	});
+	
+	
+
+	//扩展 工具按钮
+	new $.fn.dataTable.Buttons(table, {
+		buttons : buttonsActiondata
+	});
+
+	table.buttons(0, null).container().prependTo(table.table().container());
+
+	//处理 checkbox 点击事件
+	$('#user tbody').on('click', 'input[type="checkbox"]', function(e) {
+		var $row = $(this).closest('tr');
+
+		// 获取行数据
+		var data = table.row($row).data();
+
+		// 获取行id
+		var rowId = data[0];
+
+		// 
+		var index = $.inArray(rowId, rows_selected);
+
+		// If checkbox is checked and row ID is not in list of selected row IDs
+		if (this.checked && index === -1) {
+			rows_selected.push(rowId);
+
+			// Otherwise, if checkbox is not checked and row ID is in list of selected row IDs
+		} else if (!this.checked && index !== -1) {
+			rows_selected.splice(index, 1);
+		}
+
+		if (this.checked) {
+			$row.addClass('selected');
+		} else {
+			$row.removeClass('selected');
+		}
+
+		//更新表格选择状态
+		updateDataTableSelectAllCtrl(table);
+
+		e.stopPropagation();
+	});
+
+	// 处理表格单元格单击复选框 如果需要...
+	$('#user').on('click', 'tbody td, thead th:first-child', function(e) {
+		$(this).parent().find('input[type="checkbox"]').trigger('click');
+	});
+
+	// 表格全选
+	$('thead input[name="select_all"]', table.table().container()).on(
+			'click',
+			function(e) {
+				if (this.checked) {
+					$('#user tbody input[type="checkbox"]:not(:checked)')
+							.trigger('click');
+				} else {
+					$('#user tbody input[type="checkbox"]:checked').trigger(
+							'click');
+				}
+
+				e.stopPropagation();
+			});
+
+	// 
+	table.on('draw', function() {
+		updateDataTableSelectAllCtrl(table);
+	});
+	
+	setTimeout(function(){
+		
+		table.search('adn').draw();
+	},2000)
+
+	// Handle form submission event 
+	$('#frm-user').on(
+			'submit',
+			function(e) {
+				var form = this;
+
+				// Iterate over all selected checkboxes
+				$.each(rows_selected, function(index, rowId) {
+					// Create a hidden element 
+					$(form).append(
+							$('<input>').attr('type', 'hidden').attr('name',
+									'id[]').val(rowId));
+				});
+			});
+</script>
+
+<div class="box box-primary">
+ <div class="box-header with-border">
+  <div id="mainpanel" style="margin: 0px 0px 0px 0px;">
+   <div id="mapcontent" style="width: 100%;position: relative; height:480px;overflow:scroll">
+     <div id="btn_list"></div>
+	<!-- <table id="user" class="table table-bordered table-hover"></table> -->
+	<table id="user" class="table table-bordered table -striped"
+		cellspacing="0" width="100%">
+	</table>
+
+	</div>
+  </div>
+ </div>
+</div>
+
+

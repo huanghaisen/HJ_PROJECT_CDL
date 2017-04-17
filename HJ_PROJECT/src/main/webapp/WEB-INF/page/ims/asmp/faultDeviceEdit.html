@@ -1,0 +1,96 @@
+
+
+<!-- 用户编辑模态框 -->
+    <form class="form-horizontal"  method="post" name="form_imsFaultDeviceFunction" id="form_imsFaultDeviceFunction" action="${request.contextPath}/soa/asmp/faultDevice/datas/save">
+      <input type="hidden" id="id" name="id" value="${imsFaultDeviceFunction.id!}">
+      <input type="hidden" id="deviceFunctionId" name="deviceFunctionId" value="${imsFaultDeviceFunction.deviceFunctionId!}">
+      <input type="hidden" id="status" name="status" value="${imsFaultDeviceFunction.status!}">
+      <div class="modal-body">
+      <div class="form-group">
+      <div>
+      	<label for="exampleInputPassword1">设备用途：</label>
+        <input type="text" class="form-control" value="${imsFaultDeviceFunction.deviceFunctionName}" readonly>
+      </div>
+      
+      <div>
+      	<label for="exampleNickname1">报障级别：</label>
+           <select class="form-control" data-bv-field="country" id="gatherStatus" name="gatherStatus">
+  				
+   			</select>
+      </div>
+      
+      <div>
+      	<label for="exampleLoginName1" >开始时间：</label>
+          <div class="input-group">
+             <span style="position: relative; z-index: 1999;">
+                 <input class="form_datetime form-control" style="z-index: 1999; " id="starttime" name="starttime" type="text" readonly>
+             </span>
+             <span class="input-group-addon">
+                   <i class="fa fa-calendar"></i>
+              </span>
+          </div>
+      </div>
+      
+       <div>
+      	<label for="exampleLoginName1" >结束时间：</label>
+          <div class="input-group">
+             <span style="position: relative; z-index: 1999;">
+                 <input class="form_datetime form-control" style="z-index: 1999; " id="endtime" name="endtime" type="text" readonly>
+             </span>
+             <span class="input-group-addon">
+                   <i class="fa fa-calendar"></i>
+              </span>
+          </div>
+      </div> 
+      
+     </div>
+    </div>
+   </form>	
+   
+   <script>
+
+   $(document).ready(function() {
+	   var startTime = "${imsFaultDeviceFunction.startTime!}";
+	   var endTime = "${imsFaultDeviceFunction.endTime!}";
+	   $("#starttime").val(startTime);
+	   $("#endtime").val(endTime);
+	   LoadStartTimeDatepicker();
+	   LoadEndTimeDatepicker();
+	   var gatherStatus = "${imsFaultDeviceFunction.gatherStatus!}";
+	   var htmlList = '';
+	   for(var i=0;i<deviceFunction.length;i++){
+		   if(deviceFunction[i].id==gatherStatus){
+			   htmlList+='<option value="'+deviceFunction[i].id+'" selected>'+deviceFunction[i].nickName+'</option>';
+		   }else{
+			   htmlList+='<option value="'+deviceFunction[i].id+'">'+deviceFunction[i].nickName+'</option>';
+		   }
+	   }
+	   $("#gatherStatus").html(htmlList);
+   });
+   
+ 	//加载开始时间控件
+ 	function  LoadStartTimeDatepicker(){
+ 		 $('#starttime').datepicker({
+			  language:'zh-CN',
+			  format: 'yyyy-mm-dd',
+			  weekStart: 1,  
+		      autoclose: true,  
+		      forceParse: false 
+			  
+		  });
+ 	}
+
+
+ 	//加载结束时间控件
+   	function  LoadEndTimeDatepicker(){
+  		 $('#endtime').datepicker({
+			  language:'zh-CN',
+			  format: 'yyyy-mm-dd',
+			  weekStart: 1,  
+		      autoclose: true,  
+		      forceParse: false 
+			  
+		  });
+  	} 	
+   </script>
+   

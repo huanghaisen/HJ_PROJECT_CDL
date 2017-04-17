@@ -1,0 +1,329 @@
+
+<style>
+
+#example_wrapper { margin-top: 30px; }  
+#example_wrapper .btn-group .btn { margin-right: 15px; border-radius: 3px; color: #fff }
+.wb-col { float: left; width:60%; }
+.n-tect { float: left; line-height: 34px; }
+
+/* dataTables列内容居中 */
+.table>tbody>tr>td{
+        text-align:center;
+}
+
+/* dataTables表头居中 */
+.table>thead:first-child>tr:first-child>th{
+        text-align:center;
+}
+
+table.dataTable thead > tr > th{
+	padding-right: 0px;
+}
+.sdown { position: absolute; right:10px; top: 6px; }
+.pre { position: relative; }
+
+</style>
+
+<div class="box box-primary">
+<div class="box-body">
+<div class="box-body" style="width: 100%">
+  <div class="row">
+    
+    
+     <div class="col-xs-3">
+    <div class="input-group">
+      <span class="input-group-addon" id="sizing-addon2">选择地区</span>
+        <select id="distractId"  class="form-control select2" aria-describedby="sizing-addon2">
+        <option> <option>
+        </select>
+      </div>
+    </div>   
+    <div class="col-xs-1" style="width:100px;">      
+      <button type="button" class="btn btn-block btn-default" onclick="condictionsSearch()"><i class="fa fa-search"></i> 搜索</button>
+    </div>
+    
+    <div class="col-xs-1" style="width:100px;">      
+      <button type="button" class="btn btn-block btn-primary" onclick="emptyCondition()"><i class="fa fa-trash"></i> 清空</button>
+    </div>
+    <div class="col-xs-1" style="width:100px;">      
+      <button type="button" class="btn btn-success" onclick="add()"><i class="fa fa-plus-circle fz"></i> 新增</button>
+    </div>  
+    
+    
+  </div>
+  </div>
+<div id="theexampleArea">
+<table width="100%" class="table table-bordered table-striped" id="data_table"></table>
+</div>
+</div>
+</div>
+
+<script src="${request.contextPath}/lib/plugins/datatables/jquery.dataTables.min.js"></script>
+<script type="text/javascript" src="${request.contextPath}/js/Form_data_Submit.js"></script>
+<script src="${request.contextPath}/lib/plugins/select2/select2.full.min.js"></script>
+
+<script>
+var timer = null;
+        
+       
+var table=$('#data_table').DataTable({
+			    ajax: {
+					"url":contextPath+"/soa/assess/datas/search",
+					"type": "post",
+					"dataType":"json",
+					"data":function(d){
+						
+					}
+				},
+		        ordering: false,
+				info: false,
+				scrollX: false,
+				scrollY: '50vh',
+				processing: false,
+		        serverSide: true,
+				paging: true,
+				pageLength: 10,
+				pagingType: "full_numbers",//number simple simple_numbers full 默认full_numbers
+				lengthChange: false,   //可变分页组件,下行可规定显示页数，左边是定义，右边是页面显示的效果（如-1就是搜全部，但页面显示的选项是ALL）
+		        searching: false,
+			    columns: [
+					
+					{ 
+						title: '处理环节',
+						width:"15%",
+						align: 'center',
+	                    valign: 'middle',
+	                   	data: function(e){
+								return '<a href="#" onclick="show('+e.id+')">'+e.workStateName+'</a>';
+		                   	}
+						
+					},
+					{ 
+ 						title: '处理人员',
+						width:"10%",
+						align: 'center',
+	                    valign: 'middle',
+	                    data: 'creatName'
+					},
+					{ 
+ 						title: '处理时间',
+						width:"10%",
+						align: 'center',
+	                    valign: 'middle',
+	                    data: 'lastModifiedTime'
+					},
+					{
+						title: '所有地区',
+						width:"10%",
+						align: 'center',
+	                    valign: 'middle',
+	                    data: 'distractName'
+					},
+					{
+						title: '功能',
+						width:"10%",
+						data: function (e) {//这里给最后一列返回一个操作列表
+							//var a = e.roleSence;
+                       		return '<a class="btn btn-default btn-xs show-detail-json" onclick="edit('+e.id+')"><i class="icon-edit"></i>编辑</a> <a class="btn btn-default btn-xs show-detail-json" data-whatever='+e.id+'><i class="icon-edit"></i>删除</a>';
+                    	}
+					}
+			    ]
+			});
+//删除绩效规则
+$('#data_table').on('click','tbody td a[data-whatever]',function(e){
+	var objName = $(this).parent().parent().find('td').eq(0).find('a').html();
+	var ruleId = $(this).data('whatever');
+	//alert(ruleId);
+	var dia = dialog({
+        title:'提示',
+        content:'确认删除处理环节为：'+objName+' 的这条记录？',
+        okValue:'确认',
+        ok:function(){
+       	$.ajax({
+    		async: false,
+    		url:contextPath+"/soa/assess/datas/del",
+    		data: {"id":ruleId},
+    		type:"post",
+    		dataType:"json",
+    		success: function(result){
+    			if(result.status==0){
+    				var d = dialog({
+        				content : result.msg
+        			});
+        			d.show();
+        			setTimeout(function() {
+        				table.ajax.reload(null,false);
+        				d.close().remove();
+        			}, 2000);
+    			}else{
+    				var d = dialog({
+        				content : result.msg
+        			});
+        			d.show();
+        			setTimeout(function() {
+        				d.close().remove();
+        			}, 4000);
+    			}
+    		}
+    		});
+        },
+        cancelValue:'取消',
+        cancel:function(){
+       	 
+        }
+		
+	});
+	dia.showModal(); 
+});
+
+//编辑
+	function edit(id){
+		var data={"id":id};
+		post("/soa/assess/edit","html",data,function(obj){
+			var d = dialog({
+				title : '编辑绩效规则信息',
+				content :obj,					
+				width : 700,
+				okValue: '确定',
+				zIndex:1050,
+				ok :function() {
+					var num = -1;
+					this.title('正在提交..');
+					//遍历asmpAssessTimes的数量，从0开始，设置asmpAssessTimes[i]以便后台接收
+					$('#assessTimeTable').find('tr').each(function(index, el) {
+					      var data = {};
+					      var $this = $(this);
+					      var str = $(this).attr('data-name')
+					      if(str ==='asmpAssessTimes'){
+					    	  num++;
+					      }
+					      $this.find('input').each(function(index,el){
+					          var name = $(this).attr('data-name');
+					          if(name ==='timeDegree'){
+					        	  $(this).attr("name","asmpAssessTimes["+num+"].timeDegree");
+					          }else if(name ==='id'){
+					        	  $(this).attr("name","asmpAssessTimes["+num+"].id");
+					          }else if(name ==='timeScore'){
+					        	  $(this).attr("name","asmpAssessTimes["+num+"].timeScore");
+					          }
+					      });
+					    });
+
+					ajaxSubmit($('#form_submit')[0], function(data){
+						if(data.status==0){
+							var d = dialog({
+	    						content : data.msg
+	    					});
+	    						d.show();
+	    						setTimeout(function() {
+	    						d.close().remove();
+	    					}, 2000); 
+	    						table.ajax.reload(null,false);//刷新表格
+						}else{
+							var d = dialog({
+	    						content : data.msg
+	    					});
+	    						d.show();
+	    						setTimeout(function() {
+	    						d.close().remove();
+	    					}, 2000);
+						} 
+					});
+				 	cancel: false
+				}
+			});
+			d.showModal();
+		});
+}
+
+
+//查看
+function show(id){
+	var data={"id":id};
+	post("/soa/assess/show","html",data,function(obj){
+		var d = dialog({
+			title : '查看绩效规则信息',
+			content :obj,					
+			width : 700,
+			okValue: '确定',
+			zIndex:1050,
+			ok :function() {
+			 cancel: false
+			}
+		});
+		d.showModal();
+	});
+	}
+	
+//清空查询条件
+function emptyCondition(){
+	$("#distractId").select2('val',"");
+	condictionsSearch();
+}
+//条件查询配件数据
+function condictionsSearch(){
+	var partTypeId = $("#distractId").val();
+	var url=contextPath + "/soa/assess/datas/search";
+	//alert("partTypeId:"+partTypeId +" devicePartName"+devicePartName);
+    var data = {};
+	data.distractId = partTypeId;
+ 
+    table.settings()[0].ajax.url = url;   
+    table.settings()[0].ajax.data = {"params":data};
+    table.ajax.reload();
+  }
+
+
+var Url=contextPath+"/soa/asmp/datas/org4list";
+var Target="#distractId";
+Select(Url,Target);
+
+function Select(comboxUrl,SelectTarget){
+	$.ajax({
+ 	url:comboxUrl,    
+ 	type:"post",
+ 	dataType:"json",
+ 	data:{"oid":"3"},
+ 	async:false,
+ 	success: function(result){  		
+ 		//combxListData=result;
+ 		//alert(fs);
+ 		for(var i = 0;i<result.length;i++){    	
+ 			var $option = $('<option/>').attr('value',result[i].id).html(result[i].orgName);
+ 			$option.appendTo($(SelectTarget));
+ 		}
+
+ 		$(SelectTarget).select2({
+ 			placeholder: "请选择",
+ 			allowClear: false
+ 		}).change(function(){
+ 			//alert("callback2222")
+ 		});
+ 		    		
+ 	} 
+   });
+}
+//新增区域绩效规则
+ var that;//全局变量，缓存模态框对象
+function add(){
+	 post("/soa/assess/inst","html","",function(obj){
+		var d = dialog({
+			title : '新增绩效规则',
+			content :obj,					
+			width : 550,
+			height : 500,
+			okValue: '保存',
+			zIndex:1050,
+			ok :function() {
+				  that=this;
+				$('#form_submit').bootstrapValidator('validate');//在partEdit
+			
+				return false;
+				 	cancel: false 
+				}
+		   
+		});
+		d.showModal();
+	}); 
+}
+</script>

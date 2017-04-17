@@ -1,0 +1,432 @@
+
+
+<div class="box box-primary">
+	<div class="box-body">
+	  <!-- tool -->
+	  <!-- <div class="box-body">
+	  	<div class="row">
+						<div class="col-xs-4">
+							<button class="btn btn-success" id="add">
+							<i class="fa fa-plus-circle fz"></i> 新增</button>
+							<button class="btn btn-warning" id="edit">
+							<i class="glyphicon glyphicon-pencil"></i> 编辑</button>
+							<button class="btn btn-danger" id="del">
+							<i class="fa fa-trash"></i> 删除</button>
+						</div>
+			
+					</div>
+		</div> -->
+		<div class="box-header with-border">
+				  <div class="box-body" style="width: 100%">
+					<div class="row">
+						<#list btnlist as items>
+							<button class="${items.funcBg!}" id="${items.funcCode!}">
+							<i class="${items.funcIcon!}"></i> ${items.funcName!}</button>
+						
+						</#list>
+						
+					</div>
+				</div>	
+				</div>
+		
+		<!-- table -->
+		<div class="box-body id="theexampleArea">
+			<table width="100%" class="table table-bordered table-striped"
+				id="data_table"></table>
+		</div>
+		
+	</div>
+</div>
+
+<script src="${request.contextPath}/lib/plugins/datatables/jquery.dataTables.min.js"></script>
+<script type="text/javascript" src="${request.contextPath}/js/Form_data_Submit.js"></script>
+<script src="${request.contextPath}/lib/plugins/select2/select2.full.min.js"></script>
+
+<script>
+var timer = null;
+        
+       
+var table=$('#data_table').DataTable({
+			    ajax: {
+					"url":contextPath+"/soa/msg/template/datas/search",
+					"type": "post",
+					"dataType":"json",
+					"data":function(d){
+						
+					}
+				},
+				sPaginationType: "full_numbers",
+		        ordering: false,
+				info: false,
+				scrollX: false,
+				scrollY: '50vh',
+				processing: false,
+		        serverSide: true,
+				paging: true,
+				pageLength: 10,
+				pagingType: "full_numbers",//number simple simple_numbers full 默认full_numbers
+				lengthChange: false,   //可变分页组件,下行可规定显示页数，左边是定义，右边是页面显示的效果（如-1就是搜全部，但页面显示的选项是ALL）
+				//"lengthMenu": [[10, 25, 50, -1], [10, 25, 50, "All"]],
+
+		        searching: false,
+		        language: {
+		            sProcessing: "正在加载中......",
+		            sLengthMenu: "每页显示 _MENU_ 条记录",
+		            sInfo: "从 _START_ 到 _END_ /共 _TOTAL_ 条数据",
+		            sZeroRecords: "对不起，查询不到相关数据！",
+		            sEmptyTable: "表中无数据存在！",
+		            search: "查询:",
+		            paginate: {
+		               previous: "上一页",
+		               next: "下一页",
+		               first: "第一页",
+		               last: "最后一页"
+		            }
+		         },
+			    columns: [
+
+							{
+									title : '序号',
+									width : "5%",
+									data : function(e) {//这里给最后一列返回一个操作列表
+										return '<input type="checkbox" value="'+e.id+'">';
+									}
+
+								},
+								{
+									title : '消息模板名称',
+									width : "15%",
+									align : 'center',
+									valign : 'middle',
+									data : function(e) {
+										return '<a href="#" onclick="show('
+												+ e.id + ')">'
+												+ e.msgTemplateName + '</a>';
+									}
+
+								},
+								{
+									title : '消息类型',
+									width : "10%",
+									align : 'center',
+									valign : 'middle',
+									data : function(e) {
+										if (e.msgType == 1) {
+											return '手机通知';
+										} else {
+											return '短信';
+										}
+
+									}
+								},
+								{
+									title : '有效状态',
+									width : "10%",
+									data : function(e) {//这里给最后一列返回一个操作列表
+										if (e.status == 0) {
+											return '<a class="btn btn-default btn-xs show-detail-json" style="color:rgb(176, 219, 86);"  data-whatever='
+													+ e.id
+													+ ' onclick="status('
+													+ e.id
+													+ ')">有效 <i class="glyphicon glyphicon-retweet"></i></a>';
+										} else {
+											return '<a class="btn btn-default btn-xs show-detail-json" style="color:red;"  data-whatever='
+													+ e.id
+													+ ' onclick="status('
+													+ e.id
+													+ ')">无效 <i class="glyphicon glyphicon-retweet"></i></a>';
+										}
+
+									}
+								},
+								{
+									title : '模板描述',
+									width : "30%",
+									data : 'remark',
+									align : 'center',
+									valign : 'middle'
+								} ]
+					});
+
+	//修改状态
+	function status(id) {
+		var data = {
+			"id" : id
+		}
+		$.ajax({
+			url : contextPath + "/soa/msg/template/datas/status",
+			data : data,
+			type : "post",
+			dataType : "json",
+			async : false,
+			success : function(result) {
+				if (result.status == 0) {
+					table.ajax.reload(null, false);
+				}else{
+					var d = dialog({
+						title : '提示',
+						content : result.msg
+					});
+					d.show();
+					setTimeout(function() {
+						d.close().remove();
+					}, 2000);
+				}
+			}
+		});
+	}
+
+	//查看消息模板信息
+	function show(id) {
+		var data = {
+			"id" : id
+		};
+		post("/soa/msg/template/show", "html", data, function(obj) {
+			var d = dialog({
+				title : '查看消息模板信息',
+				content : obj,
+				width : 550,
+				okValue : '确定',
+				zIndex : 999999,
+				ok : function() {
+					cancel: false
+				}
+			});
+			d.showModal();
+		});
+	}
+
+
+
+	//操作方法
+	$(function(){
+
+		//新增
+		$('#add').on('click',function(){
+			post("/soa/msg/template/add", "html", "", function(obj) {
+				//console.log(obj);
+				var d = dialog({
+					title : '新增信息模板',
+					content : obj,
+					width : 700,
+					okValue : '保存',
+					zIndex : 1050,
+					ok : function() {
+						var window = this;
+						this.title('正在提交..');
+						ajaxSubmit($('#form_submit')[0], function(data) {
+							//alert(data);
+						});
+
+						//table.ajax.reload(null,false);//刷新datatable页面  table对应建表的var 命名
+
+						setTimeout(function() {
+							DTrefresh();
+							window.close().remove();
+						}, 100);
+						return false;
+						cancel: false
+					},
+					cancelValue : '取消',
+					cancel : function() {
+					}
+				});
+				d.showModal();
+			});
+    		
+    	});
+    	
+
+		//编辑
+    	$('#edit').on('click',function(){
+    		var $table = table.table().node();
+    		var $chkbox_all = $('tbody input[type="checkbox"]', $table);
+    		var $chkbox_checked = $('tbody input[type="checkbox"]:checked', $table);
+    		if ($chkbox_checked.length < 1) {
+    			var d = dialog({
+    				title : '提示',
+    				content : '请勾选要修改的记录！'
+    			});
+    			d.show();
+    			setTimeout(function() {
+    				d.close().remove();
+    			}, 2000);
+    		} else if ($chkbox_checked.length > 1) {
+    			var d = dialog({
+    				title : '提示',
+    				content : '请不要勾选多条记录修改！'
+    			});
+    			d.show();
+    			setTimeout(function() {
+    				d.close().remove();
+    			}, 2000);
+    		} else {
+    			var data = {
+    				"id" : $chkbox_checked.val()
+    			};
+    			var id = $chkbox_checked.val();
+    			post("/soa/msg/template/edit", "html", data, function(obj) {
+    				var d = dialog({
+    					title : '编辑消息模板信息',
+    					content : obj,
+    					width : 700,
+    					okValue : '保存',
+    					zIndex : 999999,
+    					ok : function() {
+    						this.title('正在提交..');
+    						ajaxSubmit($('#form_submit')[0], function(data) {
+    							if (data.status == 0) {
+    								var d = dialog({
+    									content : data.msg
+    								});
+    								d.show();
+    								setTimeout(function() {
+    									d.close().remove();
+    								}, 2000);
+    								table.ajax.reload(null, false);//刷新表格
+    							} else {
+    								var d = dialog({
+    									content : data.msg
+    								});
+    								d.show();
+    								setTimeout(function() {
+    									d.close().remove();
+    								}, 2000);
+    							}
+    						});
+    						cancel: false
+    					},
+    					cancelValue : '取消',
+    					cancel : function() {
+    					}
+    				});
+    				d.showModal();
+    			});
+    		}
+
+        });
+
+
+    	//删除
+        $('#del').on('click',function(){
+        	var $table = table.table().node();
+
+    		var $chkbox_all = $('tbody input[type="checkbox"]', $table);
+    		var $chkbox_checked = $('tbody input[type="checkbox"]:checked', $table);
+
+    		var name = $chkbox_checked.parent().parent().find('td').eq(1).html();
+
+    		var data = {
+    			"id" : $chkbox_checked.val()
+    		};
+    		var id = $chkbox_checked.val();
+
+    		if ($chkbox_checked.length < 1) {
+    			var t = dialog({
+    				title : '提示',
+    				content : '请勾选要删除的记录！'
+    			});
+    			t.show();
+    			setTimeout(function() {
+    				t.close().remove();
+    			}, 2000);
+    		} else if ($chkbox_checked.length > 1) {
+    			var t = dialog({
+    				title : '提示',
+    				content : '暂无删除多条记录权限'
+    			});
+    			t.show();
+    			setTimeout(function() {
+    				t.close().remove();
+    			}, 2000);
+    		} else {
+    			//alert(id);//测试可拿到id
+    			var d = dialog({
+
+    				title : '提示',
+    				content : '确认删除昵称为：' + name + ' 的这条记录？',
+    				okValue : '确认',
+    				ok : function() {
+    					var that = this;
+    					var url = '/soa/msg/template/datas/del';
+    					delTemplate(id, url);
+    					setTimeout(function() {
+    						table.ajax.reload(null, false);
+    						that.close().remove();
+    					}, 100);
+    				},
+    				cancelValue : '取消',
+    				cancel : function() {
+
+    				}
+
+    			});
+    			d.showModal();
+    		}
+
+        });
+
+	});
+
+	//刷新数据
+	function DTrefresh() {
+		var url = contextPath + "/soa/msg/template/datas/search";
+		var data = {};
+		table.settings()[0].ajax.url = url;
+		table.settings()[0].ajax.data = {
+			"params" : data
+		};
+		setTimeout(function() {
+			table.ajax.reload();
+		}, 200);
+	}
+
+	function delTemplate(id, url) {
+		var id = {
+			"id" : id
+		};
+		$.ajax({
+			url : contextPath + url,
+			type : "post",
+			data : id,
+			dataType : "json",
+			async : false,
+			success : function(result) {
+				var t = dialog({
+					title : '提示',
+					content : result.msg
+				});
+				t.show();
+				setTimeout(function() {
+					t.close().remove();
+				}, 2000);
+			}
+		});
+	}
+</script>
+
+
+<style>
+
+#example_wrapper { margin-top: 30px; }  
+#example_wrapper .btn-group .btn { margin-right: 15px; border-radius: 3px; color: #fff }
+.wb-col { float: left; width:60%; }
+.n-tect { float: left; line-height: 34px; }
+
+/* dataTables列内容居中 */
+.table>tbody>tr>td{
+        text-align:center;
+}
+
+/* dataTables表头居中 */
+.table>thead:first-child>tr:first-child>th{
+        text-align:center;
+}
+
+table.dataTable thead > tr > th{
+	padding-right: 0px;
+}
+.sdown { position: absolute; right:10px; top: 6px; }
+.pre { position: relative; }
+
+</style>

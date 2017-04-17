@@ -1,0 +1,675 @@
+<!-- 以前的 -->
+<link rel="stylesheet" href="${request.contextPath}/lib/plugins/datepicker/datepicker3.css">
+<!-- 机构可搜索下拉框 -->
+ <link rel="stylesheet" href="${request.contextPath}/lib/plugins/select2/select2.min.css">
+ <link rel="stylesheet" href="${request.contextPath}/lib/plugins/datatables/extensions/TableTools/css/dataTables.tableTools.css">
+ <link rel="stylesheet" href="${request.contextPath}/lib/plugins/datatables/dataTables.bootstrap.css">
+ <link rel="stylesheet" href="${request.contextPath}/lib/plugins/zTree3/css/zTreeStyle/zTreeStyle.css">
+ <!-- DT row打开详情，及浮动黑框样式 -->
+ <link rel="stylesheet" href="${request.contextPath}/lib/asmpWorkCss/childRow.css">
+ <!-- ZtreeInput组件内的li样式 -->
+ <link rel="stylesheet" href="${request.contextPath}/lib/asmpWorkCss/ZtreeInput.css">
+<style>
+  .wb-col { float: left; width:150px; }
+  .box-col {float: left; width:245px; padding:0 5px}
+  .n-tect { float: left; line-height: 34px; width:80px; } 
+  .pre { position: relative; }  
+  .select2-container--default .select2-selection--single {border-radius:0}
+  .select2-container .select2-selection--single {height:34px}  
+  .w1 {width: 160px; text-align: center; }   
+</style>
+
+<div class="box box-primary">
+ <div class="box-header with-border">
+
+<!-- --------------------------第一排，，，全局搜索框--------------------------------------------------------- -->
+  
+  <div class="box-body" style="width: 100%">
+    <div class="box-body">
+     <div class="row">
+      <div class="col-sm-3 col-xs-6">
+        
+                  
+       <div class="box-body" style="width: 100%">
+        <div class="row"> 
+                   
+         <div class="box-col"> 
+         <label class="n-tect">机构</label>
+          <div class="wb-col pre">  
+           <input type="text" class="form-control" placeholder=""  id="orgTreeInput">
+           <div class="zTreeDemo" id="orgTreeDiv">
+           <ul id="orgTreeUl" class="ztree"></ul>
+           </div> 
+          </div>
+         </div>
+
+         </div>
+                    
+         <div class="row"> 
+                    
+          <div class="box-col">
+           <label class="n-tect">型号</label>
+           <div class="wb-col pre">  
+            <input type="text" class="form-control" placeholder=""  id="inputTree">
+            <div class="zTreeDemo" id="zTreeDemo">
+            <ul id="treeDemo" class="ztree"></ul>
+            </div> 
+           </div>
+          </div>
+                  
+         </div>         
+                   
+        
+       </div>
+      </div>
+      <!-- /.col-sm-3区域 1-->
+
+      <div class="col-sm-3 col-xs-6">
+        
+                  
+       <div class="box-body" style="width: 100%">
+        <div class="row"> 
+                   
+           <div class="box-col">
+            <label class="n-tect">状态</label>
+            <div class="wb-col pre">  
+            <select id="deviceStatus" class="js-example-placeholder-single form-control select2 ">
+             <option ></option>
+             <option value="0">未安装</option>
+             <option value="1">上线</option>
+             <option value="2">禁用</option>
+            </select>
+            </div>
+           </div>
+
+         </div>
+                    
+         <div class="row"> 
+                    
+         <div class="box-col">
+          <label class="n-tect">设备用途</label>
+          <div class="wb-col pre">  
+          <select id="DFSelect" class="js-example-placeholder-single form-control select2 ">
+           <option ></option>
+          </select>
+          </div>
+         </div>
+                  
+         </div>         
+                   
+         
+       </div>
+      </div>
+      <!-- /.col-sm-3区域 2-->
+      <div class="col-sm-3 col-xs-6">
+        
+                  
+         <div class="box-body" style="width: 100%">
+           <div class="row"> 
+                   
+             <div class="box-col">
+              <label class="n-tect">出厂编码</label>
+              <div class="wb-col pre"> 
+                <input id="factoryCode" type="text" name="factoryCode" class="form-control">
+              </div>
+             </div>
+                   
+                  
+            </div>
+            
+            <div class="row">  
+    
+           <div class="box-col">
+           <label class="n-tect">维保厂商</label>
+            <div class="wb-col pre">  
+            <select id="MaintenanceSelect" class="js-example-placeholder-single form-control select2 ">
+             <option ></option>
+            </select>
+            </div>
+           </div>  
+
+          </div>
+            
+           </div>
+           </div>
+           <!-- /.col-sm-3区域 3-->
+           
+           <div class="col-sm-3 col-xs-6">
+        
+                  
+         <div class="box-body" style="width: 100%">
+            <div class="row">  
+    
+           <div class="box-col">
+             <label class="n-tect">设备编号</label>
+             <div class="wb-col"> 
+             <input id="deviceCode" type="text" name="deviceCode" class="form-control">
+             </div>
+            </div>  
+
+          </div>
+            
+          
+            
+           </div>
+           </div>
+           <!-- /.col-sm-3区域 4-->
+           
+         </div>
+         <!-- /.row -->
+        </div>
+   <!--------------------- 按钮区域------------------------------ -->
+	<div class="box-header with-border">
+		<div class="box-body" style="width: 100%">
+			<div class="row">
+				<#list btnlist as items>
+					<button class="${items.funcBg!}" id="${items.funcCode!}">
+					<i class="${items.funcIcon!}"></i> ${items.funcName!}</button>
+						
+				</#list>
+				<button type="button" class="btn btn-default" onclick="searchDeivce()"><i class="fa fa-search"></i> 搜索</button>
+                <button type="button" class="btn btn-default" onclick="emptyCondition()"><i class="fa fa-trash"></i> 清空</button>
+			</div>
+		</div>	
+	</div>	
+   <!-----------------------------DT主体------------------- --> 
+  <div class="box-body" id="tableBody">
+  <div class="row"></div>
+	<table id="deviceInfo" class="table table-bordered table-striped table-hover"
+		cellspacing="0" width="100%">
+	</table>
+      </div>
+   
+  </div>
+  	
+  </div>
+</div>
+<!-- 表单公用部分 -->
+<script type="text/javascript"src="${request.contextPath}/js/aboutForm.js"></script>
+<!-- Select2 -->
+<script src="${request.contextPath}/lib/plugins/select2/select2.full.min.js"></script>
+<!-- 设备相关 -->
+<script src="${request.contextPath}/lib/plugins/datatables/extensions/TableTools/js/dataTables.tableTools.js"></script>
+<script type="text/javascript"src="${request.contextPath}/js/ims/devices/device_info_tableCreation.js"></script>
+
+<!-- 下拉树 -->
+<script src="${request.contextPath}/lib/plugins/zTree3/js/jquery.ztree.core.js"></script>
+<script src="${request.contextPath}/lib/plugins/zTree3/js/jquery.ztree.excheck.js"></script>
+<script src="${request.contextPath}/lib/plugins/zTree3/js/jquery.ztree.exedit.js"></script>
+<script src="${request.contextPath}/js/ims/devices/orgTree.js"></script>
+
+<script>
+  
+  var curMenu = null, zTree_Menu = null;
+    var setting = {
+      view: {
+        showLine: false,
+        showIcon: false,
+        selectedMulti: false,
+        dblClickExpand: false,
+        addDiyDom: addDiyDom
+      },
+      data: {
+        simpleData: {
+          enable: true
+        }
+      },
+      callback: {
+        beforeClick: beforeClick,
+        onClick:zTreeOnClick
+      }
+    };
+
+    var zNodes =[];
+    
+    $.ajax({
+  	  type:"post",
+  	  data:"json",
+  	  url:contextPath+"/soa/device/model/datas/findAll",
+  	  async:false,
+  	  success:function (result){
+  		  var newResult=[];
+  		  for(var i=0;i<result.length;i++){
+  			  newResult.push({"id":result[i].id,"pId":result[i].parentId,"name":result[i].deviceModelName});
+  			  }
+  		   zNodes=newResult;	  
+  		  }
+  		  
+    });
+    
+    function addDiyDom(treeId, treeNode) {
+      var spaceWidth = 10;
+      var switchObj = $("#" + treeNode.tId + "_switch"),
+      icoObj = $("#" + treeNode.tId + "_ico");
+      
+      switchObj.remove();
+      icoObj.before(switchObj);
+
+      if (treeNode.level > 0) {
+        var spaceStr = "<span style='display: inline-block;width:" + (spaceWidth * treeNode.level)+ "px'></span>";
+        switchObj.before(spaceStr);
+      } 
+      
+    }
+
+    function beforeClick(treeId, treeNode) {
+      // if (treeNode.level == 0 ) {
+      //   var zTree = $.fn.zTree.getZTreeObj("treeDemo");
+      //   zTree.expandNode(treeNode);
+      //   return false;
+      // }
+      return true;
+    }
+    
+    function zTreeOnClick(event, treeId, treeNode) {
+      $('#inputTree').val(treeNode.name).attr('data_id',treeNode.id).attr('pId',treeNode.pId);
+      //console.log(treeNode);
+      
+    };
+   
+    var thewidth = $('#inputTree').width();
+
+    $('#zTreeDemo').css({width:thewidth+'px'});
+
+    var treeObj = $("#treeDemo");
+    $.fn.zTree.init(treeObj, setting, zNodes);
+    zTree_Menu = $.fn.zTree.getZTreeObj("treeDemo");
+    // curMenu = zTree_Menu.getNodes()[0].children[0].children[0];
+    // zTree_Menu.selectNode(curMenu);
+
+    treeObj.hover(function () {
+      if (!treeObj.hasClass("showIcon")) {
+        treeObj.addClass("showIcon");
+      }
+    }, function() {
+      treeObj.removeClass("showIcon");
+    });
+
+
+    $('#inputTree').on('mouseover',function(){
+
+      var width = $(this).outerWidth();
+      var left = $(this).position().left;
+
+      $('#zTreeDemo').css({width:width+'px',left:left}).show();
+
+    });
+
+    $('#inputTree').parent().on('mouseleave',function(){
+
+        $('#zTreeDemo').hide();
+
+    });
+    
+
+    $('#zTreeDemo').mouseleave(function(event) {
+      $(this).hide();
+    });;
+    
+
+</script>
+
+
+<script>
+   
+	function searchDeivce(){
+	    var depath=$("#orgTreeInput").attr("depath");
+		var orgId=$("#orgTreeInput").attr("data_id");
+		var deviceModel=$("#inputTree").attr("data_id");
+		var deviceCode=$("#deviceCode").val();
+		var deviceStatus=$("#deviceStatus").val();
+		//新需求
+		 var factoryCode=$("#factoryCode").val();
+		 var MaintenanceId=$("#MaintenanceSelect").val();
+		 var deivceFunctionId=$("#DFSelect").val();
+		
+		
+    	   var url=contextPath + "/soa/device/info/datas/search";
+           var params = {};
+           if(deviceStatus!=""){
+        	   if(depath==2){
+        		   params.cityId = orgId;
+        	   }else if(depath==3){
+        		   params.districtId = orgId;  	  
+        	   }else if(depath==4){
+        		   params.orgId = orgId;
+        	   }  
+        	   params.deviceModelId=deviceModel;
+               params.deviceCode= deviceCode;
+               params.deviceStatus= deviceStatus; 
+               
+               params.factoryCode=factoryCode;
+               params.MaintenanceId=MaintenanceId;
+               params.deivceFunctionId=deivceFunctionId;
+               
+           }else{
+        	   if(depath==2){
+        		   params.cityId = orgId;
+        	   }else if(depath==3){
+        		   params.districtId = orgId;  	  
+        	   }else if(depath==4){
+        		   params.orgId = orgId;
+        	   }    
+        	   params.deviceModelId=deviceModel;
+               params.deviceCode= deviceCode; 
+               
+               params.factoryCode=factoryCode;
+               params.MaintenanceId=MaintenanceId;
+               params.deivceFunctionId=deivceFunctionId;
+           }
+           console.log(params);
+           refreshData(url,params);
+        //延时加载   
+        setTimeout(function() {
+			table.ajax.reload();			
+		}, 50);
+	
+}	
+
+	//清空查询条件
+	function emptyCondition(){
+		$("#orgTreeInput").val(null).trigger("change");
+		$("#inputTree").val(null).trigger("change");
+		$("#deviceStatus").val(null).trigger("change");
+		$("#deviceCode").val(null);
+		$("#factoryCode").val(null);
+		$("#MaintenanceSelect").val(null).trigger("change");
+		$("#DFSelect").val(null).trigger("change");
+		
+		searchDeivce();
+	}
+	
+	
+	$(".form_datetime").datepicker({language:"zh-CN",format: 'yyyy-mm-dd'});
+	
+	//机构下拉框 js
+//	var orgUrl=contextPath+"/soa/asmp/datas/org4list";
+//	var orgTarget="#orgSelect";
+//	var model="#msOrg";
+	//营业厅下拉框
+//	orgSelect(orgUrl,orgTarget);
+	
+	$("#deviceStatus").select2({
+			placeholder: "请选择",
+			allowClear: false
+		});
+	
+	//设备用途下拉框
+	
+	var deviceFuntionUrl=contextPath+"/soa/device/function/datas/search";
+	var DFTarget="#DFSelect"
+		DFSelect(deviceFuntionUrl,DFTarget);
+	
+		function DFSelect(comboxUrl,SelectTarget){
+		$.ajax({
+	   	url:comboxUrl,    
+	   	type:"post",
+	   	dataType:"json",
+	   	async:false,
+	   	success: function(obj){  		
+	   		var result=obj.data;
+	   		for(var i = 0;i<result.length;i++){    	
+	   			var $option = $('<option/>').attr('value',result[i].id).html(result[i].deviceFunctionName);
+	   			$option.appendTo($(SelectTarget));
+	   		}
+
+	   		$(SelectTarget).select2({
+	   			placeholder: "请选择",
+	   			allowClear: false
+	   		}).change(function(){
+	   			//alert("callback2222")
+	   		});
+	   		    		
+	   	} 
+	     });
+	}
+		
+		
+	 	//维保厂商下拉框
+	 	var maintenancelUrl=contextPath+"/soa/device/info/datas/maintenanceCombox";
+	 	var maintenanceSel="#MaintenanceSelect";
+	 	manufSelect(maintenancelUrl,maintenanceSel);
+	 	
+	// 	var maintenanceSelVal=$("#maintenanceId").val();
+	// 	if(maintenanceSelVal!=null&&maintenanceSelVal!=""){
+	// 		$("#maintenanceSel").val(maintenanceSelVal).trigger("change");
+	// 	}
+	 	
+	 	//厂商下拉框
+	 	function manufSelect(comboxUrl,SelectTarget){
+	 		$.ajax({
+	 	   	url:comboxUrl,    
+	 	   	type:"post",
+	 	   	dataType:"json",
+	 	   	async:false,
+	 	   	success: function(result){ 
+	 	   		for(var i = 0;i<result.length;i++){    	
+	 	   			var $option = $('<option/>').attr('value',result[i].id).html(result[i].manufName);
+	 	   			$option.appendTo($(SelectTarget));
+	 	   		}
+
+	 	   		$(SelectTarget).select2({
+	 	   			placeholder: "请选择",
+	 	   			allowClear: false
+	 	   		}).change(function(){
+	 	   		//var selectedValue=$(SelectTarget).val();
+	   		    //$(inputTarget).val(selectedValue);
+	 	   		});
+	 	   		    		
+	 	   	    } 
+	 	     });
+	 	}
+
+
+
+
+	 	var that;//全局变量，用来缓存	dialog 对象
+		//操作方法
+    	$(function(){
+
+    		
+    		//新增
+    		$('#add').on('click',function(){
+    			post("/soa/device/info/inst","html","",function(obj){
+    				console.log(obj);
+    				var d = dialog({
+    					title : '新增设备',
+    					content :obj,					
+    					width : 550,
+    					height : 500,
+    					okValue: '保存',
+    					zIndex:1050,
+    					ok : 
+    						function() {
+    						that = this;
+    						$('#form_submit').bootstrapValidator('validate');
+    						/* this.title('正在提交..');
+    						ajaxSubmit($('#form_submit')[0], function(obj){
+    							
+    							
+    				        }); */
+    						/* var x = dialog({
+    			                title:'提示',
+    			                content:"操作成功!"					
+    						});	
+    											
+    						x.show();
+    						setTimeout(function() {
+    							x.close().remove();
+    							DTrefresh();
+    							that.close().remove();
+    						}, 2000); */
+    						return false;
+    					 cancel: false
+    					},
+    			     cancelValue:'取消',
+    				 cancel: function() {
+    				  }
+    				});
+    				d.showModal();
+    			});
+        		
+        	});
+
+
+    		//编辑
+    		$('#edit').on('click',function(){
+    			var $table = table.table().node();
+    			var $chkbox_all = $('tbody input[type="checkbox"]', $table);
+    			var $chkbox_checked = $('tbody input[type="checkbox"]:checked', $table);
+    			if($chkbox_checked.length<1){
+    				var d = dialog({
+    					title:'提示',
+    					content : '请勾选要修改的记录！'
+    				});
+    				d.show();
+    				setTimeout(function() {
+    					d.close().remove();
+    				}, 2000);
+    			}else
+    			if($chkbox_checked.length>1){
+    				var d = dialog({
+    					title:'提示',
+    					content : '请不要勾选多条记录修改！'
+    				});
+    				d.show();
+    				setTimeout(function() {
+    					d.close().remove();
+    				}, 2000);
+    			}else{
+    				var data={"id":$chkbox_checked.val()};
+    				var id=$chkbox_checked.val();
+    				post("/soa/device/info/edit","html",data,function(obj){
+    					//console.log(obj);
+    					var d = dialog({
+    						title : '修改设备信息',
+    						content :obj,					
+    						width : 550,
+    						height : 500,
+    						okValue: '保存',
+    						zIndex:1020,
+    						ok :function() {
+    							 that = this;
+    							$('#form_submit').bootstrapValidator('validate');
+    							
+    							/* var x = dialog({
+    				                title:'提示',
+    				                content:"操作成功!"					
+    							});	
+    												
+    							x.show();
+    							setTimeout(function() {
+    								x.close().remove();
+    								DTrefresh();
+    								that.close().remove();
+    							}, 2000); */
+    		                    return false;
+    						},
+    				     cancelValue:'取消',
+    					 cancel: function() {
+    						 
+    					  }
+    					});
+    					d.showModal();
+    				});
+    			  }	
+
+            });
+
+            //删除
+            $('#del').on('click',function(){
+            	var $table = table.table().node();
+        		var $chkbox_all = $('tbody input[type="checkbox"]', $table);
+        		var $chkbox_checked = $('tbody input[type="checkbox"]:checked', $table);
+        		
+        		var data={"id":$chkbox_checked.val()};
+        		var objName=$chkbox_checked.parent().parent().find("td").eq(1).html();
+        		var id=$chkbox_checked.val();
+        		
+        		if($chkbox_checked.length<1){
+        		var t = dialog({
+        			title:'提示',
+        			content : '请勾选要删除的记录！'
+        		});
+        		t.show();
+        		setTimeout(function() {
+        			t.close().remove();
+        		}, 2000);
+        	    }else if($chkbox_checked.length>1){
+        			var t = dialog({
+        				title:'提示',
+        				content : '暂无删除多条记录权限'
+        			});
+        			t.show();
+        			setTimeout(function() {
+        				t.close().remove();
+        			}, 2000);
+        		    }else{
+        			//alert(id);//测试可拿到id
+        			var d = dialog({
+                         title:'提示',
+                         content:'确认删除设备编号为：'+objName+' 的这条记录？',
+                         okValue:'确认',
+                         ok:function(){
+                        	 var that=this;
+                        	 var url='/soa/device/info/datas/del';
+                        	 delObject(id,url);
+                        	 
+         					var x = dialog({
+        		                title:'提示',
+        		                content:"操作成功!"					
+        					});	
+        										
+        					x.show();
+        					setTimeout(function() {
+        						x.close().remove();
+        						DTrefresh();
+        						that.close().remove();
+        					}, 2000);
+                        	               	
+                         },
+                         cancelValue:'取消',
+                         cancel:function(){
+                        	 
+                         }				
+        			});
+        			d.showModal();	
+        	    }
+            });
+
+            //导出
+            $('#export').on('click',function(){
+            	location.href =contextPath+'/soa/device/info/importexcel';//主要是这一句
+
+            });
+            
+            //生成二维码
+            $('#qrcode').on('click',function(){
+            	var ids=[];
+   			 $("input[name='device_ids']:checked").each(function(){
+   	    	    	ids.push($(this).val());
+   	    	    });
+   			 if(ids.length==0){
+   				 var t = dialog({
+   						title:'提示',
+   						content : '选择需要打印的设备项！'
+   					});
+   					t.show();
+   					setTimeout(function() {
+   						t.close().remove();
+   					}, 2000);
+   			 }else{
+   				 openwindows("/soa/device/info/qrcode?ids="+ids,"qrcode");
+   			 }
+
+                
+            });
+       
+
+    	});
+	
+	 
+</script>
+
+
+

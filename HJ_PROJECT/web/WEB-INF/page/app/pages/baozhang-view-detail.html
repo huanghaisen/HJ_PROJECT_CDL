@@ -1,0 +1,148 @@
+  <style>
+    .pzbtnarea { background: #666; width: 80%; height:60px; padding:10px 0 0 0;  margin: 0 auto; color: #fff; }
+    .thecamera { display: block; width: 20px; height: 20px; margin:0 auto; border-radius:50%; text-align: center}
+    .pzinput { opacity:0; position: absolute; left: 0; top: 0; width: 100%; height: 100% }
+    .lblist { margin-top: 10px; }
+    .lblist > span { display: inline-block; padding:5px; margin-bottom:10px; }
+  </style>
+<div class="mainpage">
+  <div class="topnavbar">
+    <a href="#" class="topnav-back"><i class="fa fa-fw fa-angle-left"></i></a> 
+    <span class="topnav-check"><i class="fa fa-fw fa-check"></i></span>
+    <div class="topnavtitle">报障</div>
+       
+    
+  </div>
+ <div class="mainpagecontent">
+  <section class="m-content">
+    <div class="mbox bor-b">
+      <div class="row">
+       <!-- 
+        <div class="col-xs-4">          
+           <div class="pzbtnarea">
+            <span class="thecamera"><i class="fa fa-camera"></i></span>
+            <p class="text-center">选择图片</p>
+            <input type="file" name="pzimg" class="pzinput" multiple="multiple"  id="uploadFile"/>
+           </div>           
+        </div>
+         -->
+        <div class="col-xs-6" id="deviceDiv" deviceId=${device.id!} orgId=${device.orgId!}>
+          <p>设备编号：${device.deviceCode!}</p>
+          <p>设备类型：${device.deviceTypeName!}</p>
+          <p>设备用途：${device.deviceFuctionName!}</p>
+        </div>
+        <div class="col-xs-4"/>  
+        <div class="col-xs-2" >
+          <i class="fa fa-list-ul pull-right text-aqua mt10" id="moreInfo" data-pageview="${request.contextPath}/soa/webapp/addWorkDeviceInfo"></i>
+        </div>
+      </div>
+    </div> 
+    <div class="mbox mt10 bor-b">
+      <p><b>故障现象</b></p>
+      <div class="lblist" id="lblist">
+        <!-- <button type="button" class="btn btn-block btn-default"><i class="fa fa-plus-circle fz"></i> 查询</button> -->
+        <!-- 这块内容初始化生成,仅留一个例子在下面 -->
+        <span class="label label-default">金属键盘损坏</span>
+        
+      </div>
+    </div>
+    <div class="mbox mt10 bor-b">
+      <p><b>故障描述</b></p>
+      <textarea class="form-control" rows="3" id="modelFaultRemark" placeholder="请填写故障描述"></textarea>
+    </div>
+     
+     
+
+  </section>
+</div> 
+</div>
+<script src="${request.contextPath}/lib/webuploader-0.1.5/webuploader.min.js"></script> 
+<script>
+  app.currentCompleted = true;//开启返回事件
+  var deviceId=$("#deviceDiv").attr("deviceId");
+  $('#moreInfo').attr('data-pageview',"${request.contextPath}/soa/webapp/addWorkDeviceInfo?deviceId="+deviceId)
+  
+  $('.topnav-check').click(function(){
+	  var btns=[];//故障现象id数组
+	  $('#lblist').find(".label-danger").each(function(){
+		    btns.push($(this).attr('value'));	   
+	  });
+	  var faultList=btns.join(",");//写入表的故障现象id集
+	  var deviceId=$("#deviceDiv").attr("deviceId");
+	  var orgId=$("#deviceDiv").attr("orgId");
+	  var remark=$("#modelFaultRemark").val();
+      var work={                       //请求参数(不包含上传模块)
+          	"modelFaultList":faultList,
+          	"orgId":orgId ,
+          	"deviceId":deviceId ,
+          	"modelFaultRemark":remark 
+            };
+      
+      app.currentCompleted = false;//开启返回事件
+      $.ajax({
+		   	url:contextPath+"/soa/asmp/asmpWork/addWork",    
+		   	type:"post",
+		   	dataType:"json",
+		   	data: work,
+		   	success: function(result){ 
+		   		var d = dialog({
+					title:'提示',
+					zIndex:1080,
+					content : result.msg
+				});
+		   		
+				d.show();
+				setTimeout(function() {
+					d.remove();
+					app.currentCompleted = true;
+					app.goback();
+				}, 1500);	   		
+		   	   } 
+		     });
+      
+      
+  });
+  
+  //上传事件
+  $('#btnfile').click(function(){
+	 alert("上传事件没做");
+  });
+  
+
+  
+//=============================================分割线===========以下是故障现象数据及页面事件==================
+  $(function(){
+	  
+	  var deviceId=$("#deviceDiv").attr("deviceId");
+	  //alert(deviceId);
+	  $.ajax({
+		   	url:contextPath+"/soa/asmp/datas/DModelFaultList",    
+		   	type:"post",
+		   	dataType:"json",
+		   	data:{"id":deviceId},
+		   	success: function(result){ 
+		   		var html='';
+		   		//console.log(result);
+		   		for(var i=0;i<result.length;i++){		   			
+		   			html +='<span class="label label-default" value='+result[i].id+'>'+result[i].modelFaultName+'</span> ';
+		   		}
+		   		$("#lblist").html(html);
+		   		
+		   	} 
+		  });
+
+    $('#lblist').delegate('.label','click',function(){
+      if($(this).hasClass('label-danger')){
+        $(this).removeClass('label-danger').addClass('label-default');
+        if($(this).find('.fa-check').length>0){
+          $(this).find('.fa-check').remove();
+        }
+      }else{
+        $(this).prepend('<i class="fa fa-check"></i>').removeClass('label-default').addClass('label-danger');
+      }
+    });
+
+  });
+
+</script>
+

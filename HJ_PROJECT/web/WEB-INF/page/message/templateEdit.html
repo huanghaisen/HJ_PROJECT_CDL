@@ -1,0 +1,87 @@
+<form class="form-horizontal" method="post" name="form_submit" id="form_submit" action="${request.contextPath}/soa/msg/template/datas/edit">
+  	<input type="hidden" id="id" name="id" value="${msgTemplate.id!}"> 
+  	<input type="hidden" id="status" name="status" value="${msgTemplate.status!}"> 
+    <div class="box-body">
+      <div class="form-group">
+        <label class="col-sm-3 control-label">模板名称：</label>
+        <div class="col-sm-8">
+         <input class="form-control" type="text" id="msgTemplateName" name="msgTemplateName" value="${msgTemplate.msgTemplateName!}"> 
+        </div>
+      </div>
+      <div class="form-group">
+        <label class="col-sm-3 control-label">模板描述：</label>
+        <div class="col-sm-8">
+          <input class="form-control" type="text" id="remark" name="remark" value="${msgTemplate.remark!}"> 
+        </div>
+      </div>
+      <div class="form-group">
+        <label class="col-sm-3 control-label">消息类型：</label>
+        <div class="col-sm-8">
+          <select class="form-control select2" id="msgType" name="msgType" style="width: 100%;">
+          	<option value="0">短信</option>
+          	<option value="1">手机通知</option>                  
+          </select>
+        </div>
+      </div>
+      <div class="form-group">
+        <label class="col-sm-3 control-label">可选模板参数：</label>
+        <div class="col-sm-8">
+          <div class="theTarea" id="theTarea">
+            
+          </div>
+        </div>
+      </div>
+      <div class="form-group">
+        <label class="col-sm-3 control-label">消息内容：</label>
+        <div class="col-sm-8">
+          <textarea class="textarea" style="width:100%; height:125px;resize: none;" id="msgTemplateContent" name="msgTemplateContent"></textarea>
+        </div>
+      </div>
+     
+    </div>
+  </form>  
+ 
+<script>
+
+	var msgType= "${msgTemplate.msgType!}";
+	$("#msgType").val(msgType);
+	var msgTemplateContent = "${msgTemplate.msgTemplateContent!}";
+	$("#msgTemplateContent").val(msgTemplateContent);
+
+	
+ var mbhtml = '<span data-mb="{{BusinessHallName.DATA}}">[营业厅名称]</span>'
+            +'<span data-mb="{{DevicesCode.DATA}}">[设备编号]</span>'
+            +'<span data-mb="{{WorkOrderLevel.DATA}}">[工单级别]</span>'
+            +'<span data-mb="{{CreateDate.DATA}}">[创建时间]</span>';                 
+ 
+  $('#theTarea').html(mbhtml);
+
+  var  textareaarr = msgTemplateContent;
+
+   $('#theTarea').delegate('span', 'click', function() {
+
+       var $this = $(this);
+       
+       var value = $this.attr("data-mb");
+
+       $this.addClass('hover').siblings().removeClass('hover');      
+       textareaarr+=value;
+
+       $('#msgTemplateContent').val(textareaarr);      
+
+   }); 
+
+   $('#msgTemplateContent').on('keyup',function(){
+     textareaarr = $(this).val();
+   });
+
+</script>
+<style type="text/css">  
+ .form-group label { font-size: 12px; font-weight: normal; }
+ .theTarea { height: 34px;  font-size: 0 }
+ .theTarea > span { display: inline-block; padding: 0 15px;border: 1px solid #ccc; margin:0 0 0 -1px; line-height: 34px; font-size: 12px; border-right: 1px solid #ccc; cursor: pointer; }
+ .theTarea > span:nth-child(0) {margin:0;}
+ .theTarea > span.hover,.theTarea > span:hover { background-color:#f1f9f9  }
+ .nobor { display: inline-block; width: 90%;  border:0; line-height: 34px;  }
+</style>
+

@@ -1,0 +1,98 @@
+
+<style>
+
+  .wb-col { float: left; width:70%; }
+  .n-tect { float: left; line-height: 34px; }
+   
+  .sdown { position: absolute; right:10px; top: 6px; }
+  .SelectList { position: absolute; right: 30px; top: 33px; display: none; width: 200px; height:300px;z-index: 999; margin: 0; padding: 0; overflow-y:scroll; background-color: #fff;  border: 1px solid #ccc;}
+  .SelectList li { list-style: none; line-height: 30px; border-bottom:1px dotted #ccc; padding: 0 10px; }
+  .SelectList li:hover { background-color:#f0f0f0  }
+  .pre { position: relative; }
+   
+</style> 
+<!-- 编辑模态框 -->
+    <form class="form-horizontal" style="height:480px;overflow:scroll;overflow-x:hidden" method="post" name="form_submit" id="form_submit" action="${request.contextPath}/soa/asmp/asmpWork/datas/save">
+       <input type="hidden" id="id" name="id" value="${TAsmpWork.id!}">     
+      <div class="modal-body">
+      <div class="form-group">
+      
+     <div>
+     <div><label >营业厅：</label></div>         
+      
+      <div class="wb-col pre" id=forgId>
+          <select class="js-example-placeholder-single form-control select2" id="fSelect"  style="width: 100%;">
+                  <option></option>
+          </select>
+      </div>
+    </div>
+    
+    
+     <br/><br/>
+                <div>
+                <div><label for="workCode" >工单编号：</label></div>
+                  <input type="text" class="form-control" id="workCode" name="workCode" value="${TAsmpWork.workCode!}" >              
+                </div>
+                
+                <div>               
+                  <label for="workSource">报障来源：</label>
+                  <input type="text" class="form-control" id=workSource name="workSource"  value="${TAsmpWork.workSource!}">
+                </div>
+                
+                <div>
+                  <label for="manufName">故障设备Id：</label>
+                  <input type="text" class="form-control" id="deviceId" name="deviceId" value="${TAsmpWork.deviceId!}">
+                </div>
+                
+                <div>
+                  <label for="modelFaultList">营业厅：</label>
+                  <input type="text" class="form-control" id="modelFaultList" name="modelFaultList" value="${TAsmpWork.modelFaultList!}">
+                </div>
+                
+                <div>
+                  <label for="status">状态：</label>
+                  <input type="text" class="form-control" id="status" name="status" value="${TAsmpWork.status!}">
+                </div>
+                
+              
+      </div>
+      </div>
+     </form>	
+     
+     
+
+     <script>
+     
+     
+     var orgUrl=contextPath+"/soa/asmp/datas/org4list";
+     //var combxListData=null;
+     var orgTarget="#fSelect";
+    // var $option = $('<option/>').attr('value',result[i].id).html(result[i].orgName);
+    orgSelect(orgUrl,orgTarget);
+    
+    function orgSelect(comboxUrl,SelectTarget){
+    	$.ajax({
+        	url:comboxUrl,    
+        	type:"post",
+        	dataType:"json",
+        	async:false,
+        	success: function(result){  		
+        		//combxListData=result;
+        		//alert(fOrgs);
+        		for(var i = 0;i<result.length;i++){    	
+        			var $option = $('<option/>').attr('value',result[i].id).html(result[i].orgName);
+        			$option.appendTo($(SelectTarget));
+        		}
+
+        		$(SelectTarget).select2({
+        			placeholder: "请选择",
+        			allowClear: true
+        		}).change(function(){
+        			//alert("callback2222")
+        		});
+        		    		
+        	} 
+          });
+    }
+     
+     </script>

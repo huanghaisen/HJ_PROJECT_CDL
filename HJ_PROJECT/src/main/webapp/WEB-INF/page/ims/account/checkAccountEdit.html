@@ -1,0 +1,175 @@
+<style type="text/css">
+
+.w1 {width: 160px; text-align: center; }
+.pre { position: relative; }
+
+.wb-col { float: left; width:80%; }
+.n-tect { float: left; line-height: 34px; }
+.form-group label { font-size: 12px; font-weight: normal; }
+.inw { width:85%; }
+
+.cent th{text-align:center; }
+
+</style>
+<form class="form-horizontal" method="post" name="form_submit" id="form_submit" action="${request.contextPath}/soa/account/check/datas/edit">
+<input type='hidden' id="id" name="id" value="${asmpAccount.id}"/>
+<input type='hidden' id="workId" name="workId" value="${asmpAccount.workId}"/>
+<div class="box-body" style="height:480px;overflow:scroll;overflow-x:hidden"> 
+  <div class="row" id="jddetail">
+    <div class="form-horizontal">
+             
+      <div class="form-group">
+        <label class="col-sm-1 control-label">工单编号：</label>
+        <div class="col-sm-2" style="margin-top:5px;">
+          <div class="theTarea" id="workCode">
+          	${asmpAccount.workCode}
+          </div>
+        </div>
+      </div>
+      <div class="form-group">
+        <label class="col-sm-1 control-label">营业厅：</label>
+        <div class="col-sm-2" style="margin-top:5px;">
+          <div class="theTarea" id="orgName">
+          	${asmpAccount.orgName}
+          </div>
+        </div>
+        <label class="col-sm-1 control-label">申请人：</label>
+        <div class="col-sm-1" style="margin-top:5px;">
+          <div class="theTarea" id="proposerName">
+          	${asmpAccount.proposerName}
+          </div>
+        </div>
+      </div>
+      
+      <div class="form-group">
+        <label class="col-sm-1 control-label">备注：</label>
+        <div class="col-sm-2" style="margin-top:5px;">
+          <div class="theTarea" id="orgName">
+          	${asmpAccount.remark!}
+          </div>
+        </div>
+        
+      </div>
+    </div>
+  </div>  
+
+    <div class="box-body">
+      
+        <div class="tbbody clearfix">          
+          <div class="tbtool">
+            <h4>具体使用配件:</h4>            
+          </div>
+        </div>
+        <table class="table table-bordered cent" id="workPartList"  align="center">
+          <tr>
+            <th width="15%">配件名称</th>
+            <th width="20%">配件型号</th>
+            <th width="15%">数量</th>
+            <th width="15%">单价</th>
+            <th width="15%">总价</th>
+            <th width="20%">备注</th>            
+          </tr>         
+          
+        </table>
+        <div class="tbbody clearfix">         
+          <div class="tbtool">
+            <h4>基本费用信息:</h4>
+          </div>
+        </div>
+        <table class="table table-bordered cent" id="accountBasitList"  align="center">
+          <tr>
+            <th width="15%">出发地</th>
+            <th width="15%">目的地</th>
+            <th width="10%">火车票</th>
+            <th width="10%">公交费</th>
+            <th width="10%">船务费</th>
+            <th width="10%">的士费</th>
+            <th width="10%">工单费</th>
+            <th width="10%">其他费</th>
+          </tr>
+                   
+        </table>
+        
+        <div class="form-group" id="radiogroup">
+         <div class="radio">
+          <label>审核结果：</label>
+          <label>            
+            <input type="radio" name="status" checked="checked" value="2">
+            通过
+          </label>
+          <label>
+            <input type="radio" name="status" value="3">
+            打回 
+          </label>
+          </div>                         
+        </div>
+        <div class="form-group">
+            <label class="col-sm-1 control-label">备注：</label>
+            <div class="col-sm-10">
+              <textarea name="remark" id="remark" class="textarea" style="width:80%; height:125px;" placeholder="结算打回时备注不为空，200字以内"></textarea>
+            </div>
+          </div>
+        
+        </div>
+    </div>
+    </form>
+<script>
+
+	//增加具体使用配件行
+	var workId=$("#workId").val();
+	$.ajax({
+		url:contextPath+"/soa/account/workpart/datas/search",    
+		type:"post",
+		dataType:"json",
+		data:{id:workId},
+		success: function(result){
+				var html = $("#workPartList").html();
+				var rowdata=result.data;
+				for(var i=0;i<rowdata.length;i++){
+					var sumCost = rowdata[i].sumCost==null?0:rowdata[i].sumCost;
+					var remark = rowdata[i].remark==null?"":rowdata[i].remark;
+					html= html+"<tr>"
+						+"<td>"+rowdata[i].partName+"</td>"
+						+"<td>"+rowdata[i].partTypeName+"</td>"
+						+"<td>"+rowdata[i].partCount+"</td>"
+						+"<td>"+rowdata[i].partPrice+"</td>"
+						+"<td>"+sumCost+"</td>"
+						+"<td>"+remark+"</td>"
+						+"</tr>";
+				}
+				$("#workPartList").html(html);
+		}
+				   		
+	});
+
+
+	//增加基本费用行
+	var id=$("#id").val();
+	$.ajax({
+		url:contextPath+"/soa/account/accountbasic/datas/search",    
+		type:"post",
+		dataType:"json",
+		data:{id:id},
+		success: function(result){
+				var html = $("#accountBasitList").html();
+				var rowdata=result.data;
+				for(var i=0;i<rowdata.length;i++){
+					html=html+ "<tr>"
+		            +"<td>"+rowdata[i].originId+"</td>"
+		            +"<td>"+rowdata[i].destinationId+"</td>"
+		            +"<td>"+rowdata[i].train+"</td>"
+		            +"<td>"+rowdata[i].bus+"</td>"
+		            +"<td>"+rowdata[i].ship+"</td>"
+		            +"<td>"+rowdata[i].taxi+"</td>"
+		            +"<td>"+rowdata[i].workCost+"</td>"
+		            +"<td>"+rowdata[i].other+"</td>"         
+		            +"</tr>";
+				}
+				$("#accountBasitList").html(html);
+		}
+				   		
+	});
+
+</script>
+
+

@@ -1,0 +1,338 @@
+<link rel="stylesheet" href="${request.contextPath}/lib/plugins/zTree3/css/zTreeStyle/zTreeStyle.css" type="text/css">
+ <link rel="stylesheet" href="${request.contextPath}/lib/plugins/select2/select2.min.css">
+<style>
+td.details-control {	cursor: pointer;}
+
+tr.shown td.details-control {	}
+.showTip {	width: 300px;	border-radius: 5px;	background: #000;	opacity: 0.8;}
+.showTipcon {	padding: 5px;}
+.showTipcon p {	color: #fff;}
+
+.ztree li span.button {	min-width: 0;	min-height: 0}
+
+  .select2-container--default .select2-selection--single {border-radius:0}
+  .select2-container .select2-selection--single {height:34px}
+</style>
+<div class="box box-primary">
+	<div class="box-header with-border">
+		<div id="mainpanel" style="margin: 0px 0px 0px 0px;">
+			<div id="mapcontent" style="width: 100%; position: relative;">
+				
+				<div class="box-body" style="width: 100%">
+					<div class="row">
+						<div class="col-xs-3">
+							<div class="input-group">
+								<span class="input-group-addon" id="sizing-addon1" >账户</span>
+								<input type="text" class="form-control" id="loginname"
+									 aria-describedby="sizing-addon1">
+							</div>
+
+						</div>
+						<div class="col-xs-3">
+							<div class="input-group">
+								<span class="input-group-addon" id="sizing-addon2">昵称</span> <input
+									type="text" class="form-control" id="nickname"
+									 aria-describedby="sizing-addon2">
+							</div>
+						</div>
+						<div class="col-xs-3">
+							<div class="input-group">
+								<span class="input-group-addon" id="sizing-addon3">电话</span> <input
+									type="text" class="form-control" id="telphone" 
+									aria-describedby="sizing-addon3">
+							</div>
+						</div>
+						<div class="col-xs-1">
+							<button class="btn btn-default" onclick="condictionsSearch()">
+							<i class="fa fa-search"></i> 搜索</button>
+						</div>
+					</div>
+				</div>
+
+				<div class="box-header with-border">
+				   <div class="box-body" style="width: 100%">
+					<div class="row">
+						<div class="col-xs-4">
+							<button class="btn btn-success" onclick="add()">
+							<i class="fa fa-plus-circle fz"></i> 新增</button>
+							<button class="btn btn-warning" onclick="edit()">
+							<i class="glyphicon glyphicon-pencil"></i> 编辑</button>
+							<button class="btn btn-danger" onclick="del()">
+							<i class="fa fa-trash"></i> 删除</button>
+						</div>
+						
+					</div>
+				</div>	
+				</div>
+
+                <div class="box-body">
+				<!-- DataTable主体 -->
+				<table id="table_form"
+					class="table table-bordered table-striped table-hover"
+					cellspacing="0" width="100%">
+				</table>
+                </div>
+			</div>
+		</div>
+	</div>
+</div>
+
+<!---------------------------------- 何辉  修改权限用对话框 --------------------------------------------->
+<div class="modal" id="myModaltree" tabindex="-1" role="dialog">
+	<div class="modal-dialog" role="document">
+		<div class="modal-content">
+			<div class="modal-header">
+				<button type="button" class="close" data-dismiss="modal"
+					aria-label="Close">
+					<span aria-hidden="true">&times;</span>
+				</button>
+				<h4 class="modal-title" id="myModalLabel">授予角色</h4>
+			</div>
+			<div class="modal-body">
+				<div class="zTreeDemoBackground left">
+					<ul id="treeDemo" class="ztree"></ul>
+				</div>
+			</div>
+			<div class="modal-footer">
+				<button type="button" class="btn btn-primary" id="rolesenceTransform" sence="soa">
+				            <i class="fa fa-rotate-left"></i> 场景切换</button>
+				<button type="button" class="btn btn-default" data-dismiss="modal">取消</button>
+				<button type="button" class="btn btn-primary"
+					onclick="updateUserRole()">保存修改</button>
+			</div>
+		</div>
+	</div>
+</div>
+
+
+
+<!-- dataTable及浮态框相关js -->
+<script type="text/javascript"
+	src="${request.contextPath}/js/aboutForm.js"></script>
+<!-- Select2 -->
+<script src="${request.contextPath}/lib/plugins/select2/select2.full.min.js"></script>
+<!-- 
+<script type="text/javascript" src="${request.contextPath}/js/user/user_buttons.js"></script>
+ -->
+<script type="text/javascript" src="${request.contextPath}/js/user/user_tableCreation.js"></script>
+<!-- 权限相关js -->
+
+<script type="text/javascript"	src="${request.contextPath}/lib/plugins/zTree3/js/jquery.ztree.core.js"></script>
+<script type="text/javascript"	src="${request.contextPath}/lib/plugins/zTree3/js/jquery.ztree.excheck.js"></script>
+<script type="text/javascript"	src="${request.contextPath}/js/user/user_role.js"></script>
+<script>
+	// 表格行选择数组
+	var rows_selected = [];
+	var data = {};
+	//初始化表格（抽出）
+
+	//角色树生成（何辉）
+	$(document).ready(function() {
+		var sence="soa";
+		initTree(sence);
+	});
+
+	function condictionsSearch() {
+
+		var nickname = $("#nickname").val();
+		var loginname = $("#loginname").val();
+		var email = $("#email").val();
+		var telphone = $("#telphone").val();
+		var url = contextPath + "/soa/user/datas/search";
+		var params = {};
+		params.nickName = nickname;
+		params.loginName = loginname;
+		params.email = email;
+		params.phone = telphone;
+		//aboutForm。js里
+		refreshData(url, params);
+	}
+	
+	function add(){
+		post("/soa/user/inst", "html", "", function(obj) {
+			//console.log(obj);
+			var d = dialog({
+				title : '新增用户',
+				content : obj,
+				width : 550,
+				height : 500,
+				okValue : '保存',
+				zIndex : 1050,
+				ok : function() {
+					var that = this;
+					$('#form_user').bootstrapValidator('validate');
+					return false;
+				},
+				cancelValue : '取消',
+				cancel : function() {
+				}
+			});
+			d.showModal();
+			that=d;
+		});
+	}
+var that;//全局变量，用来缓存	dialog 对象
+   function edit(){
+		
+		var $table = table.table().node();
+		var $chkbox_all = $('tbody input[type="checkbox"]', $table);
+		var $chkbox_checked = $('tbody input[type="checkbox"]:checked', $table);
+		if($chkbox_checked.length<1){
+			var d = dialog({
+				title:'提示',
+				content : '请勾选要修改的记录！'
+			});
+			d.show();
+			setTimeout(function() {
+				d.close().remove();
+			}, 2000);
+		}else
+		if($chkbox_checked.length>1){
+			var d = dialog({
+				title:'提示',
+				content : '请不要勾选多条记录修改！'
+			});
+			d.show();
+			setTimeout(function() {
+				d.close().remove();
+			}, 2000);
+		}else{
+			var data={"id":$chkbox_checked.val()};
+			var id=$chkbox_checked.val();
+			post("/soa/user/edit","html",data,function(obj){
+				//console.log(obj);
+				var d = dialog({
+					title : '修改用户',
+					content :obj,					
+					width : 550,
+					height : 480,
+					okValue: '保存',
+					zIndex:1050,
+					ok : 
+						function() {
+						var that = this;
+						
+						$('#form_user').bootstrapValidator('validate');
+						return false;
+					},
+			     cancelValue:'取消',
+				 cancel: function() {
+					 
+				  }
+				});
+				d.showModal();
+				that=d;
+			});
+		}
+		
+		}
+	
+	function del() {
+		var $table = table.table().node();
+		
+		var $chkbox_all = $('tbody input[type="checkbox"]', $table);
+		var $chkbox_checked = $('tbody input[type="checkbox"]:checked', $table);
+		
+		var name = $chkbox_checked.parent().parent().find('td').eq(2).html();
+		
+		var data={"id":$chkbox_checked.val()};
+		var id=$chkbox_checked.val();
+		
+		if($chkbox_checked.length<1){
+		var t = dialog({
+			title:'提示',
+			content : '请勾选要删除的记录！'
+		});
+		t.show();
+		setTimeout(function() {
+			t.close().remove();
+		}, 2000);
+	    }else if($chkbox_checked.length>1){
+			var t = dialog({
+				title:'提示',
+				content : '暂无删除多条记录权限'
+			});
+			t.show();
+			setTimeout(function() {
+				t.close().remove();
+			}, 2000);
+		    }else{
+			//alert(id);//测试可拿到id
+			var d = dialog({
+				
+                 title:'提示',
+                 content:'确认删除昵称为：'+name+' 的这条记录？',
+                 okValue:'确认',
+                 ok:function(){
+                	 var that=this;
+                	 var url='/soa/user/datas/del';
+                	delObject(id,url);
+                	setTimeout(function() {
+						table.ajax.reload(null,false);
+						that.close().remove();
+					}, 100);
+                	
+                 },
+                 cancelValue:'取消',
+                 cancel:function(){
+                	 
+                 }
+				
+			});
+			d.showModal();	
+	    }
+	}
+</script>
+<script type="text/javascript">
+//面板处理 打回切换
+$('#radiogroup').delegate('input', 'click', function(event) {
+    
+    var thevalue = $(this).val();
+
+    if(thevalue == 1){
+  	//$('#orgdiv').show();
+      $('#manufdiv').hide();
+     
+      
+    }else{
+  	$('#orgdiv').show();
+    //$('#manufdiv').hide();
+
+    }
+
+});
+
+
+
+	var sence = $("#senceTransform").attr("sence");
+	//场景切换
+	$("#senceTransform").on("click", function() {
+		if (sence == "soa") {
+			$("#senceTransform").attr("sence", "coa");
+			sence = $("#senceTransform").attr("sence");
+		} else if (sence == "coa") {
+			$("#senceTransform").attr("sence", "soa");
+			sence = $("#senceTransform").attr("sence");
+		}
+		//弹出对话框，源码在aboutForm.js
+
+		//showDailog('切换成功，请稍后！',2000);
+		var msg = "成功切换到" + sence + "场景！";
+		showDailog(msg, 2000);
+
+	});
+	var rolesence = $("#rolesenceTransform").attr("sence");
+	//场景切换
+	$("#rolesenceTransform").on("click", function() {
+		if (rolesence == "soa") {
+			$("#rolesenceTransform").attr("sence", "coa");
+			rolesence = $("#rolesenceTransform").attr("sence");
+		} else if (rolesence == "coa") {
+			$("#rolesenceTransform").attr("sence", "soa");
+			rolesence = $("#rolesenceTransform").attr("sence");
+		}
+		initTree(rolesence);
+		initUserRole(userId);
+	});
+</script>
+

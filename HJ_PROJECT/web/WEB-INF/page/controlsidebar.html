@@ -1,0 +1,57 @@
+<!-- 公共 control-sidebar 开始 -->
+<aside class="control-sidebar control-sidebar-dark">
+	<!-- Create the tabs -->
+	<ul class="nav nav-tabs nav-justified control-sidebar-tabs">
+		<li class="active"><a href="#control-sidebar-home-tab"
+			data-toggle="tab"><i class="fa fa-home"></i></a></li>
+		<li><a href="#control-sidebar-stats-tab" data-toggle="tab"><i
+				class="fa fa-wrench"></i></a></li>
+		<li><a href="#control-sidebar-settings-tab" data-toggle="tab"><i
+				class="fa fa-gears"></i></a></li>
+	</ul>
+	<!-- Tab panes -->
+	<div class="tab-content">
+		<!-- Home tab content -->
+		<div class="tab-pane active" id="control-sidebar-home-tab">
+			<div>
+				<h4 class="control-sidebar-heading">面板工具栏</h4>
+				<div class="form-group">
+					<label class="control-sidebar-subheading">
+						<a href="${request.contextPath}/soa/echarts/screen" target="_blank">大屏监控</a>
+					</label>
+				</div>
+			</div>
+
+		</div>
+		<!-- /.tab-pane -->
+		<!-- Stats tab content -->
+		<div class="tab-pane" id="control-sidebar-stats-tab">
+			<h4 class="control-sidebar-heading">设置工具栏</h4>
+				<div class="form-group">
+					<label class="control-sidebar-subheading"><input
+						type="checkbox" data-layout="fixed" class="pull-right">
+						Fixed layout</label>
+					<p>Activate the fixed layout. You can't use fixed and boxed
+						layouts together</p>
+				</div>
+		</div>
+		<!-- /.tab-pane -->
+		<!-- Settings tab content -->
+		<div class="tab-pane" id="control-sidebar-settings-tab">
+			<h4 class="control-sidebar-heading">系统配置工具栏</h4>
+				<div class="form-group">
+					<label class="control-sidebar-subheading"><input
+						type="checkbox" data-layout="fixed" class="pull-right">
+						Fixed layout</label>
+					<p>Activate the fixed layout. You can't use fixed and boxed
+						layouts together</p>
+				</div>
+		</div>
+
+	</div>
+</aside>
+<!-- /.control-sidebar -->
+<!-- Add the sidebar's background. This div must be placed
+       immediately after the control sidebar -->
+<div class="control-sidebar-bg"></div>
+<!-- 公共 control-sidebar 结束 -->

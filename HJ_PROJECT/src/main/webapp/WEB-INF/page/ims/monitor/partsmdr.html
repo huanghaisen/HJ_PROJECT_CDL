@@ -1,0 +1,120 @@
+<link rel="stylesheet" href="${request.contextPath}/lib/plugins/datatables/dataTables.bootstrap.css">
+
+<style type="text/css">
+.pre { position: relative; }
+.mleftArea { margin-right:300px;min-height:300px; position: relative;}
+.mrightArea { position:absolute; right:10px; min-height:300px;  top:10px; width: 290px; }
+.mainArea { margin:10px auto; }
+.mrmain { height:298px;  border: 1px solid #ccc }
+.ftc { text-align: center  }
+.thetitle{ padding: 0 10px; margin: 0; text-align: center; font-size: 20px;  }
+.theline { height: 298px; border: 1px solid #ccc}
+.thelineArea { height: 298px; }
+.smapArea { position: absolute;left: 0; top: 0; display: none; z-index: 99; width: 100%; height:400px; border: 1px solid #ccc; background: #fff; }
+.sysChartMsg { margin-top: 10px; border: 1px solid #ccc}
+.statusChart { height: 150px;border-bottom: 1px solid #ccc;background-color:#f7f9fa;background-image:linear-gradient(#f2f5f6, #fff);  }
+/*.mrightArea > .statusChart:last-child { border-bottom: 0 } */
+.binChart { float: left; width: 130px; height: 150px; }
+.statusMsg { float: right; width: 150px; height: 150px; padding: 0 10px 0 10px; border-left: 1px solid #ccc; }
+.statusMsg > .chartItems { width: 140px; }
+.statusMsg > .chartItems > h5{ font-size:16px; }
+.statusMsg ul,.statusMsg li { list-style:none; margin: 0; padding: 0 }
+.chartItems > h5 >a:hover {color:#333}
+.chartData{ font-size:12px; }
+.chartData.chartIndex >li{cursor:pointer;}
+.chartData > li{ height:22px; width:140px; line-height:22px;/*white-space:nowrap;text-overflow:ellipsis;*/vertical-align:middle; overflow:hidden;}
+.chartData > li.fx{ float:left; width:70px;}
+.chartData > li.fx >.color{ display:none;}
+.chartData > li > em{ display:block; float:left; width:12px; height:12px; background-color:red; margin-top:5px; margin-right:5px; box-shadow:1px 1px 0px #ccc;}
+.chartData > li.cur >em{ width:13px; height:13px;}
+.chartData > li.cur{ font-weight:bold;cursor:default;}
+.chartData > li >.color{ display:inline-block; width:60px;overflow:hidden; white-space:nowrap;text-overflow:ellipsis; vertical-align:middle;}
+.fc1 { padding: 0 5px; color:#fc8157 }
+
+.mtool { position:absolute; right:10px; top:10px; z-index: 999; display: block; height: 40px; }
+.mtool .btn { margin: 0 5px; }
+
+.mback { position:absolute; left:10px; top:5px; display: none; width: 80px; height: 32px; }
+.mflush { position:absolute; right:10px; top:5px; width: 40px; height: 32px; }
+.import { position:absolute; right:10px; top:5px; height: 32px; }
+
+.cuttime { position:absolute; right:50px; top:5px; width: 136px; height: 32px; text-align: right; }
+.statusdetail {height:146px; overflow-y:scroll}
+.statusdetail .txt { padding: 10px; }
+.statusdetail .txt .r {display: inline-block;float: left;width: 6px;height: 6px;background-color: #61c17f;border-radius: 4px;margin: 7px 5px 0 0;}
+.toolhd { position: relative; width: 100%; height: 45px; margin-bottom:-10px; border: 1px solid #f4f4f4; border-bottom: 0}
+.toolhd .h { padding: 0 10px; line-height: 38px; font-size: 14px; }
+.slider {position: absolute;height: 5px;width:92%;left:41px; bottom: 80px;z-index: 10;overflow: hidden; font-size: 0}
+.slider > a { display: inline-block; height: 5px;background: #4fbd66; overflow: hidden; font-size: 0;} 
+.slider >.cur {background-color: #F90;}
+
+
+.progress { float:left; width: 80%; }
+.table tr td .progress { margin-right:10px;}
+
+</style>
+
+<div class="box box-primary">
+<div class="box-header with-border">
+  <button type="button" class="btn btn-default mback" title="返回" id="backtomap"><i class="fa fa-reply"></i>返回</button>
+  <button type="button" class="btn btn-default mflush" title="刷新" id="mflush"><i class="fa fa-refresh"></i></button>
+  <h3 class="thetitle" id="thetitle">全省模块故障率</h3>
+  <div class="cuttime"></div>
+</div>
+<div class="box-body pre"> 
+  <div class="mleftArea">    
+    <div class="theline">      
+      <div class="thelineArea" id="theline">
+          
+      </div>
+      <div class="mtool" id="mtool">
+          
+      </div>
+      <div id="slider" class="slider">
+        <a href="javascript:;" data-text="0" data-time="01:00" title="点击查看0:00-01:00时刻线的数据»">01:00</a>
+      </div>
+    </div>
+    <!-- <div class="sysChartMsg" id="sysChartMsg">
+      
+    </div> -->
+    
+
+  </div>
+  <div class="mrightArea">
+    <div class="mrmain">
+        <div class="statusChart">
+           <div class="binChart" id="bingbu1">
+             
+           </div>
+           <div class="statusMsg">
+             <div class="chartItems" id="pie1">
+               
+             </div>
+           </div>
+        </div>
+        <div class="statusdetail">
+            <div class="txt" id="pie_title">
+            
+            </div>
+        </div>    
+    </div>
+  </div>
+    <div class="mainArea">
+        <div class="toolhd">
+            <p class="h">模块故障状态统计 <span class="text-yellow" id="time" >(00:00)</span></p>
+            <button type="button" class="btn btn-default import" title="导出" id="partsExport"><i class="fa fa-share-square-o"></i> 导出</button>
+        </div>
+        
+        <table class="table table-bordered table-striped table-hover" id="thetable">
+               
+        </table>
+        
+    </div>
+</div>
+</div>
+<script src="${request.contextPath}/lib/echarts/echarts.js"></script>
+<script src="${request.contextPath}/lib/echarts/theme/shine.js"></script>
+<script src="${request.contextPath}/lib/plugins/datatables/jquery.dataTables.min.js"></script>
+<script src="${request.contextPath}/lib/plugins/datatables/dataTables.bootstrap.min.js"></script>
+<script src="${request.contextPath}/lib/plugins/daterangepicker/moment.min.js"></script>
+<script src="${request.contextPath}/js/monitor/partsmdr.js"></script>

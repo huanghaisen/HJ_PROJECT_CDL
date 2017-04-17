@@ -1,0 +1,13 @@
+<!-- 用户编辑模态框 -->
+    <form class="form-horizontal"  method="post" name="form_user" id="form_part" action="${request.contextPath}/soa/asmp/commonMethod/datas/save">
+      <input type="hidden" id="id" name="id" value="${model.id!}">
+      <input type="hidden" id="parentId" name="parentId" value="${model.parentId!}">
+      <div class="modal-body">
+      <div class="form-group">
+      <div>
+      	<label >处理方法：</label>
+        <input type="text" class="form-control" id="commonMethodName" name="commonMethodName" value="${model.commonMethodName!}">
+      </div>
+     </div>
+    </div>
+   </form>

@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<title>kv6管理平台</title>
+<meta http-equiv="pragma" content="no-cache" />
+<meta http-equiv="cache-control" content="no-cache,no-store,max-age=0" />
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<meta name="viewport"
+	content="width=device-width,minimum-scale=1.0,maximum-scale=1.0,user-scalable=no" />
+<link rel="stylesheet"
+	href="${request.contextPath}/css/font-awesome.min.css">
+<link rel="stylesheet"
+	href="${request.contextPath}/css/AdminLTE.min.css">
+<link rel="stylesheet"
+	href="${request.contextPath}/css/skins/_all-skins.min.css">
+<link rel="stylesheet"
+	href="${request.contextPath}/lib/bootstrap/css/bootstrap.min.css">
+<link rel="stylesheet"
+	href="${request.contextPath}/lib/plugins/iCheck/square/blue.css">
+<script type="text/javascript">
+	var contextPath = '${request.contextPath!}';
+	
+</script>
+<script
+	src="${request.contextPath}/lib/plugins/jQuery/jQuery-2.1.4.min.js"></script>
+<!-- Bootstrap 3.3.5 -->
+<script src="${request.contextPath}/lib/bootstrap/js/bootstrap.min.js"></script>
+<!-- iCheck -->
+<script src="${request.contextPath}/lib/plugins/iCheck/icheck.min.js"></script>
+</head>
+<body class="hold-transition login-page">
+	<div class="login-box">
+		<div class="login-logo">
+			<b>${systitle!}IMS管理平台</b>
+		</div>
+		<!-- /.login-logo -->
+		<div class="login-box-body">
+			<p class="login-box-msg" id="msg">${msg!}</p>
+			<form id="kxdfrom" name="kxdfrom" method="post"
+				action="${request.contextPath}/login">
+				<input type="hidden" name="userFrom" value="${userFrom!}">
+				<div class="form-group has-feedback">
+					<input type="text" id="username" name="username"
+						class="form-control" placeholder="请输入您的用户名"> <span
+						class="glyphicon glyphicon-user form-control-feedback"></span>
+				</div>
+				<div class="form-group has-feedback">
+					<input type="password" id="password" name="password"
+						class="form-control" placeholder="请输入您的密码"> <span
+						class="glyphicon glyphicon-lock form-control-feedback"></span>
+				</div>
+				<div class="form-group has-feedback">
+					<input type="text" id="captcha" name="captcha" class="form-control"
+						placeholder="验证码"> <span
+						class="glyphicon glyphicon-th form-control-feedback"></span>
+				</div>
+				<div class="row">
+					<div class="col-xs-8">
+						<div class="checkbox icheck">
+							<label> <input type="checkbox" name="checkName"
+								id="checkName">保存账号信息
+							</label>
+						</div>
+					</div>
+					<div class="col-xs-4">
+						<button type="submit" class="btn btn-primary btn-block btn-flat">登录</button>
+					</div>
+				</div>
+			</form>
+		</div>
+	</div>
+</body>
+</html>
+<!-- 
+
+<script src="${request.contextPath}/js/aboutForm.js"></script>
+ -->

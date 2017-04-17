@@ -1,0 +1,46 @@
+    <div class="box">
+            <div class="box-header">
+              <h3 class="box-title">工单详情</h3>
+            </div>
+            <!-- /.box-header -->
+            <div class="box-body no-padding">
+              <table class="table table-striped">
+             <tbody>        <tr>
+            <td>工单编号：</td>
+            <td>${TAsmpWork.workCode!}</td>
+            <td>工单状态：</td>
+            <td>${TAsmpWork.statusStr!}</td>
+            <td>营业厅：</td>
+            <td>${TAsmpWork.orgName!}</td>
+        </tr>
+        <tr>
+            <td>报障人：</td>
+            <td>${TAsmpWork.creatorName!}</td>
+            <td>手机号码：</td>
+            <td>${TAsmpWork.telphone!}</td>
+            <td>报障时间：</td>
+            <td>${TAsmpWork.createTime!}</td>
+        </tr>
+        
+        <tr>
+            <td>设备编号：</td>
+            <td>${TAsmpWork.deviceCode!}</td>
+            <td>故障现象：</td>
+            <td>${TAsmpWork.modelFaultList!}</td>
+            <td>故障描述：</td>
+            <td>${TAsmpWork.modelFaultRemark!}</td>
+            
+       </tr>
+       <tr>
+            <td>维保厂商：</td>
+            <td>${TAsmpWork.manufName!}</td>
+            <td>附件：</td>
+            <td></td>
+        </tr>
+    </tbody></table>
+            </div>
+            <!-- /.box-body -->
+          </div>
+    
+    
+ 

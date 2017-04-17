@@ -1,0 +1,121 @@
+
+
+<!-- 用户编辑模态框 -->
+    <form class="form-horizontal"  method="post" name="form_deviceLimit" id="form_deviceLimit" action="${request.contextPath}/soa/device/timelimit/datas/save">
+      <input type="hidden" id="id" name="id" value="${model.id!}">
+      <input type="hidden" id="creater" name="creater" value="${model.creater!}">
+      <input type="hidden" id="isDeleted" name="isDeleted" value="0">
+      <input type="hidden" id="timeType" name="timeType" value="${model.timeType!}">
+      <div class="modal-body">
+               
+               <div class="form-group">
+                <div>               
+                  <label for="exampleNickname1">方案名称：</label>
+                  <input type="text" class="form-control" id="limitName" name="limitName" value="${model.limitName!}">
+                </div>
+                </div>
+                
+               <div class="form-group">
+                <label for="partTypeSelect">工作时间分类：</label>
+                 <select id="timeTypeSel"  class="form-control select2" name="timeTypeSel" style="width:100%" aria-describedby="sizing-addon2">
+                   	<option> <option>
+			        <option value="0">工作日</option>
+			        <option value="1">周末</option>
+			        <option value="2">法定节假日</option>
+			        <option value="3">其他</option>
+                 </select>
+               </div>
+                
+               <div class="form-group">
+                <div>
+                  <label for="exampleInputPassword1">终端工作时间：</label>
+                  <input type="text" class="form-control" id="limtTime" name="limtTime" value="${model.limtTime!}"><span>例:7:00-20:00</span>
+                </div>
+               </div>
+                
+                
+     
+      </div>
+     </form>	
+         
+     <script>
+    $(function(){
+    	$("#timeTypeSel").select2({
+ 			placeholder: "请选择",
+ 			allowClear: false
+ 		}).change(function(){
+ 			var hiddenTimeTypeId=$("#timeType");
+			var zhi=$("#timeTypeSel").val();
+			hiddenTimeTypeId.attr("value",zhi);
+ 		});
+	 	var timeTypeVal=$("#timeType").val();
+	 	if(timeTypeVal!=null&&timeTypeVal!=""){
+	 		$("#timeTypeSel").val(timeTypeVal).trigger("change");
+	 	}
+
+
+$('#form_deviceLimit').bootstrapValidator({
+    message: 'This value is not valid',
+    container: 'tooltip',
+    feedbackIcons: {
+        valid: 'glyphicon glyphicon-ok',
+        invalid: 'glyphicon glyphicon-remove',
+        validating: 'glyphicon glyphicon-refresh'
+    },
+    fields: {
+    	timeTypeSel: {
+            validators: {
+                notEmpty: {
+                    message: '请选择类型'
+                }
+            }
+        },
+        limitName: {
+        	container: 'popover',
+            message: 'The name is not valid',
+            validators: {
+                notEmpty: {
+                    message: '方案名称不能为空！'
+                }
+            }
+        },
+        limtTime: {
+        	container: 'popover',
+            validators: {
+                notEmpty: {
+                    message: '工作时间不能为空！'
+                }
+            }
+        }
+
+    }
+}).on('success.form.bv', function(e) {
+	
+	ajaxSubmit($('#form_deviceLimit')[0], function(data){
+			if(data.status==0){
+				var d = dialog({
+					content : data.msg
+				});
+					d.show();
+					setTimeout(function() {
+					d.close().remove();
+					that.close().remove();
+				}, 2000); 
+					
+					table.ajax.reload(null,false);//刷新表格
+			}else{
+				var d = dialog({
+					content : data.msg
+				});
+					d.show();
+					setTimeout(function() {
+					d.close().remove();
+					that.close().remove();
+				}, 2000);
+			} 
+		});
+	
+    }); 
+
+ }); 
+</script>

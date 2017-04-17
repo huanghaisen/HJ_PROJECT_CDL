@@ -1,0 +1,85 @@
+<!-- 编辑模态框 -->
+<div class="modal-body">
+    <form class="form-horizontal"  method="post" name="form_submit" id="form_submit" action="${request.contextPath}/soa/manuf/datas/save">   
+      <div class="box-body">      
+      <input type="hidden" id="id" name="id" value="${model.id!}">
+      <input type="hidden" id="manufType" name="manufType" value="${model.manufType!}"/>
+      	        <div class="form-group">
+                  <label for="manufName" class="col-sm-3 control-label">厂商名称</label>
+                  <div class="col-sm-9">
+                  <input type="text" class="form-control" id="manufName" name="manufName" value="${model.manufName!}">   
+                  </div>           
+                </div>
+                
+               <div class="form-group">         
+                  <label for="manufBriefName" class="col-sm-3 control-label">厂商简称</label>
+                   <div class="col-sm-9">
+                   <input type="text" class="form-control" id="manufBriefName" name="manufBriefName" value="${model.manufBriefName!}">
+                   </div> 
+                </div>
+                
+                <div class="form-group">
+                  <label for="manufCode" class="col-sm-3 control-label">厂商编码</label>
+                   <div class="col-sm-9">
+                  <input type="text" class="form-control" id="manufCode" name="manufCode" value="${model.manufCode!}">
+                  </div>
+                </div>
+                
+                <div class="form-group">
+                  <label for="sele" class="col-sm-3 control-label">厂商类型</label>
+                  <div class="col-sm-9">
+                  <select  id="manufTypeList" class="js-example-placeholder-single form-control select2"  style="width:100%">
+                  <option value="1">配件厂商</option>
+                  <option value="2">终端厂商</option>
+                  <option value="3">维保厂商</option>
+                  </select>
+                  </div>
+                </div>
+                
+                
+                
+                <div class="form-group">
+                  <label for="contactWay1" class="col-sm-3 control-label">联系电话</label>
+                  <div class="col-sm-9">
+                  <input type="text" class="form-control" id="contactWay1" name="contactWay1" value="${model.contactWay1!}">
+                  </div>
+                </div>
+                
+                 <div class="form-group">
+                  <label for="contactWay2" class="col-sm-3 control-label">备用电话</label>
+                  <div class="col-sm-9">
+                  <input type="text" class="form-control" id="contactWay2" name="contactWay2" value="${model.contactWay2!}"> 
+                  </div>
+                </div>
+                
+                 <div class="form-group">
+                  <label for="manufAddress" class="col-sm-3 control-label">厂商地址</label>
+                  <div class="col-sm-9">
+                  <input type="text" class="form-control" id="manufAddress" name="manufAddress" value="${model.manufAddress!}">
+                  </div>
+                </div>
+                
+         
+      
+     
+    </div>
+   </form>
+</div> 
+   <script>
+   $(document).ready(function() {
+	   $("#manufTypeList").select2({
+			placeholder: "请选择",
+			allowClear: false
+		}).change(function(){
+
+			var selectedValue=$("#manufTypeList").val();
+		    $("#manufType").val(selectedValue);
+		});
+		var sexStatusVal=$("#manufType").val();
+		if(sexStatusVal!=null&&sexStatusVal!=""){
+			$("#manufTypeList").val(${model.manufType!}).trigger("change");
+		}
+	});
+  
+
+   </script>

@@ -1,0 +1,13 @@
+<!-- 用户编辑模态框 -->
+    <form class="form-horizontal"  method="post" name="form_part" id="form_part" action="${request.contextPath}/soa/parts/type/datas/save">
+      <input type="hidden" id="id" name="id" value="${model.id!}">
+      <input type="hidden" id="parentId" name="parentId" value="${model.parentId!}">
+      <div class="modal-body">
+      <div class="form-group">
+      <div>
+      	<label >配件类别：</label>
+        <input type="text" class="form-control" id="partTypeName" name="partTypeName" value="${model.partTypeName!}">
+      </div>
+     </div>
+    </div>
+   </form>

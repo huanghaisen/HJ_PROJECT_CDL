@@ -1,0 +1,128 @@
+
+    <div class="box">
+            <div class="box-header">
+              <h3 class="box-title">工单详情</h3>
+            </div>
+           <div  id="workId" hidden>${work.id!}</div>
+            <div class="box-body no-padding">
+              <table class="table table-striped">
+             <tbody>        <tr>
+            <td>工单编号：</td>
+            <td>${work.workCode!}</td>
+            <td>工单状态：</td>
+            <td>${work.statusStr!}</td>
+            <td>营业厅：</td>
+            <td>${work.orgName!}</td>
+        </tr>
+        <tr>
+            <td>报障人：</td>
+            <td>${work.creatorName!}</td>
+            <td>手机号码：</td>
+            <td>${work.telphone!}</td>
+            <td>报障时间：</td>
+            <td>${work.createTime!}</td>
+        </tr>
+        
+        <tr>
+            <td>维保厂商：</td>
+            <td>${work.manufName!}</td>
+            <td>设备编号：</td>
+            <td>${work.deviceCode!}</td>
+             <td>故障现象：</td>
+            <td>${work.modelFaultNameList!}</td>
+        </tr>
+        <tr>
+            <td>故障描述：</td>
+            <td>${work.modelFaultRemark!}</td>
+        </tr>
+    </tbody></table>
+    </div>
+    </div>
+            <br/>
+   <div class="box">
+            <div class="box-header">
+              <h3 class="box-title">工单处理详情</h3>
+            </div>
+            
+            <div class="box-body no-padding">
+              <table class="table table-striped">
+     <tbody>
+     <tr>
+            <td>工单类型：</td>
+            <td>处理人：</td>
+            <td>处理时间：</td>
+            <td>处理结果：</td>
+        </tr>
+     <#list stepList as workStep>
+        <tr>
+            <td>${workStep.statusStr!}</td>
+            <td>${workStep.dispatchUserName!}</td>
+            <td>${workStep.lastModifiedTime!}</td>
+            <td>${workStep.stepStatusStr!}</td>
+        </tr>
+	</#list>  
+	
+         </tbody>
+      </table>
+     </div>
+    </div>
+
+<div class="row">
+  <div class="col-md-6">
+ <div class="form-group" id="checkResult">
+          <label><p class="text-red">验收结果：</p></label>
+          <label>            
+            <input type="radio" name="options1" checked="checked" value="1">
+            验收通过
+          </label>
+          <label>
+            <input type="radio" name="options1" value="2">
+            返回重新处理 
+          </label>                
+        </div>
+</div>
+  <div class="col-md-6">
+<div class="form-group" id="satisfaction">
+          <label><p class="text-red">满意度：</p></label>
+          <label>            
+            <input type="radio" name="options2" checked="checked" value="0">
+           好评
+          </label>
+          <label>
+            <input type="radio" name="options2" value="1">
+            一般
+          </label>   
+        <label>
+            <input type="radio" name="options2" value="2">
+           差评 
+          </label>                
+        </div>
+</div>
+</div>
+
+   
+        
+        
+        
+
+
+        
+   <div> 
+   <div>
+   
+   </div>              
+      <label for="modelFaultRemark">备注：</label>
+      <textarea id="modelFaultRemark" class="form-control" rows="3" placeholder="请填写 。。。"  name="modelFaultRemark"></textarea>
+   </div>
+        
+        
+        
+        
+        
+        
+<script type="text/javascript">
+
+
+</script>
+
+

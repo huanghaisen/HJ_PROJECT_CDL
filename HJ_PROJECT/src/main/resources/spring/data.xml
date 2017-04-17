@@ -1,0 +1,126 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans" 
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns:tx="http://www.springframework.org/schema/tx"
+	xmlns:context="http://www.springframework.org/schema/context" 
+	xmlns:aop="http://www.springframework.org/schema/aop"
+	xsi:schemaLocation="
+	http://www.springframework.org/schema/aop http://www.springframework.org/schema/aop/spring-aop-4.2.xsd
+	http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-4.2.xsd
+	http://www.springframework.org/schema/tx http://www.springframework.org/schema/tx/spring-tx-4.2.xsd
+	http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-4.2.xsd">
+		
+	<bean id="dataSource" class="com.mchange.v2.c3p0.ComboPooledDataSource" destroy-method="close">
+		<property name="driverClass" value="${jdbc.diriver}" />
+		 <property name="jdbcUrl" value="${jdbc.url}"/>
+		<property name="user" value="${jdbc.username}" />
+		<property name="password" value="${jdbc.password}" />
+		
+		<!--初始化时获取的连接数，取值应在minPoolSize与maxPoolSize之间。-->
+		<property name="initialPoolSize" value="${SERVER.INITPOOLSIZE}" />
+
+		<!--连接池中保留的最小连接数。-->
+		<property name="minPoolSize" value="${SERVER.MINPOOLSIZE}" />
+
+		<!--连接池中保留的最大连接数。-->
+		<property name="maxPoolSize" value="${SERVER.MAXPOOLSIZE}" />
+
+		<!--最大空闲时间,60秒内未使用则连接被丢弃。若为0则永不丢弃。-->
+		<property name="maxIdleTime" value="60" />
+
+		<!--当连接池中的连接耗尽的时候c3p0一次同时获取的连接数。-->
+		<property name="acquireIncrement" value="2" />
+
+		<!--每60秒检查所有连接池中的空闲连接。Default: 0 -->
+		<property name="idleConnectionTestPeriod" value="60" />
+	</bean>
+	<!-- 配置数据源 使用的是Druid数据源 -->
+	<!--<bean name="dataSource" class="com.alibaba.druid.pool.DruidDataSource"
+		  init-method="init" destroy-method="close">
+		<property name="url" value="${jdbc.url}" />
+		<property name="username" value="${jdbc.username}" />
+		<property name="password" value="${jdbc.password}" />
+
+		&lt;!&ndash; 初始化连接大小 &ndash;&gt;
+		<property name="initialSize" value="0" />
+		&lt;!&ndash; 连接池最大使用连接数量 &ndash;&gt;
+		<property name="maxActive" value="20" />
+
+		&lt;!&ndash; 连接池最小空闲 &ndash;&gt;
+		<property name="minIdle" value="0" />
+		&lt;!&ndash; 获取连接最大等待时间 &ndash;&gt;
+		<property name="maxWait" value="60000" />
+		<property name="poolPreparedStatements" value="true" />
+		<property name="maxPoolPreparedStatementPerConnectionSize"
+				  value="33" />
+		&lt;!&ndash; 用来检测有效sql &ndash;&gt;
+		<property name="validationQuery" value="${validationQuery}" />
+		<property name="testOnBorrow" value="false" />
+		<property name="testOnReturn" value="false" />
+		<property name="testWhileIdle" value="true" />
+		&lt;!&ndash; 配置间隔多久才进行一次检测，检测需要关闭的空闲连接，单位是毫秒 &ndash;&gt;
+		<property name="timeBetweenEvictionRunsMillis" value="60000" />
+		&lt;!&ndash; 配置一个连接在池中最小生存的时间，单位是毫秒 &ndash;&gt;
+		<property name="minEvictableIdleTimeMillis" value="25200000" />
+		&lt;!&ndash; 打开removeAbandoned功能 &ndash;&gt;
+		<property name="removeAbandoned" value="true" />
+		&lt;!&ndash; 1800秒，也就是30分钟 &ndash;&gt;
+		<property name="removeAbandonedTimeout" value="1800" />
+		&lt;!&ndash; 关闭abanded连接时输出错误日志 &ndash;&gt;
+		<property name="logAbandoned" value="true" />
+		&lt;!&ndash; 监控数据库 &ndash;&gt;
+		<property name="filters" value="mergeStat" />
+	</bean>-->
+
+	<bean id="sessionFactory" class="org.springframework.orm.hibernate4.LocalSessionFactoryBean">
+		<property name="dataSource" ref="dataSource" />
+		<!-- <property name="mappingJarLocations"> -->
+		<property name="packagesToScan">
+			<list>
+				<value>com.model</value>
+			</list>
+		</property>
+		<property name="hibernateProperties">
+			<value>
+				hibernate.dialect=org.hibernate.dialect.MySQLDialect
+				hibernate.generate_statistics=true
+				hibernate.order_updates=true
+				hibernate.show_sql=false
+				hibernate.format_sql=false
+				<!--设置查询缓存开启-->
+				hibernate.cache.use_query_cache=true
+				<!-- 开启Hibernate的二级缓存 -->
+				hibernate.cache.use_second_level_cache=true
+				hibernate.session.events.log=false
+				<!--配置Hibernate使用cache提供类-->
+				hibernate.cache.region.factory_class=com.googlecode.hibernate.memcached.MemcachedRegionFactory
+				<!-- 否使用结构化的方式缓存对象  -->
+				hibernate.cache.use_structured_entries=true
+				hibernate.max_fetch_depth=3
+				<!-- 这个设置对的集群缓存非常有用 -->
+				hibernate.cache.use_minimal_puts=false
+				<!-- 设置memcached缓存服务器的端口 -->
+				hibernate.memcached.servers=${MEM.URL}
+				<!-- 设置二级缓存的前缀名称 -->
+				hibernate.cache.region_prefix=quality.cache.ehcache
+				<!-- 缓存失效时间,单位秒 -->
+				hibernate.memcached.cacheTimeSeconds=${MEM.TIMESECONDS}
+				<!-- 操作超时时间设置,单位ms -->
+				hibernate.memcached.operationTimeout=${MEM.TIMEOUT}
+			</value>
+		</property>
+	</bean>
+
+	<context:component-scan base-package="com.model"/>
+	
+	<bean id="txManager" class="org.springframework.orm.hibernate4.HibernateTransactionManager">
+		<property name="sessionFactory" ref="sessionFactory" />
+	</bean>
+
+	<!--使用基于注解方式配置事务 -->
+	<tx:annotation-driven transaction-manager="txManager" />
+	
+	<!-- 定义用户操作日志切入点和通知器 --> 
+	<aop:config proxy-target-class="true"></aop:config>
+	
+</beans>

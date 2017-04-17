@@ -1,0 +1,7 @@
+  .uselectArea { position: absolute; right: 30px; top: 33px; display: none; width: 200px;z-index: 999; margin: 0; padding: 0; background-color: #fff;  border: 1px solid #ccc;}
+  .uselectArea li { list-style: none; line-height: 30px; border-bottom:1px dotted #ccc; padding: 0 10px; }
+  .uselectArea li:hover { background-color:#f0f0f0  }
+  
+ .form-group label { font-size: 12px; font-weight: normal; }
+ .inw { width: 80px; }
+  

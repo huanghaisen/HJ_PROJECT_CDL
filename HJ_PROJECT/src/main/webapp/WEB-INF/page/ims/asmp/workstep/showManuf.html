@@ -1,0 +1,315 @@
+  <form class="form-horizontal" style="height:480px;overflow:scroll;overflow-x:hidden" >
+    <div class="box-body">
+    <div style="display: none" id="userId">${assessView.uid!}</div>
+      <table class="table table-striped" id="dataTable">
+      
+                <tr>
+                  <td width="20%">维保厂商:</td>
+                  <td width="20%">${assessView.userName!}</td>                  
+                  <td width="20%"></td>
+                  <td width="40%"></td>
+                </tr>
+                <tr>
+					<td><input type="button" value="超时工单" onclick="overTimeWork()" /></td>
+					<td><input type="button" value="驳回工单" onclick="rollBackWork()" /></td>
+					<td><input type="button" value="差评工单" onclick="differWork()" /></td>
+					<td></td>
+				</tr>
+      </table>
+		<div id="procWork" style="display: none;">
+			<table width="100%" class="table table-bordered table-striped"
+				id="procWork_table"></table>
+		</div>
+		<div id="overTimeWork" style="display: none;">
+			<table width="100%" class="table table-bordered table-striped"
+				id="overTimeWork_table"></table>
+		</div>
+		<div id="rollBackWork" style="display: none;">
+			<table width="100%" class="table table-bordered table-striped"
+				id="rollBackWork_table"></table>
+		</div>
+		<div id="differWork" style="display: none;">
+			<table width="100%" class="table table-bordered table-striped"
+				id="differWork_table"></table>
+		</div>
+	</div>
+ </form>
+<script>
+	var datatable;
+	function overTimeWork() {
+		if (typeof (datatable) != "undefined") {
+			datatable.destroy();
+		}
+		$("#overTimeWork").css("display", "block");
+		$("#rollBackWork").css("display", "none");
+		$("#differWork").css("display", "none");
+		datatable = $('#overTimeWork_table').DataTable({
+			ajax : {
+				"url" : contextPath + "/soa/workstep/findManuf",
+				"type" : "post",
+				"dataType" : "json",
+				"data" : {
+					"id" : $("#userId").html(),
+					"type" : "1"
+				}
+			},
+			"ordering" : false,
+			'info' : false,
+			//"scrollX": false,
+			//"scrollY": '50vh',
+			"processing" : true,
+			"serverSide" : false,
+			'paging' : true,
+			'pageLength' : 6,
+
+			"language" : {
+				"sProcessing" : "正在加载中......",
+				"sLengthMenu" : "每页显示 _MENU_ 条记录",
+				"sInfo" : "从 _START_ 到 _END_ /共 _TOTAL_ 条数据",
+				"sZeroRecords" : "对不起，查询不到相关数据！",
+				"sEmptyTable" : "表中无数据存在！",
+				"search" : "查询:",
+				"paginate" : {
+					"previous" : "上一页",
+					"next" : "下一页",
+					"first" : "第一页",
+					"last" : "最后一页"
+				}
+			},
+			"pagingType" : "full_numbers",//number simple simple_numbers full 默认full_numbers
+			'lengthChange' : false, //可变分页组件,下行可规定显示页数，左边是定义，右边是页面显示的效果（如-1就是搜全部，但页面显示的选项是ALL）
+			//"lengthMenu": [[10, 25, 50, -1], [10, 25, 50, "All"]],
+
+			'searching' : false, //搜索栏，失效
+			'columns' : [
+
+			{
+				title : '工单编号',
+				//width : "10%",
+				align : 'center',
+				valign : 'middle',
+				data : 'workCode'
+
+			}, {
+				title : '营业厅',
+				//width : "10%",
+				align : 'center',
+				valign : 'middle',
+				data : 'orgName'
+			}, {
+				title : '工单等级',
+				//width : "10%",
+				align : 'center',
+				valign : 'middle',
+				data : 'workLevel'
+			}, {
+				title : '报障时间',
+				//width : "10%",
+				align : 'center',
+				valign : 'middle',
+				data : 'createTime'
+			}, {
+				title : '工单时限',
+				//width : "10%",
+				align : 'center',
+				valign : 'middle',
+				data : 'limitTime'
+			}, {
+				title : '超时时间(H)',
+				//width : "10%",
+				align : 'center',
+				valign : 'middle',
+				data : 'overTime'
+			}, {
+				title : '工单状态',
+				//width : "10%",
+				align : 'center',
+				valign : 'middle',
+				data : 'workStatus'
+			} ]
+		});
+	}
+	function rollBackWork() {
+		if (typeof (datatable) != "undefined") {
+			datatable.destroy();
+		}
+		$("#overTimeWork").css("display", "none");
+		$("#rollBackWork").css("display", "block");
+		$("#differWork").css("display", "none");
+		datatable = $('#rollBackWork_table').DataTable({
+			ajax : {
+				"url" : contextPath + "/soa/workstep/findManuf",
+				"type" : "post",
+				"dataType" : "json",
+				"data" : {
+					"id" : $("#userId").html(),
+					"type" : "2"
+				}
+			},
+			"ordering" : false,
+			'info' : false,
+			//"scrollX": false,
+			//"scrollY": '50vh',
+			"processing" : true,
+			"serverSide" : false,
+			'paging' : true,
+			'pageLength' : 6,
+
+			"language" : {
+				"sProcessing" : "正在加载中......",
+				"sLengthMenu" : "每页显示 _MENU_ 条记录",
+				"sInfo" : "从 _START_ 到 _END_ /共 _TOTAL_ 条数据",
+				"sZeroRecords" : "对不起，查询不到相关数据！",
+				"sEmptyTable" : "表中无数据存在！",
+				"search" : "查询:",
+				"paginate" : {
+					"previous" : "上一页",
+					"next" : "下一页",
+					"first" : "第一页",
+					"last" : "最后一页"
+				}
+			},
+			"pagingType" : "full_numbers",//number simple simple_numbers full 默认full_numbers
+			'lengthChange' : false, //可变分页组件,下行可规定显示页数，左边是定义，右边是页面显示的效果（如-1就是搜全部，但页面显示的选项是ALL）
+			//"lengthMenu": [[10, 25, 50, -1], [10, 25, 50, "All"]],
+
+			'searching' : false, //搜索栏，失效
+			'columns' : [
+
+			{
+				title : '工单编号',
+				//width : "15%",
+				align : 'center',
+				valign : 'middle',
+				data : 'workCode'
+
+			}, {
+				title : '营业厅',
+				//width : "15%",
+				align : 'center',
+				valign : 'middle',
+				data : 'orgName'
+			}, {
+				title : '工单等级',
+				//width : "15%",
+				align : 'center',
+				valign : 'middle',
+				data : 'workLevel'
+			}, {
+				title : '驳回人',
+				//width : "15%",
+				align : 'center',
+				valign : 'middle',
+				data : 'rollBackName'
+			}, {
+				title : '驳回时间',
+				//width : "15%",
+				align : 'center',
+				valign : 'middle',
+				data : 'rollBackTime'
+			},{
+				title : '驳回原因',
+				//width : "15%",
+				align : 'center',
+				valign : 'middle',
+				data : 'rollBackReason'
+			}, {
+				title : '工单状态',
+				//width : "15%",
+				align : 'center',
+				valign : 'middle',
+				data : 'workStatus'
+			} ]
+		});
+	}
+	function differWork() {
+		if (typeof (datatable) != "undefined") {
+			datatable.destroy();
+		}
+		//datatable.destroy();
+		$("#overTimeWork").css("display", "none");
+		$("#rollBackWork").css("display", "none");
+		$("#differWork").css("display", "block");
+		datatable = $('#differWork_table').DataTable({
+			ajax : {
+				"url" : contextPath + "/soa/workstep/findManuf",
+				"type" : "post",
+				"dataType" : "json",
+				"data" : {
+					"id" : $("#userId").html(),
+					"type" : "3"
+				}
+			},
+			"ordering" : false,
+			'info' : false,
+			//"scrollX": false,
+			//"scrollY": '50vh',
+			//"processing": true,
+			"serverSide" : false,
+			'paging' : true,
+			'pageLength' : 6,
+
+			"language" : {
+				"sProcessing" : "正在加载中......",
+				"sLengthMenu" : "每页显示 _MENU_ 条记录",
+				"sInfo" : "从 _START_ 到 _END_ /共 _TOTAL_ 条数据",
+				"sZeroRecords" : "对不起，查询不到相关数据！",
+				"sEmptyTable" : "表中无数据存在！",
+				"search" : "查询:",
+				"paginate" : {
+					"previous" : "上一页",
+					"next" : "下一页",
+					"first" : "第一页",
+					"last" : "最后一页"
+				}
+			},
+			"pagingType" : "full_numbers",//number simple simple_numbers full 默认full_numbers
+			'lengthChange' : false, //可变分页组件,下行可规定显示页数，左边是定义，右边是页面显示的效果（如-1就是搜全部，但页面显示的选项是ALL）
+			//"lengthMenu": [[10, 25, 50, -1], [10, 25, 50, "All"]],
+
+			'searching' : false, //搜索栏，失效
+			'columns' : [
+
+			{
+				title : '工单编号',
+				//width:"15%",
+				align : 'center',
+				valign : 'middle',
+				data : 'workCode'
+
+			}, {
+				title : '营业厅',
+				//width:"15%",
+				align : 'center',
+				valign : 'middle',
+				data : 'orgName'
+			}, {
+				title : '工单等级',
+				//width:"15%",
+				align : 'center',
+				valign : 'middle',
+				data : 'workLevel'
+			}, {
+				title : '验收人',
+				//width:"15%",
+				align : 'center',
+				valign : 'middle',
+				data : 'checkUserName'
+			}, {
+				title : '验收时间',
+				//width:"15%",
+				align : 'center',
+				valign : 'middle',
+				data : 'checkTime'
+			}, {
+				title : '工单状态',
+				//width:"15%",
+				align : 'center',
+				valign : 'middle',
+				data : 'workStatus'
+			} ]
+		});
+	}
+	overTimeWork();
+</script>
+

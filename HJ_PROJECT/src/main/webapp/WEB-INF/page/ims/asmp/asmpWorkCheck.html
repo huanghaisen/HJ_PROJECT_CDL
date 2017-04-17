@@ -1,0 +1,232 @@
+
+<link rel="stylesheet" href="${request.contextPath}/lib/plugins/select2/select2.min.css">
+<link rel="stylesheet" href="${request.contextPath}/lib/asmpWorkCss/asmpWorkIndex.css">
+<link rel="stylesheet" href="${request.contextPath}/lib/plugins/zTree3/css/zTreeStyle/zTreeStyle.css">
+<link rel="stylesheet" href="${request.contextPath}/lib/asmpWorkCss/ZtreeInput.css"> 
+<div class="box box-primary">
+ <div class="box-header with-border">
+  <div id="mainpanel" style="margin: 0px 0px 0px 0px;">
+   <div id="mapcontent" style="width: 100%;position: relative;">
+   <div class="box-body" style="width: 100%">
+   <div class="row">    
+    <div class="col-xs-3">
+    <div class="input-group">
+      <span class="input-group-addon" id="sizing-addon1">工单编号</span>
+        <input id="workCode" type="text" class="form-control" aria-describedby="sizing-addon1">
+      </div>
+    </div>
+    <div class="col-xs-3">
+     <label class="n-tect">机构：</label>
+      <div class="wb-col pre">
+        <input type="text" class="form-control" id="ztreeInputOrg">
+        <div class="zTreeDemo" style="width: 325px; left: 0px; display: none;">
+        <ul class="ztree" id="ztree1"></ul>
+         </div>
+        </div>
+     </div>
+      
+      <div class="col-xs-1">      
+      <button type="button" class="btn btn-default " onclick="condictionsSearch()"><i class="fa fa-search"></i> 搜索</button>
+    </div>
+    
+    <!-- <div class="col-xs-1">      
+      <button type="button" class="btn btn-success" data-toggle="modal" id="checkWork"><i class="fa fa-edit"></i> 验收</button>
+    </div> -->
+   </div>
+      
+    </div>
+<div class="box-header with-border">
+				  <div class="box-body" style="width: 100%">
+					<div class="row">
+						<#list btnlist as items>
+							<button class="${items.funcBg!}" id="${items.funcCode!}">
+							<i class="${items.funcIcon!}"></i> ${items.funcName!}</button>
+						
+						</#list>
+						
+					</div>
+				</div>	
+				</div>
+
+<div class="modal fade bs-example-modal-lg" role="dialog" aria-labelledby="myLargeModalLabel" id="LargeModal" >
+  <div class="modal-dialog modal-lg">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+        <h4 class="modal-title" id="myModalLabel">验收处理</h4>
+      </div>
+      <div class="modal-body" id="modalBody">
+            
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-default" data-dismiss="modal">取消</button>
+        <button type="button" class="btn btn-primary" onclick="checkSubmit()">确认</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+
+
+	<!-- DataTable主体 -->
+	<div class="box-body" style="width: 100%">
+	<table id="table_form" class="table table-bordered table-striped table-hover"
+		cellspacing="0" width="100%">
+	</table>
+    </div>
+	</div>
+  </div>
+ </div>
+</div>
+
+
+<!-- dataTable及浮态框相关js -->
+
+<script type="text/javascript" src="${request.contextPath}/js/aboutForm.js"></script>
+<script type="text/javascript">
+var orginUrl="/soa/asmp/asmpWork/datas/check";
+</script>
+<script type="text/javascript" src="${request.contextPath}/js/asmp/asmpWork/work_tableCreation.js"></script>
+<script src="${request.contextPath}/lib/plugins/select2/select2.full.min.js"></script>
+<!-- 
+<script type="text/javascript">
+var orgUrl=contextPath+"/soa/asmp/datas/org4list";
+var orgTarget="#orgSelect";
+var model="#msOrg";
+//营业厅下拉框
+orgSelect(orgUrl,orgTarget);
+</script>
+ -->
+
+<script src="${request.contextPath}/lib/plugins/zTree3/js/jquery.ztree.core.js"></script>
+<script src="${request.contextPath}/lib/plugins/zTree3/js/jquery.ztree.excheck.js"></script>
+<script src="${request.contextPath}/lib/plugins/zTree3/js/jquery.ztree.exedit.js"></script>
+<script type="text/javascript" src="${request.contextPath}/js/orgTreeInput.js"></script>
+<script type="text/javascript">
+var zNodes1={};
+addTree($('#ztree1'),zNodes1,true);
+
+
+</script>
+
+
+
+<script>
+
+function condictionsSearch(){
+	
+	var orgId=$("#ztreeInputOrg").attr("data_id");
+	    //var orgId=$("#orgSelect").val();
+		var workCode=$("#workCode").val();
+		var url=contextPath + orginUrl;
+	    var params= {};
+	       params.orgId = orgId; 
+	       params.workCode = workCode; 
+     //aboutForm。js里
+	      refreshData(url,params);
+	  }
+
+
+//操作方法
+$(function(){
+
+	//新增
+	$('#checkWork').on('click',function(){
+		var $table = table.table().node();
+		var $chkbox_all = $('tbody input[type="checkbox"]', $table);
+		var $chkbox_checked = $('tbody input[type="checkbox"]:checked', $table);
+		if($chkbox_checked.length<1){
+			var d = dialog({
+				title:'提示',
+				content : '请勾选要验收的工单！'
+			});
+			d.show();
+			setTimeout(function() {
+				d.close().remove();
+			}, 2000);
+		}else if($chkbox_checked.length>1){
+			var d = dialog({
+				title:'提示',
+				content : '请不要同时勾选多条工单验收！'
+			});
+			d.show();
+			setTimeout(function() {
+				d.close().remove();
+			}, 2000);
+		}else{
+			var data={"id":$chkbox_checked.val()};
+			var id=$chkbox_checked.val();
+			$('#LargeModal').find('#modalBody').html('');//先清空Body防止多点击重复写入
+
+			post("/soa/asmp/asmpWork/checkInfo","html",data,function(obj){	
+				//$('#AcceptModal').find('#modalBody').html(obj).end().modal();
+				$('#LargeModal').find('#modalBody').html(obj);
+			   
+		       });
+			//等所有post请求发完再加载显示模态框
+			 $('#LargeModal').modal();
+	       }
+		
+	});
+
+});
+  
+  function checkSubmit(){
+	 var workId=$("#workId").html();
+	 var checkResult=$('#checkResult').find('input:checked').attr('value');
+	 var checkRemark=$('#modelFaultRemark').val();
+	 var params=null;
+	 if(checkResult==1){
+		 var satisfaction=$('#satisfaction').find('input:checked').attr('value');
+		 
+		 //alert("check:"+checkResult+"===满意度："+satisfaction+"===备注："+checkRemark);
+		 params={"workId":workId,"satisfaction":satisfaction,"remark":checkRemark};
+		 
+	 }else if(checkResult==2){
+		 //alert("退回");
+		 params={"workId":workId,"remark":checkRemark};		 
+	 }
+	 
+	 var data={"isRepulse":checkResult,"params":params};
+	 if(checkResult==1||checkResult==2&&(checkRemark!=null&&checkRemark!=""&&checkRemark.length<200)){
+		 $.ajax({
+			   	url:contextPath+"/soa/asmp/asmpWork/datas/checkStep",    
+			   	type:"post",
+			   	dataType:"json",
+			   	data: data,
+			   	success: function(obj){ 
+			   		var msg=eval(obj).msg;
+			   		var d = dialog({
+						title:'提示',
+						zIndex:1080,
+						content : msg
+					});
+					d.show();
+					setTimeout(function() {
+						d.close().remove();
+					}, 800);
+
+			   	   } 
+			     });    
+		   
+		   			setTimeout(function() {
+		   				$('#LargeModal').modal('hide');
+		   				condictionsSearch();
+		   			}, 1200);	
+	 }else{
+		 var d = dialog({
+				title:'提示',
+				zIndex:1080,
+				content : '打回处理请在备注填写原因，并控制在100字以内！'
+			});
+			d.show();
+			setTimeout(function() {
+				d.close().remove();
+			}, 2000);
+	 }
+	 
+	   			
+  }
+  
+</script>

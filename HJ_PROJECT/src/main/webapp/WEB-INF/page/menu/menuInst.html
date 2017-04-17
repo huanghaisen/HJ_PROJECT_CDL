@@ -1,0 +1,50 @@
+<script>
+	var tier = ${menu.tier!};
+	if(tier==0){
+		//$("#url").hide();
+		$("#isopen").hide();
+		//$("#visible").hide();
+	}
+
+</script>
+
+<!-- 用户编辑模态框 -->
+    <form class="form-horizontal" method="post" name="form_menu" id="form_menu" action="${request.contextPath}/soa/menu/datas/save">
+       <input type="hidden" id="parentId" name="parentId" value="${menu.parentId!}">      
+       <input type="hidden" id="tier" name="tier" value="${menu.tier!}">  
+       <input type="hidden" id="menuCode" name="menuCode" value="${menu.code!}">   
+       <input type="hidden" id="menuSence" name="menuSence" value="${menu.sence!}">    
+      <div class="modal-body">
+      <div class="form-group">
+                <div>
+                  <label for="exampleLoginName1" >菜单名</label>
+                  <input type="text" class="form-control" id="menuName" name="menuName" />              
+                </div>
+                
+                <div id="url">               
+                  <label for="exampleNickname1">菜单路径</label>
+                  <input type="text" class="form-control" id="menuUrl" name="menuUrl" />
+                </div>
+                              
+                <div id="isopen">               
+                  <label for="exampleNickname1">是否开放</label>
+                   <select class="form-control" id="menuIsopen" name="menuIsopen" data-bv-field="country" >
+  						<option value="0">内部地址</option>
+        				<option value="1">弹框</option>
+        				<option value="2">事件触发</option>
+   				   </select>
+                </div>
+                
+                
+                <div id="visible">               
+                  <label for="exampleNickname1">是否可见</label>
+                   <select class="form-control" id="isVisible" name="isVisible" data-bv-field="country" >
+  						<option value="0">可见</option>
+        				<option value="1">隐藏</option>
+   				   </select>
+                </div>
+                
+               
+      </div>
+      </div>
+     </form>	

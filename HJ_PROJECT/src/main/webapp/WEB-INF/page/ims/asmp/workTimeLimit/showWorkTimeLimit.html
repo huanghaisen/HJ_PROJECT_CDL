@@ -1,0 +1,64 @@
+<style>
+.ims{padding-top: 7px;}
+</style>
+
+    <form class="form-horizontal" method="post" name="form_user" id="form_user" action="">         
+      <div class="modal-body">
+      	<div class="form-group">
+                <div>
+                  <label class="col-sm-4 control-label">机构：</label>
+                  <div class="col-sm-8">
+                  	<div class="ims">${model.orgName!}</div>
+                  </div>
+                </div>
+      	</div>
+      	<div class="form-group">         
+                <div>               
+                  <label class="col-sm-4 control-label">工单类别：</label>
+                  <div class="col-sm-8">
+                  	<div class="ims">${model.workTypeName!}</div>
+                  </div>
+                </div>
+        </div>
+      	<div class="form-group">        
+                <div>
+                  <label class="col-sm-4 control-label">派单时限：</label>
+                  <div class="col-sm-8">	
+                  	<div class="ims">${model.acceptTimeLimit!}</div>
+                  </div>
+                </div>
+        </div>
+      	<div class="form-group">        
+                <div>
+                  <label class="col-sm-4 control-label">结单时限：</label>
+                  <div class="col-sm-8">
+                  	<div class="ims">${model.singleTimeLimit!}</div>
+                  </div>
+                </div>
+        </div>
+      	<div class="form-group">        
+                <div>
+                  <label class="col-sm-4 control-label">验收时限：</label>
+                  <div class="col-sm-8">	
+                  	<div class="ims">${model.checkTimeLimit!}</div>
+                  </div>
+                </div>
+        </div>
+      	<div class="form-group">        
+                <div>
+                  <label class="col-sm-4 control-label">工单时限：</label>
+                  <div class="col-sm-8">	
+                  	<div class="ims">${model.workTimeLimit!}</div>
+                  </div>
+                </div>
+        </div>
+      	<div class="form-group">        
+                <div>
+                  <label class="col-sm-4 control-label">超时短信发送时间：</label>
+                  <div class="col-sm-8">	
+                  	<div class="ims">${model.messageTimeLimit!}</div>
+                  </div>
+                </div>
+        </div>
+      </div>
+     </form>	

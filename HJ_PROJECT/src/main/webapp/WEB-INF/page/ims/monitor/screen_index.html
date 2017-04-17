@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <title>KXD screen</title>  
+  <meta content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" name="viewport">
+  <script type="text/javascript">
+  	var contextPath='${request.contextPath}';
+  	var mainurl='${mainurl!}';
+  </script>
+  <link rel="stylesheet" href="${request.contextPath}/lib/bootstrap/css/bootstrap.min.css">
+  <link rel="stylesheet" href="${request.contextPath}/css/font-awesome.min.css">
+  <link rel="stylesheet" href="${request.contextPath}/css/ionic.min.css">
+  <link rel="stylesheet" href="${request.contextPath}/css/AdminLTE.min.css">
+  <link rel="stylesheet" href="${request.contextPath}/css/skins/_all-skins.min.css"> 
+  <link rel="stylesheet" href="${request.contextPath}/lib/plugins/artDialog/ui-dialog.css">
+  <link rel="stylesheet" href="${request.contextPath}/css/screen.css"> 
+  <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
+  <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
+  <!--[if lt IE 9]>
+  <script src="lib/plugins/html5shiv/3.7.3/html5shiv.min.js"></script>
+  <script src="lib/plugins/respond/1.4.2/respond.min.js"></script>
+  <![endif]-->  
+</head>
+<body class="hold-transition skin-blue sidebar-mini">
+
+<div class="wrapper">
+  
+  <!-- 主要内容 开始 -->
+
+    <!-- Main content -->
+    <div class="main" id="main">
+      <div class="mtitle">
+      	<div id="cuttime" style="color: #fff;"></div>
+      </div>
+      <div class="crow clearfix">
+        <div class="fl col-x-1 h-row-1 bg-blue bor-1" id="themap">          
+
+        </div>
+
+        <div class="fr col-x-2 h-row-1 bg-blue bor-1" id="theline">          
+
+        </div>
+
+      </div>
+
+      <div class="crow clearfix">
+        <div class="h-row-2 bg-blue bor-1">
+          <div class="col-xs-6 col-sm-3">
+            <div class="h-row-2 bor-r" id="bingbu1"></div>
+          </div>
+          <div class="col-xs-6 col-sm-3 h-row-2">            
+            <div class="h-row-2 bor-r" id="bingbu2"></div>
+          </div>
+          <div class="col-xs-6 col-sm-3 h-row-2">            
+             <div class="h-row-2 bor-r" id="bingbu3"></div> 
+          </div>
+          <div class="col-xs-6 col-sm-3">            
+            <div class="h-row-2"  id="bingbu4"></div>
+          </div>
+        </div>
+      </div>
+
+      <div class="crow clearfix">
+        <div class="h-row-3 bg-blue bor-1">
+          <table class="table" id="thetable">
+               
+              </table>
+        </div>
+
+      </div>   
+
+    </div>
+    <!-- /.content -->
+
+
+</div>
+  <!-- 主要内容 结束 -->
+
+
+<!-- ./wrapper -->
+
+<script src="${request.contextPath}/lib/plugins/jQuery/jQuery-2.1.4.min.js"></script>
+<script src="${request.contextPath}/lib/plugins/jQueryUI/jquery-ui.min.js"></script>
+<script src="${request.contextPath}/lib/bootstrap/js/bootstrap.min.js"></script>
+<script src="${request.contextPath}/lib/plugins/datatables/jquery.dataTables.min.js"></script>
+<script src="${request.contextPath}/lib/plugins/datatables/dataTables.bootstrap.min.js"></script>
+<script src="${request.contextPath}/lib/echarts/echarts.js"></script>
+<script src="${request.contextPath}/lib/echarts/theme/shine.js"></script>
+<script src="${request.contextPath}/lib/plugins/daterangepicker/moment.min.js"></script>
+  	<script src="${request.contextPath}/js/app.js"></script>
+  	<script src="${request.contextPath}/js/utils.js"></script>
+<script src="${request.contextPath}/js/init.js"></script>
+<script src="${request.contextPath}/js/monitor/screenmdr.js"></script>
+</body>
+</html>

@@ -1,0 +1,291 @@
+<!-- 用户编辑模态框 -->
+ <link rel="stylesheet" href="${request.contextPath}/lib/plugins/zTree3/css/zTreeStyle/zTreeStyle.css">
+ <link rel="stylesheet" href="${request.contextPath}/lib/asmpWorkCss/ZtreeInput.css">
+    <form class="form-horizontal" method="post" name="form_user" id="form_user" action="${request.contextPath}/soa/user/datas/save">
+       <input type="hidden" id="id" name="id" value="${userModel.id!}">
+       <input type="hidden" id="usersex" name="sex" value="${userModel.sex!}">              
+       <input type="hidden" id="orgId" name="orgId" value="${userModel.orgId!}">              
+       <input type="hidden" id="manufId" name="manufId" value="${userModel.manufId!}"> 
+       <input type="hidden" id="sence" name="sence" value="soa">   
+      <div class="modal-body">
+      					<div class="form-group" id="radiogroup">
+						<div class="col-lg-9"> 
+						<label> <input type="radio" name="type"
+							 value="0"> 营业厅用户
+						</label> <label> <input type="radio" name="type"
+							value="1"> 厂商用户
+						</label>
+						<label> <input type="radio" name="type"
+							value="2"> 系统用户
+						</label>
+						</div>
+					</div>
+
+				<div class="form-group" id="orgdiv" >
+					<label class="col-lg-3 control-label">机构范围</label>
+				      <div class="col-lg-9">
+                        <input type="text" class="form-control" id="ztreeInputOrg" >
+                        <div class="zTreeDemo" style="width: 325px; left: 0px; display: none;">
+                         <ul class="ztree" id="ztree1"></ul>
+                       </div>
+                   </div>
+				</div>
+                  
+                <div class="form-group" id="manufdiv" >
+					<label for="manufSel" class="col-lg-3 control-label">厂商</label>
+					<div class="col-lg-9">
+					<select class="js-example-placeholder-single form-control select2" style="width:100%" id="manufSel" >
+						<option></option>
+					</select>
+					</div>
+				</div>
+                  
+      			<div class="form-group">
+                  <label class="col-lg-3 control-label" for="exampleInputEmail1">登录名</label>
+                  	<div class="col-lg-9">
+                		<#if userModel.id?? > 
+                			<input type="text" class="form-control" maxlength="30" id="loginName" disabled="disabled"  name="loginName" value="${userModel.loginName!}">
+                		<#else>
+                 			<input type="text" class="form-control" maxlength="30" id="loginName"  name="loginName" value="${userModel.loginName!}">
+                 		</#if>
+                    </div>
+                  
+                	<!-- <div class="col-lg-9">
+                         <input type="text" class="form-control" maxlength="30" id="loginName" <#if userModel.id?? > disabled </#if> name="loginName" value="${userModel.loginName!}">
+                     </div> -->
+                     
+                </div>
+                <div class="form-group">
+                  <label class="col-lg-3 control-label" for="exampleNickname1">昵称</label>
+               	<div class="col-lg-9">               
+                  	<input type="text" class="form-control" id="nickName" name="nickName" value="${userModel.nickName!}">
+                  </div>
+                </div>
+                
+                <#if !userModel.id?? >
+                <div class="form-group">
+                  <label class="col-lg-3 control-label" for="exampleNickname1">密码</label>
+               	<div class="col-lg-9">               
+                  	 <input type="password" class="form-control" id="password" maxlength="16" name="password" value="">
+                  </div>
+                </div>
+                </#if>
+                <div class="form-group">
+                  <label class="col-lg-3 control-label" for="exampleInputEmail1">邮箱地址</label>
+                	<div class="col-lg-9">
+                         <input type="text" class="form-control" id="email" name="email" value=${userModel.email!}>
+                     </div>
+                </div>
+                
+                <div class="form-group">
+                  <label class="col-lg-3 control-label" for="exampleNickname1">联系电话</label>
+               	<div class="col-lg-9">               
+                  	 <input type="text" class="form-control" id="phone" maxlength="30" name="phone" value=${userModel.phone!}>
+                  </div>
+                </div>
+                <div class="form-group">
+                  <label class="col-lg-3 control-label" for="sexSel">性别</label>
+               	<div class="col-lg-9">               
+                  	 <select  id="sexSel" class="js-example-placeholder-single form-control select2 " style="width:100%">
+                  <option value="0">男</option>
+                  <option value="1">女</option>
+                  </select>
+                  </div>
+                </div>
+      </div>
+     </form>
+<script src="${request.contextPath}/lib/plugins/zTree3/js/jquery.ztree.core.js"></script>
+<script src="${request.contextPath}/lib/plugins/zTree3/js/jquery.ztree.excheck.js"></script>
+<script src="${request.contextPath}/lib/plugins/zTree3/js/jquery.ztree.exedit.js"></script>
+<script type="text/javascript" src="${request.contextPath}/js/orgTreeInput.js"></script>
+ <script type="text/javascript">
+var zNodes1={};
+var flag=1;//flag不为0时可以选择所有机构
+addTree($('#ztree1'),zNodes1,flag);
+</script>	
+ <script type="text/javascript">
+$(document).ready(function() {
+	
+//面板处理 打回切换
+$('#radiogroup').delegate('input', 'click', function(event) {
+    var thevalue = $(this).val();
+    if(thevalue == 0){
+  	  //$('#orgdiv').show();
+      $('#manufdiv').hide();
+      $('#manufId').val(0);
+      $("#manufSel").val(0).trigger("change");
+    }else if(thevalue == 2){
+   	  $('#manufdiv').hide();
+      $('#manufId').val(0);
+      $("#manufSel").val(0).trigger("change");
+    }else{
+      $('#manufdiv').show();
+    }
+});
+$("#sexSel").select2({
+		placeholder: "请选择",
+		allowClear: false
+	}).change(function(){
+		var selectedValue=$("#sexSel").val();
+		
+	    $("#usersex").val(selectedValue);
+	});
+
+	var sexStatusVal=$("#usersex").val();
+	if(sexStatusVal!=null&&sexStatusVal!=""){
+		$("#sexSel").val(sexStatusVal).trigger("change");
+	}
+	
+ 	
+ 	//营业厅下拉框
+	var orgSelectedVal=$("#orgId").val();
+ 	//var orgSelectedVal=$("#ztreeInputOrg").attr("data_id");
+ 	if(orgSelectedVal!=null&&orgSelectedVal!=""){
+ 		var zTree = $.fn.zTree.getZTreeObj("ztree1");
+		var node = zTree.getNodeByParam("id",orgSelectedVal);
+		$("#ztreeInputOrg").val(node.name);
+ 	}
+ 		
+ 	//厂商下拉框
+ 	var maintenancelUrl=contextPath+"/soa/user/datas/maufCombox";
+ 	var maintenance="#manufSel";
+ 	manufSelect(maintenancelUrl,maintenance);
+ 	
+ 	var id=$("#id").val();
+	if(id==null || id==""){
+		$("input[name='type'][value=0]").attr("checked",true);
+		 $('#manufdiv').hide();
+	     $('#manufId').val(0);
+	}else{
+		var type='${userModel.type!}';
+		$("input[name='type'][value="+type+"]").attr("checked",true);
+		if(type==0){
+			$('#manufdiv').hide();
+		    $('#manufId').val(0);
+		}else if(type==1){
+			var manufVal =$("#manufId").val();
+			$("#manufSel").val(manufVal).trigger("change");
+		}else if(type==2){
+			$('#manufdiv').hide();
+		    $('#manufId').val(0);
+		}
+		
+	}
+
+ 	
+ 	//厂商下拉框
+ 	function manufSelect(comboxUrl,SelectTarget){
+ 		$.ajax({
+ 	   	url:comboxUrl,    
+ 	   	type:"post",
+ 	   	dataType:"json",
+ 	   	async:false,
+ 	   	success: function(result){ 
+ 	   		//combxListData=result;
+ 	   		//alert(fOrgs);
+ 	   		for(var i = 0;i<result.length;i++){    	
+ 	   			var $option = $('<option/>').attr('value',result[i].id).html(result[i].manufName);
+ 	   			$option.appendTo($(SelectTarget));
+ 	   		}
+
+ 	   		$(SelectTarget).select2({
+ 	   			placeholder: "请选择",
+ 	   			allowClear: false
+ 	   		}).change(function(){
+ 	   		var selectedValue=$("#manufSel").val();
+   		    $("#manufId").val(selectedValue);
+ 	   		});
+ 	   		    		
+ 	   	    } 
+ 	     });
+ 	}
+ 	
+ 	$('#form_user').bootstrapValidator({
+        message: 'This value is not valid',
+        feedbackIcons: {
+            valid: 'glyphicon glyphicon-ok',
+            invalid: 'glyphicon glyphicon-remove',
+            validating: 'glyphicon glyphicon-refresh'
+        },
+        fields: {
+        	loginName: {
+                message: 'The loginName is not valid',
+                validators: {
+                    notEmpty: {
+                        message: '登录名不能为空！'
+                    },
+                    stringLength: {
+                        min: 5,
+                        max: 30,
+                        message: '登录名必须是5-30位的字符串！'
+                    },
+                    regexp: {
+                        regexp: /^\w+$/,
+                        message: '登录名必须是由字母、数字、下划线组成！'
+                    }
+                }
+            },
+            nickName: {
+                message: 'The nickName is not valid',
+                validators: {
+                    notEmpty: {
+                        message: '昵称不能为空！'
+                    }
+                }
+            },
+           email: {
+                validators: {
+                    notEmpty: {
+                        message: '邮编地址不能为空！'
+                    },
+                    emailAddress: {
+                        message: '输入的不是一个合法的邮编地址！'
+                    }
+                }
+            },
+           password: {
+                validators: {
+                    notEmpty: {
+                        message: '密码不能为空！'
+                    },
+                    stringLength: {
+                        min: 6,
+                        max: 16,
+                        message: '密码必须是6-16位的字符串！'
+                    }
+                }
+            },
+        phone: {
+            validators: {
+            	notEmpty: {
+                    message: '电话号码不能为空！'
+                },
+                regexp: {
+                    regexp: /((\d{11})|^((\d{7,8})|(\d{4}|\d{3})-(\d{7,8})|(\d{4}|\d{3})-(\d{7,8})-(\d{4}|\d{3}|\d{2}|\d{1})|(\d{7,8})-(\d{4}|\d{3}|\d{2}|\d{1}))$)/,
+                    message: '请输入合法的电话号码！'
+                }
+            }
+          }
+        }
+    }).on('success.form.bv', function(e) {
+		that.title('正在提交..');
+		var orgId=$("#ztreeInputOrg").attr("data_id");
+		if(orgId!=null){
+			$('#orgId').val(orgId);
+		}
+		ajaxSubmit($('#form_user')[0], function(data){
+            //alert(data);
+        });
+				
+		 //updateUser(id);
+		setTimeout(function() {
+			DTrefresh();
+			//table.ajax.reload(null,false);//刷新datatable页面  table对应建表的var 命名
+			that.close().remove();
+		}, 100); 
+		return false;
+    });
+	});	
+ 	
+</script>    
+     

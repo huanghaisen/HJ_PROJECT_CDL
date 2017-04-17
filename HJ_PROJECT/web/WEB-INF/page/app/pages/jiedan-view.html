@@ -1,0 +1,208 @@
+ <link rel="stylesheet" href="${request.contextPath}/lib/plugins/datatables/dataTables.bootstrap.css">
+ <link rel="stylesheet" href="${request.contextPath}/lib/plugins/zTree3/css/zTreeStyle/zTreeStyle.css">
+<style>
+.ztree li ul{ margin:0; padding:0; }
+.ztree li { width: 120%; line-height:30px; margin: 0; padding: 0;white-space: nowrap;}
+.ztree li a { display: block;width: 120%;  height:30px;margin: 0; padding: 0px;}
+.ztree li a:hover {background-color:#D4D4D4;text-decoration:none;}
+
+.ztree li a span.button.switch {visibility:visible}
+.ztree.showIcon li a span.button.switch {visibility:visible}
+.ztree li a.curSelectedNode {background-color:#E7E7E7;border:0;height:30px;}
+.ztree li span {  line-height:30px;}
+.ztree li span.button {margin-top: -7px;}
+.ztree li span.button.switch {width: 16px;height: 16px;}
+
+.ztree li a.level0 span {/*font-size: 150%;font-weight: bold;*/}
+.ztree li span.button {background-image:url("${request.contextPath}/lib/plugins/zTree3/img/left_menuForOutLook.png"); *background-image:url("${request.contextPath}/lib/plugins/zTree3/img/left_menuForOutLook.gif")}
+.ztree li span.button.switch.level0 {width: 20px; height:20px}
+.ztree li span.button.switch.level1 {width: 20px; height:20px}
+.ztree li span.button.noline_open {background-position: 0 2px;}
+.ztree li span.button.noline_close {background-position: -20px 2px;}
+.ztree li span.button.noline_open.level0 {background-position: 0 2px;}
+.ztree li span.button.noline_close.level0 {background-position: -20px 2px;}
+.zTreeDemo { display: none; width:200px; height: 300px; overflow:auto; background-color: #fff; border: 1px solid #ccc;  }
+.ztree li span.wr { float: right; width:60%; text-align: right; }
+.ztree li span.wr span { display: inline-block; margin: 0; text-align: center;} 
+
+.rowtoolbar { padding:10px; }
+.rowTitle { margin:0 10px; height: 31px; background-color:#f0f0f0; border-bottom: 1px solid #D1D1D1}
+.rowtoolbar .btn { margin-right: 10px; }
+.rowTitle span { line-height: 30px; font-size: 12px; }
+.rowTitle .wr { float: right; width:60%; text-align: right; }
+.rowTitle .t { float: left; width: 40%;  font-weight: bold; }
+.rowTitle .t b { padding: 5px; }
+.rowTitle .tfield { display: block; border-left: 1px solid #fff;border-right: 1px solid #dbdbdb }
+.w1 {width: 160px; text-align: center; }
+.pre { position: relative; }
+</style>
+<div class="mainpage">
+  <div class="topnavbar">
+    <a href="#" class="topnav-back"> <i class="fa fa-fw fa-angle-left"></i>
+    </a>
+    <span class="topnav-check"><i class="fa fa-fw fa-check"></i></span>
+   
+    <div class="topnavtitle">结单</div>
+    <div class="box-tools pull-right">
+          <div class="has-feedback">
+            <input type="text" class="form-control input-sm" placeholder="">
+            <span class="glyphicon glyphicon-search form-control-feedback"></span>
+          </div>
+        </div>
+
+  </div>
+  <div class="mainpagecontent">
+    <section class="m-content">
+      <div class="mbox bor-b">
+        <p>报障时间：${work.createTime!}</p>
+        <div class="row">
+          <div class="col-xs-6">
+            <p>报障人：${work.creatorName!}</p>
+          </div>
+          <div class="col-xs-6">
+            <p>${work.creatorTel!}</p>
+          </div>
+        </div>
+       <div class="form-group" >          
+            <div class="radio">
+              <label class="t">是否受理</label>              
+              <label><input type="radio" name="opt1" checked="checked" value="" id='ipt1'><span>是</span></label>
+            </div>
+          </div>   
+      </div>
+      <div class="dis" id="isshouli">
+       <div class="mbox mt10">
+      <label class="n-tect">结单问题：</label>
+      <div class="wb-col">  
+        <input type="text" class="form-control" placeholder="选择问题类型"  id="inputTree">
+        <div class="zTreeDemo" id="zTreeDemo">
+          <ul id="treeDemo" class="ztree"></ul>
+        </div> 
+      </div>
+      <label class="n-tect">处理方法：</label>
+       <div class="wb-col">  
+        <input type="text" class="form-control" placeholder="选择处理方法"  id="inputTree2">
+        <div class="zTreeDemo" id="zTreeDemo2">
+          <ul id="treeDemo2" class="ztree"></ul>
+        </div> 
+      </div>
+      <div class="mt10">
+          <div class="mt10" id="addcl"/>
+          <!-- 问题与对应处理方法js生成 -->
+          </div>
+      </div>
+
+        <div class="mbox mt10">
+          <select class="form-control select2" id="select3" style="width:100%">
+          <!-- 耗材配件内容js生成 -->
+          </select>
+          <div class="mt10" id="addwl">
+              
+
+          </div>
+        </div>
+        <div class="mbox mt10 bor-b">
+           <div class="form-group" id="faultResult">          
+            <div class="radio">
+              <label class="t">判定结果： </label>              
+              <label>
+                <input type="radio" name="options1" checked="checked" value="0">没有损坏</label>
+              <label>
+                <input type="radio" name="options1" value="1">人为损坏</label>
+              <label>
+                <input type="radio" name="options1" value="3">其他</label>
+            </div>
+          </div> 
+           <div class="form-group" id="settleWay">          
+            <div class="radio">
+              <label class="t">结单方式：  </label>              
+              <label>
+                <input type="radio" name="options2" checked="checked" value="0">现场结单</label>
+              <label>
+                <input type="radio" name="options2" value="1">电话处理</label>
+              <label>
+                <input type="radio" name="options2" value="2">其他</label>
+            </div>
+          </div> 
+          <div class="form-group" id="isrepair">          
+            <div class="radio">
+              <label class="t">是否修复 </label>              
+              <label>
+                <input type="radio" name="options3" checked="checked" value="0">已修复</label>
+              <label>
+                <input type="radio" name="options3" value="1">未修复</label>
+              <label>
+                <input type="radio" name="options3" value="2">待观察</label>
+            </div>
+          </div>          
+          <textarea class="form-control" rows="3" placeholder="请输入备注"></textarea>
+        </div>
+        <div class="m-title bor-b">工单信息：</div>
+        <div class="mbox bor-b">
+          <p>设备编号：${work.deviceCode!}</p>
+          <p>设备类型：${device.deviceTypeName!}</p>
+          <p>出厂编号：${device.factoryCode!}</p>
+        </div>
+        <div class="m-title bor-b">故障信息：</div>
+        <div class="mbox bor-b">
+         <p>故障类型：${work.modelFaultNameList!}</p>
+         <p>报障级别：${work.workGradeStr!}</p>  
+         <!-- <p>状态码：${work.statusStr!}</p>  -->
+         <p>状态描述：${work.modelFaultRemark!}</p>     
+        </div>
+      </div>
+      <div class="undis" id="unshouli">
+        <textarea class="form-control" rows="3" placeholder="打回原因" id="remarkText"></textarea>
+      </div>
+
+    </section>
+  </div>
+</div>
+<script src="${request.contextPath}/lib/plugins/select2/select2.full.min.js"></script>
+
+
+<script src="${request.contextPath}/lib/plugins/zTree3/js/jquery.ztree.core.js"></script>
+<script src="${request.contextPath}/lib/plugins/zTree3/js/jquery.ztree.excheck.js"></script>
+<script src="${request.contextPath}/lib/plugins/zTree3/js/jquery.ztree.exedit.js"></script>
+<script src="${request.contextPath}/js/webapp/settlePage.js"></script>
+<script type="text/javascript">
+
+$(".topnav-check").click(function(event) {
+	jiedanSubmit();
+/* Act on the event */});
+
+function jiedanSubmit(){
+	if($("#ipt1").is(':checked')){
+		//获取备注
+		var remark=$("#remarkText").val();
+		//获取问题ID和处理方法ID
+		$("#addcl").find(".row").each(function(){
+			var $this = $(this);
+			var faultId = $this.find('.col-xs-10').attr('faultId');
+			var methodId = $this.find('.col-xs-10').attr('methodId');
+			console.log("falutId:"+faultId+"   methodId:"+methodId);
+			
+			
+		});
+		//获取耗材配件Id
+		$("#addwl").find(".row").each(function(){
+			var partId = $(this).find('.col-xs-10').attr('dataId');
+			console.log("partId:"+partId);
+			
+		});
+		//获取3个单选
+		var option1= $("#faultResult").find('input:checked').val();
+		var option2= $("#settleWay").find('input:checked').val();
+		var option3= $("#isrepair").find('input:checked').val();
+		console.log("1:"+option1+"2:"+option2+"3:"+option3);
+		
+		alert("OK");
+	}else{
+		var remark=$("#remarkText").val();
+		alert(remark);
+	}
+}
+
+</script>
+
+

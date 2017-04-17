@@ -1,0 +1,18 @@
+<!-- chlidrow图片样式 --!>
+td.details-control {
+    background: url('${request.contextPath}/images/details_open.png') no-repeat center right;
+    cursor: pointer;
+    padding:0 0 0 0;
+}
+tr.shown td.details-control {
+    background: url('${request.contextPath}/images/details_close.png') no-repeat center right;
+    padding:0 0 0 0;
+   
+}
+   
+  #example_wrapper { margin-top: 30px; }  
+  #example_wrapper .btn-group .btn { margin-right: 15px; border-radius: 3px; color: #fff }
+
+   .showTip { width:300px; border-radius: 5px; background: #000; opacity:0.8;}
+   .showTipcon { padding:5px; }
+   .showTipcon p {color: #fff; }

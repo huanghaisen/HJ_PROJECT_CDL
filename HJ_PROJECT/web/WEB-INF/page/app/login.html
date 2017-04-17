@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<link rel="dns-prefetch" href="//">
+<meta content="yes" name="apple-mobile-web-app-capable" />
+<meta content="yes" name="apple-touch-fullscreen" />
+<meta content="telephone=no,email=no" name="format-detection" />
+<meta name="viewport"
+	content="width=device-width,minimum-scale=1.0,maximum-scale=1.0,user-scalable=no" />
+<link href="touch-icon-iphone-114.png"
+	rel="apple-touch-icon-precomposed">
+<link href="${request.contextPath}/applib/favicon.ico"
+	rel="Shortcut Icon" type="image/x-icon" />
+<script src="${request.contextPath}/applib/js/web-detector.js"></script>
+<title>kv6管理平台</title>
+<link rel="stylesheet"
+	href="${request.contextPath}/applib/bootstrap/css/bootstrap.min.css">
+<link rel="stylesheet"
+	href="${request.contextPath}/applib/dist/css/AdminLTE.min.css">
+<link rel="stylesheet"
+	href="${request.contextPath}/applib/plugins/iCheck/square/blue.css">
+<link rel="stylesheet"
+	href="${request.contextPath}/applib/css/login.css">
+<script type="text/javascript">
+	var contextPath = '${request.contextPath}'
+</script>
+</head>
+<body class="hold-transition login-page">
+	<div class="login-box">
+		<div class="login-logo">
+			<img src="${request.contextPath}/applib/images/lightlogo.png"
+				width="50%" alt="">
+		</div>
+		<div class="login-box-body">
+			<form id="kxdfrom" name="kxdfrom" method="post"
+				action="${request.contextPath}/login">
+				<input type="hidden" name="userFrom" value="${userFrom}">
+				<div class="form-group has-feedback">
+					<input type="text" id="username" name="username"
+						class="form-control" placeholder="用户名">
+				</div>
+				<div class="form-group has-feedback">
+					<input type="password" id="password" name="password"
+						class="form-control" placeholder="密码" value="123456">
+				</div>
+				<div class="form-group has-feedback">
+					<div class="row">
+						<div class="col-xs-6">
+							<input type="text" name="captcha" class="form-control"
+								placeholder="验证码">
+						</div>
+
+						<div class="col-xs-6">
+							<button type="button" class="btn btn-info btn-block btn-flat">发送短信验证</button>
+						</div>
+					</div>
+				</div>
+				<div class="form-group has-feedback">
+					<div class="row">
+						<div class="col-xs-8">
+							<div class="checkbox icheck">
+								<label> <input type="checkbox" name="checkName"
+									id="checkName">保存账号信息
+								</label>
+							</div>
+						</div>
+
+					</div>
+				</div>
+				<div class="text-center">
+					<button type="submit" class="btn btn-info btn-block btn-lg"
+						id="login">登 录</button>
+				</div>
+			</form>
+		</div>
+	</div>
+	<script
+		src="${request.contextPath}/lib/plugins/jQuery/jQuery-2.1.4.min.js"></script>
+	<script
+		src="${request.contextPath}/applib/bootstrap/js/bootstrap.min.js"></script>
+	<script
+		src="${request.contextPath}/applib/plugins/iCheck/icheck.min.js"></script>
+		<script type="text/javascript">
+		$(function(){
+			$('input').iCheck({
+			      checkboxClass: 'icheckbox_square-blue',
+			      radioClass: 'iradio_square-blue',
+			      increaseArea: '20%' // optional
+			    });
+		});
+		</script>
+</body>
+</html>

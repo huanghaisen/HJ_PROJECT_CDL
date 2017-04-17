@@ -1,0 +1,81 @@
+<!-- 公共头部 开始 -->
+  <header class="main-header">
+    <!-- Logo -->
+    <a href="index.html" class="logo">     
+      <span class="logo-mini"><b></b></span>      
+      <span class="logo-lg"><b>${systitle!}管理平台</b></span>
+    </a>
+    <!-- Header Navbar: style can be found in header.less -->
+    <nav class="navbar navbar-static-top" role="navigation">
+      <!-- Sidebar toggle button-->
+      <a href="#" class="sidebar-toggle" data-toggle="offcanvas" role="button">
+        <span class="sr-only">Toggle navigation</span>
+      </a>
+
+      <div class="navbar-custom-menu">
+        <ul class="nav navbar-nav">
+      
+          <!-- 
+          <li class="dropdown messages-menu">
+            <a href="#" class="dropdown-toggle" data-toggle="dropdown">
+              <i class="fa fa-envelope-o"></i>
+              <span class="label label-success">4</span>
+            </a>            
+          </li>
+         
+          <li class="dropdown notifications-menu">
+            <a href="#" class="dropdown-toggle" data-toggle="dropdown">
+              <i class="fa fa-bell-o"></i>
+              <span class="label label-warning">10</span>
+            </a>            
+          </li>
+          
+          <li class="dropdown tasks-menu">
+            <a href="#" class="dropdown-toggle" data-toggle="dropdown">
+              <i class="fa fa-flag-o"></i>
+              <span class="label label-danger">9</span>
+            </a>            
+          </li>  -->
+          
+          <!-- User Account: style can be found in dropdown.less -->
+          <li class="dropdown user user-menu">
+            <a href="#" class="dropdown-toggle" data-toggle="dropdown">
+              <img src="${request.contextPath}/images/chinaMoblie160x160.png" class="user-image" alt="User Image">
+              <span class="hidden-xs">${userInfo.nickName!}</span>
+            </a>
+            <ul class="dropdown-menu">
+                  <!-- User image -->
+                  <li class="user-header">
+                    <img src="${request.contextPath}/images/chinaMoblie160x160.png" class="img-circle" alt="User Image" />
+                    <p>
+                      ${userInfo.nickName!}
+                      <small>${userInfo.email!}</small>
+                    </p>
+                  </li>
+                  <!-- Menu Body -->
+                  <li class="user-body">
+                    
+                    <div class="col-xs-4 text-center" style="width: 100%;">
+                      <button class="btn btn-primary margin btn-sm" type="button" onclick="showUser();">查看个人资料</button>
+                    </div>
+                  </li>
+                  <!-- Menu Footer-->
+                  <li class="user-footer">
+                    <div class="pull-left">
+                      <a href="#" class="btn btn-default btn-flat" onclick="showPassword()">修改密码</a>
+                    </div>
+                    <div class="pull-right">
+                      <a href="#" onclick="quit()" class="btn btn-default btn-flat">退出</a>
+                    </div>
+                  </li>
+                </ul>
+          </li>
+          <!-- Control Sidebar Toggle Button -->
+          <li>
+            <a href="#" data-toggle="control-sidebar"><i class="fa fa-gears"></i></a>
+          </li>
+        </ul>
+      </div>
+    </nav>
+  </header>
+  <!-- 公共头部 结束 -->

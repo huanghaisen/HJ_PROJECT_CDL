@@ -1,0 +1,112 @@
+<style>
+.showTip { width:300px; border-radius: 5px; background: #000; opacity:0.8;}
+.showTipcon { padding:5px; }
+.showTipcon p {color: #fff; }
+/* dataTables列内容居中 */
+.table>tbody>tr>td{
+        text-align:center;
+}
+
+/* dataTables表头居中 */
+.table>thead:first-child>tr:first-child>th{
+        text-align:center;
+}
+
+table.dataTable thead > tr > th{
+	padding-right: 0px;
+}
+</style>
+
+<div class="box box-primary">
+<div class="box-body">
+
+<div id="theexampleArea">
+<table width="100%" class="table table-bordered table-striped" id="data_table"></table>
+</div>
+</div>
+</div>
+
+<script src="${request.contextPath}/lib/plugins/datatables/jquery.dataTables.min.js"></script>
+<script type="text/javascript" src="${request.contextPath}/js/Form_data_Submit.js"></script>
+
+<script>
+       
+var table=$('#data_table').DataTable({
+			    ajax: {
+					"url":contextPath+"/soa/monitor/faultMonitor2/datas/search",
+					"type": "post",
+					"dataType":"json",
+					"data":function(d){
+						
+					}
+				},
+		        ordering: false,
+				info: false,
+				scrollX: false,
+				scrollY: '50vh',
+				processing: false,
+		        serverSide: true,
+				paging: false,
+				pageLength: 1,
+				pagingType: "full_numbers",//number simple simple_numbers full 默认full_numbers
+				lengthChange: false,   //可变分页组件,下行可规定显示页数，左边是定义，右边是页面显示的效果（如-1就是搜全部，但页面显示的选项是ALL）
+				//"lengthMenu": [[10, 25, 50, -1], [10, 25, 50, "All"]],
+
+		        searching: false,
+			    columns: [
+					
+					{ 
+						title: '设备用途',
+						width:"20%",
+						data: 'deviceFunctionName',
+						align: 'center',
+	                    valign: 'middle'
+					}, 
+					
+					{ 
+						title: '监控状态',
+						width:"10%",
+						data: function (e) {//这里给最后一列返回一个操作列表
+							if(e.status==0){
+								return '<a class="btn btn-default btn-xs show-detail-json" style="color:rgb(176, 219, 86);"   data-whatever='+e.id+' onclick="status('+e.id+')">监控中 <i class="glyphicon glyphicon-retweet"></i></a>';
+							}
+							else{
+								return '<a class="btn btn-default btn-xs show-detail-json" style="color:red;"  data-whatever='+e.id+' onclick="status('+e.id+')">未监控 <i class="glyphicon glyphicon-retweet"></i></a>';
+							}
+                       		
+                    	}
+					}, 
+					{ 
+						title: '更新人员',
+						width:"10%",
+						data: 'loginName',
+						align: 'center',
+	                    valign: 'middle'
+					},{ 
+						title: '最后更新时间',
+						width:"10%",
+						data: 'lastModifiedTime',
+						align: 'center',
+	                    valign: 'middle'
+					}
+			    ]
+			});
+        	
+//修改状态
+function status(id){
+	var data = {"id":id}
+  	$.ajax({
+  		url:contextPath+"/soa/monitor/faultMonitor2/datas/status",    
+  		data:data,
+  		type:"post",
+  		dataType:"json",
+  		async:false,
+  		success: function(result){
+  			if(result.status==0){
+  				table.ajax.reload(null,false);
+      		}
+  		} 
+  	});
+}
+	
+</script>

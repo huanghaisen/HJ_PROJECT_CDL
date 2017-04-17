@@ -1,0 +1,109 @@
+<div class="box">
+	<div class="box-header"><h3 class="box-title">工单详情</h3></div>
+	<!-- /.box-header -->
+	<div class="box-body no-padding">
+		<div id="workId" hidden val=${TAsmpWork.id!}></div>
+		<div id="manufId" hidden val=${TAsmpWork.manufId!}></div>
+		<table class="table table-striped">
+			<tbody>
+				<tr>
+					<td>工单编号：</td>
+					<td>${TAsmpWork.workCode!}</td>
+					<td>工单状态：</td>
+					<td>${TAsmpWork.statusStr!}</td>
+				</tr>
+				<tr>
+					<td>营业厅：</td>
+					<td>${TAsmpWork.orgName!}</td>
+					<td>报障人：</td>
+					<td>${TAsmpWork.creatorName!}</td>
+				</tr>
+				<tr>
+					<td>设备编号：</td>
+					<td>${TAsmpWork.deviceCode!}</td>
+					<td>维保厂商：</td>
+					<td>${TAsmpWork.manufName!}</td>
+				</tr>
+				<tr>
+					<td>报障时间：</td>
+					<td>${TAsmpWork.createTime!}</td>
+					<td>故障现象：</td>
+					<td colspan=2>${TAsmpWork.modelFaultNameList!}</td>
+					<td></td>
+				</tr>
+				<tr>
+					<td>故障描述：</td>
+					<td colspan=2>${TAsmpWork.modelFaultRemark!}</td>
+					<td></td>
+				</tr>
+				<tr>
+										
+					<td>附件：</td>
+					<td id="filetd"></td>
+				</tr>
+
+			</tbody>
+		</table>
+	</div>
+	<!-- /.box-body -->
+</div>
+
+<div class="box-body">
+	<div class="input-group" style="width: 100%">
+		<span class="input-group-addon" id="sizing-addon4" style="width: 20%">选择维保人员</span>
+		<select class="js-example-placeholder-single form-control select2"
+			id="maintainer" style="width: 60%" aria-describedby="sizing-addon4">
+			<option></option>
+		</select>
+	</div>
+
+</div>
+
+
+<script>
+	var manufId = $("#manufId").attr('val');
+	var maintainerUrl = contextPath + "/soa/user/datas/manufUserSelect";
+	var maintainerTarget = "#maintainer";
+
+	//alert(manufId);
+	maintainerSelect(maintainerUrl, maintainerTarget)
+	function maintainerSelect(comboxUrl, SelectTarget) {
+		$.ajax({
+			url : comboxUrl,
+			type : "post",
+			dataType : "json",
+			data : {
+				"manufId" : manufId
+			},
+			async : false,
+			success : function(result) {
+
+				for (var i = 0; i < result.length; i++) {
+					var $option = $('<option/>').attr('value', result[i].id)
+							.html(result[i].nickName);
+					$option.appendTo($(SelectTarget));
+				}
+
+				$(SelectTarget).select2({
+					placeholder : "请选择维保人员",
+					allowClear : false
+				})
+
+			}
+		});
+	}
+</script>
+<script>
+
+//附件下载链接js
+var fileIdList='${TAsmpWork.attachList!}';
+if(fileIdList!=0&&fileIdList!=-1){
+	var fileIdArry=fileIdList.split(',');
+	for (var i = 0; i < fileIdArry.length; i++) {
+			 $('#filetd').append('<a href="'+contextPath+'/soa/files/file/download?id='+fileIdArry[i]+'">附件'+(i+1)+'</a>&nbsp');
+		}	
+}
+
+
+
+</script>

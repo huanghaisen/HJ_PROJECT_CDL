@@ -1,0 +1,108 @@
+<link rel="stylesheet" href="${request.contextPath}/lib/plugins/select2/select2.min.css">
+<link rel="stylesheet" href="${request.contextPath}/lib/plugins/zTree3/css/zTreeStyle/zTreeStyle.css">
+<link rel="stylesheet" href="${request.contextPath}/lib/plugins/zTree3/css/ZtreeInput.css">
+<link rel="stylesheet" href="${request.contextPath}/lib/plugins/daterangepicker/daterangepicker-bs3.css">
+<style>
+
+td.details-control {
+    cursor: pointer;    
+}
+tr.shown td.details-control {
+   
+}
+      
+   .showTip { width:300px; border-radius: 5px; background: #000; opacity:0.8;}
+   .showTipcon { padding:5px; }
+   .showTipcon p {color: #fff; }
+
+   .ztree li span.button { min-width:0; min-height:0}
+   
+   .select2-container--default .select2-selection--single {border-radius:0}
+  .select2-container .select2-selection--single {height:34px}
+   
+</style>
+<div class="box box-primary">
+ <div class="box-header with-border">
+  <div id="mainpanel" style="margin: 0px 0px 0px 0px;">
+   <div id="mapcontent" style="width: 100%;position: relative;">
+    <!--  -----------工具及按钮栏填充区 --------------  -->
+     <div id="toolArea"></div>       
+    <!--  -----------工具及按钮栏填充区 --------------  -->
+    <div id="titleHeader"><center>
+    	<h2>
+    	${systitle!}移动市区/县/营业厅耗材使用情况
+    	</h2>
+    	</center>
+    </div>
+    </div>
+
+	<!-- DataTable主体 -->
+	<table id="table_form" class="table table-bordered table-striped table-hover"
+		cellspacing="0" width="100%">
+	</table>
+    <!-- DataTable主体 -->
+	
+  </div>
+ </div>
+</div>
+
+<div class="modal fade" id="editModal"  role="dialog" aria-labelledby="editModal">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+        <h4 class="modal-title" id="myModalLabel">耗材使用统计</h4>
+      </div>
+      <div class="modal-body" id="modalBody">
+		
+       </div>
+    </div>
+  </div>
+</div>
+<script src="${request.contextPath}/lib/plugins/select2/select2.full.min.js"></script>
+<script type="text/javascript" src="${request.contextPath}/js/aboutForm.js"></script>
+<script src="${request.contextPath}/lib/plugins/daterangepicker/moment.min.js"></script>
+<script type="text/javascript">var dataUrl='${dataUrl!}';var exportUrl='${exportUrl!}';</script>
+<script type="text/javascript"src="${request.contextPath}/js/workReport/supplies_index.js"></script>
+<script>
+	var rows_selected = [];
+	var data={};
+    var treeUrl='${treeUrl!}'+"?level=3";
+	var toolsUrl='${toolsUrl!}';
+    var userId='${user.uid!}';
+
+    //搜索框以及按钮填充请求
+    $.ajax({
+		type:"post",
+		url:contextPath+toolsUrl,
+		data:"json",
+		success:function(obj){
+			//$("#toolArea").html("");
+			$("#toolArea").html(obj);
+		}
+	});
+        
+	function conditionSearch(){
+		var time=$("#time").val();
+		var oid=$("#typeInputTree").attr("code");
+		var url=contextPath + dataUrl;
+		console.dir(time);
+	    var params= {};
+	       params.time = time;
+	       params.oid = oid;
+	      table.settings()[0].ajax.url = url;   
+	      table.settings()[0].ajax.data = {"params":params};
+	      table.ajax.reload();
+	  }
+
+	function exportProduct(){
+		  var time=$("#time").val();
+		  var oid=$("#typeInputTree").attr("code");
+		  if(oid==null){
+			  oid=0;
+			}
+		  location.href =contextPath+exportUrl+'?time='+time+'&oid='+oid;
+
+	}
+
+</script>

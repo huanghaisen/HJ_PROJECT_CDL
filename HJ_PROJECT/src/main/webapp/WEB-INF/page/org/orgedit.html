@@ -1,0 +1,182 @@
+<!-- 用户编辑模态框 -->
+<link rel="stylesheet" href="${request.contextPath}/lib/plugins/select2/select2.min.css">
+   <div class="modal-body">
+    <form class="form-horizontal"  method="post" name="form_action" id="form_action" action="${request.contextPath}/soa/org/datas/save">
+      <input type="hidden" id="id" name="id" value="${model.id!}">
+      <input type="hidden" id="parentOrgId" name="parentOrgId" value="${model.parentOrgId!}">
+      
+      
+      <div class="form-group">   
+        <label for="inputPassword3" class="col-sm-3 control-label">机构类型</label>
+        <div class="col-sm-9">
+         <select class="form-control" id="orgType" name="orgType">
+           <option value="0">非营业厅机构</option>
+           <option value="1">自建厅</option>
+           <option value="2">合作厅</option>
+           <option value="3">特约代办点</option>
+           <option value="4">手机卖场</option>
+         </select>
+       </div>
+       </div>
+       
+       <div class="form-group">
+	       <label for="inputPassword3" class="col-sm-3 control-label">机构编码</label>
+           <div class="col-sm-9">
+	        <input type="text" class="form-control" id="orgCode" name="orgCode" placeholder="机构编码" value="${model.orgCode!}">
+	      </div>
+      </div>
+      
+       <div class="form-group">
+        <label for="inputPassword3" class="col-sm-3 control-label">机构名称</label>
+        <div class="col-sm-9">
+        <input type="text" class="form-control" id="orgName" name="orgName" placeholder="机构名称" value="${model.orgName!}">
+      </div>
+      </div>
+      
+      <div class="form-group">
+     	<label for="inputPassword3" class="col-sm-3 control-label">机构简称</label>
+        <div class="col-sm-9">
+        <input type="text" class="form-control" id="orgBriefName" name="orgBriefName" placeholder="机构简称" value="${model.orgBriefName!}">
+      </div>
+      </div>
+      
+       <div class="form-group">
+      <label for="inputPassword3" class="col-sm-3 control-label">联系电话</label>
+        <div class="col-sm-9">
+        <input type="text" class="form-control" id="telphone" name="telphone" placeholder="联系电话" value="${model.telphone!}">
+      </div>      
+      </div>
+      
+       <div class="form-group">
+       <label for="inputPassword3" class="col-sm-3 control-label">邮箱地址</label>
+        <div class="col-sm-9">
+        <input type="email" class="form-control" id="email" name="email" placeholder="邮箱" value="${model.email!}">
+      </div>		
+      </div>
+      
+       <div class="form-group">
+      <label for="inputPassword3" class="col-sm-3 control-label">机构负责人</label>
+        <div class="col-sm-9">
+        <select class="js-example-placeholder-single  select2 orgSelect" id="leaderId" name="leaderId"  style="width: 100%;">
+        	<option value="">请选择</option> 
+        </select>
+      </div>
+      </div>
+      
+       <div class="form-group">
+      	<label for="inputPassword3" class="col-sm-3 control-label">联系地址</label>
+        <div class="col-sm-9">
+      	<textarea class="form-control" rows="3" id="address" name="address" placeholder="联系地址">${model.address!}</textarea>
+      </div>
+      </div>
+  
+   </form>
+  </div>
+  
+    <script type="text/javascript" src="${request.contextPath}/js/aboutForm.js"></script>
+    <script src="${request.contextPath}/lib/plugins/select2/select2.full.min.js"></script>
+    <script type="text/javascript">
+    $(document).ready(function(){
+			 var orgType=$("#orgType");
+			 orgType.val('${model.orgType?default("0")}');
+			 $('#form_action').bootstrapValidator({
+			        message: 'This value is not valid',
+			        container: 'tooltip',
+			        feedbackIcons: {
+			            valid: 'glyphicon glyphicon-ok',
+			            invalid: 'glyphicon glyphicon-remove',
+			            validating: 'glyphicon glyphicon-refresh'
+			        },
+			        fields: {
+			        	orgCode: {
+			        		container: 'popover',
+			                message: 'The loginName is not valid',
+			                validators: {
+			                	container: 'popover',
+			                    notEmpty: {
+			                        message: '机构编码不能为空！'
+			                    },
+			                    regexp: {
+			                        regexp: /^[A-Za-z]+$/,
+			                        message: '机构编码必须是由字母组成！'
+			                    }
+			                }
+			            },
+			            orgName: {
+			            	container: 'popover',
+			                message: 'The nickName is not valid',
+			                validators: {
+			                    notEmpty: {
+			                        message: '机构名称不能为空！'
+			                    }
+			                }
+			            },
+			            orgBriefName: {
+			            	container: 'popover',
+			            	message: 'The nickName is not valid',
+			                validators: {
+			                    notEmpty: {
+			                        message: '机构简称不能为空！'
+			                    }
+			                }
+			            },
+			            email: {
+			            	container: 'popover',
+			                validators: {
+			                    notEmpty: {
+			                        message: '邮编地址不能为空！'
+			                    },
+			                    emailAddress: {
+			                        message: '输入的不是一个合法的邮编地址！'
+			                    }
+			                }
+			            },
+			            address: {
+			            	container: 'popover',
+			                validators: {
+			                    notEmpty: {
+			                        message: '地址不能为空！'
+			                    }
+			                }
+			            },
+			            telphone: {
+			            container: 'popover',
+			            validators: {
+			            	notEmpty: {
+			                    message: '电话号码不能为空！'
+			                },
+			                regexp: {
+			                    regexp: /((\d{11})|^((\d{7,8})|(\d{4}|\d{3})-(\d{7,8})|(\d{4}|\d{3})-(\d{7,8})-(\d{4}|\d{3}|\d{2}|\d{1})|(\d{7,8})-(\d{4}|\d{3}|\d{2}|\d{1}))$)/,
+			                    message: '请输入合法的电话号码！'
+			                }
+			            }
+			        }
+			        }
+			    }).on('success.form.bv', function(e) {
+			    	dialogEdit.title('正在提交..');
+ 					ajaxSubmit($('#form_action')[0], function(data){
+	    					
+	    					treeRefresh(nodeEdit);
+	    					dialogEdit.close().remove();
+ 						var x = dialog({
+    						content : data.msg
+    					});
+    						x.show();
+    						setTimeout(function() {    					    
+    						x.close().remove();   						
+    					}, 2000); 
+	    					
+ 					});
+			    });
+    	});
+    
+  	//机构下拉
+    selectcbx(
+    		contextPath+"/soa/user/datas/userSelect",
+    		"#leaderId",
+    		{
+    			"cmd":0,
+    			"oid":0,
+    		}
+    		);
+    </script>

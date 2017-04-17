@@ -1,0 +1,106 @@
+<script>
+	
+	var isleaf = ${menu.isLeaf};
+	if(isleaf==0){
+		$("#url").hide();
+		$("#isopen").hide();
+	}
+</script>
+
+<!-- 用户编辑模态框 -->
+ <div class="modal-body">
+    <form class="form-horizontal" method="post" name="form_menu" id="form_menu" action="${request.contextPath}/soa/menu/datas/save">
+       <input type="hidden" id="id" name="id" value="${menu.id!}">   
+       <input type="hidden" id="menuCode" name="menuCode" value="${menu.menuCode!}">
+       <!-- <input type="hidden" id="menuIsopen" name="menuIsopen" value="${menu.menuIsopen!}"> -->
+       <input type="hidden" id="menuType" name="menuType" value="${menu.menuType!}">
+       <input type="hidden" id="menuTarget" name="menuTarget" value="${menu.menuTarget!}">
+       <input type="hidden" id="menuIcon" name="menuIcon" value="${menu.menuIcon!}">
+       <input type="hidden" id="parentId" name="parentId" value="${menu.parentId!}"> 
+       <input type="hidden" id="isLeaf" name="isLeaf" value="${menu.isLeaf!}"> 
+       <!-- <input type="hidden" id="isVisible" name="isVisible" value="${menu.isVisible!}">  -->
+       <input type="hidden" id="status" name="status" value="${menu.status!}">
+       <input type="hidden" id="mclass" name="mclass" value="${menu.mclass!}"> 
+       <input type="hidden" id="menuSence" name="menuSence" value="${menu.menuSence!}">  
+       <input type="hidden" id="menuOrder" name="menuOrder" value="${menu.menuOrder!}">          
+      <div class="box-body">
+      
+               <div class="form-group">
+                  <label for="exampleLoginName1" class="col-sm-3 control-label">菜单名</label>
+                  <div class="col-sm-9">
+                  <input type="text" class="form-control" id="menuName" name="menuName" value="${menu.menuName!}">  
+                  </div>            
+                </div>
+                
+                <div class="form-group" id="url">               
+                  <label for="exampleNickname1" class="col-sm-3 control-label">菜单路径</label>
+                  <div class="col-sm-9" >
+                  <input type="text" class="form-control" id="menuUrl" name="menuUrl" value="${menu.menuUrl!}">
+                  </div>
+                </div>
+                
+                
+                <div class="form-group" id="isopen">               
+                  <label for="exampleNickname1" class="col-sm-3 control-label">是否开放</label>
+                   <div class="col-sm-9" >
+                   <select class="form-control" id="menuIsopen" name="menuIsopen" data-bv-field="country" >
+  						<option value="0">内部地址</option>
+        				<option value="1">弹框</option>
+        				<option value="2">事件触发</option>
+   				   </select>
+   				   </div>
+   				    <script>
+     					var menuIsopen= "${menu.menuIsopen!}";
+     					$("#menuIsopen").val(menuIsopen);
+    			   </script>
+                </div>
+                
+                <div class="form-group" id="visible">               
+                  <label for="exampleNickname1" class="col-sm-3 control-label">是否可见</label>
+                  <div class="col-sm-9">
+                   <select class="form-control" id="isVisible" name="isVisible" data-bv-field="country" >
+  						<option value="0">可见</option>
+        				<option value="1">隐藏</option>
+   				   </select>
+   				   </div>
+   				    <script>
+     					var isVisible= "${menu.isVisible!}";
+     					$("#isVisible").val(isVisible);
+    			   </script>
+                </div>
+                
+                
+                <!-- <div>
+                	<label for="exampleSex1">排序</label>
+                	<select class="form-control" name="menuOrder" id="menuOrder" data-bv-field="country">
+                          <option value="1">1</option>
+                          <option value="2">2</option>
+                          <option value="3">3</option>
+                          <option value="4">4</option>
+                          <option value="5">5</option>
+                          <option value="6">6</option>
+                          <option value="7">7</option>
+                          <option value="8">8</option>
+                          <option value="9">9</option>
+                          <option value="10">10</option>
+                          <option value="11">11</option>
+                          <option value="12">12</option>
+                          <option value="13">13</option>
+                          <option value="14">14</option>
+                          <option value="15">15</option>
+                   </select>
+                   动态设置Select的默认值
+                   <script>
+     					var job= "${menu.menuOrder!}";
+     					if(job==0){
+     						$("#menuOrder").val(1);
+     					}else{
+     						$("#menuOrder").val(job);
+     					}
+     					
+    			   </script>
+               </div> -->
+                
+      </div>
+     </form>
+     </div>	

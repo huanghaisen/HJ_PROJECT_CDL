@@ -1,0 +1,114 @@
+<form class="form-horizontal"  method="post" name="form_action" id="form_action" action="${request.contextPath}/soa/api/datas/save/supplies">
+<div class="mainpage">
+  <div class="topnavbar">
+    <a href="#" class="topnav-back"><i class="fa fa-fw fa-angle-left"></i></a> 
+    <span class="topnav-check"><i class="fa fa-fw fa-check" id="sub_ok"></i></span>
+    <div class="topnavtitle">耗材申请</div>   
+    <div class="box-tools pull-right">
+      <div class="has-feedback">
+        <input type="text" class="form-control input-sm" placeholder="Search Mail">
+        <span class="glyphicon glyphicon-search form-control-feedback"></span>
+      </div>
+    </div>
+  </div>
+ <div class="mainpagecontent">
+  <section class="m-content">   
+    
+    <div class="mbox mt10">
+      <p>请选择工单编号：</p>
+      <div class="mt10">
+        <select class="form-control select2" name="workId" id="workCode">
+        <option></option>
+          </select>
+        </div>
+    </div>
+
+    <div class="mbox">
+      <p>请选择配件(可多选)：</p>
+      <div class="mt10">
+      	<input type="hidden" value="" name="partId" id="partId"/>
+        <select class="form-control select2" multiple="multiple" name="part" id="part">
+          </select>
+        </div>    
+    </div>
+  </section>
+</div> 
+</div>
+</form>
+<script src="${request.contextPath}/applib/plugins/select2/select2.full.min.js"></script>
+<script src='${request.contextPath}/applib/plugins/iscroll/iscroll-probe.js'></script>
+<script src='${request.contextPath}/js/aboutForm.js'></script>
+<script>
+
+   $(function(){
+   	app.currentCompleted = true;
+	var api_part_url="/soa/api/datas/partlist";
+	var api_work_url="/soa/api/datas/worklist";
+	function init(){
+		getWorklist();
+		getPartlist();
+	}
+	   
+	function getWorklist(){
+		ajax(
+			api_work_url,
+			"JSON",
+			function(obj){
+				//console.dir(partList);
+				var workCodeList=obj.data;
+				for(var i = 0;i<workCodeList.length;i++){    	
+  		   			var $option = $('<option/>').attr('value',workCodeList[i].id).html(workCodeList[i].workCode);
+  		   			$option.appendTo($('#workCode'));
+  		   		}
+			});
+	}
+	
+	function getPartlist(){
+		ajax(
+			api_part_url,
+			"JSON",
+			function(obj){
+				var partList=obj.data;
+				var list="";
+				for(var i=0;i<partList.length;i++){
+					list+='<optgroup label='+partList[i].name+'>';
+					 var part = partList[i].part;
+					 if(part!=null){
+						for(var j=0;j<part.length;j++){
+							list+='<option value="'+part[j].id+'">'+part[j].name+'</option>';
+						}
+				     }
+					 list+='</optgroup>';
+ 				   }
+				console.dir(partList);
+				
+ 				$('#part').html(list);
+			});
+	}
+	
+	$("#sub_ok").on("click",function(){
+		app.currentCompleted = false;
+		$('#partId').val($('#part').val());//获取select选择到的值后赋值给input能让表单序列化
+		ajaxSubmit($('#form_action')[0], function(obj){
+			var d = dialog({
+     			title:'提示',
+     			zIndex:1080,
+     			content : obj.msg
+     		});
+     		d.show();
+     		
+     		setTimeout(function() {
+     			d.close().remove();
+     			app.currentCompleted = true;
+     			app.goback();
+     		}, 3000);
+		});
+	});
+	
+	  
+       $("#workCode").select2({placeholder: "选择工单编号",minimumResultsForSearch: -1});
+       $("#part").select2({placeholder: "选择配件"});
+       init();
+  });
+
+</script>

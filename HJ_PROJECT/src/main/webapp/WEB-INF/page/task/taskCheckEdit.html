@@ -1,0 +1,239 @@
+<style>
+   .innbr { display:block; height: 34px; line-height: 34px; border-bottom:1px solid #d2d6de }
+   .nbr {border-left:0;border-top:0; border-right:0;}
+</style>
+
+<form class="form-horizontal"  method="post" name="form_submit" id="form_submit" action="${request.contextPath}/soa/task/taskOrg/check/datas/save">
+<input type="hidden" id="taskOrgId" name="taskOrgId" value="${taskOrg.id!}"> 
+<div class="box-body">
+<div class="row">
+  <div class="col-md-6">
+   <div class="form-horizontal">
+      <div class="form-group">
+        <label for="inputName" class="col-sm-4 control-label">任务编号：</label>
+        <div class="col-sm-5">
+          <span class="innbr">${taskOrg.taskCode!}</span>
+        </div>
+      </div>                 
+      <div class="form-group">
+        <label for="inputName" class="col-sm-4 control-label">维保厂商：</label>
+        <div class="col-sm-5">
+          <span class="innbr">${taskOrg.manufName!}</span>
+        </div>
+      </div>
+      
+      <div class="form-group">
+        <label for="inputName" class="col-sm-4 control-label">任务开始时间：</label>
+        <div class="col-sm-5">
+          <span class="innbr">${taskOrg.beginTime!}</span>
+        </div>
+      </div>
+      
+      
+   </div>
+  </div>
+  <div class="col-md-6">
+     <div class="form-horizontal">
+                    
+      <div class="form-group">
+        <label for="inputName" class="col-sm-4 control-label">申请人：</label>
+        <div class="col-sm-5">
+          <span class="innbr">${taskOrg.initiatorName!}</span>
+        </div>
+      </div>
+      <div class="form-group">
+        <label for="inputName" class="col-sm-4 control-label">申请人电话：</label>
+        <div class="col-sm-5">
+          <span class="innbr">${taskOrg.phone!}</span>
+        </div>
+      </div>
+      
+      <div class="form-group">
+        <label for="inputName" class="col-sm-4 control-label">任务结束时间：</label>
+        <div class="col-sm-5">
+          <span class="innbr">${taskOrg.endTime!}</span>
+        </div>
+      </div>
+   </div> 
+  </div>
+</div>     
+ 
+</div>
+<div class="box-body">
+<div class="row">
+<label for="inputName" class="control-label">巡检设备结果信息</label>
+</div> 
+<div class="row">
+<table id="table2" class="table table-bordered table-striped" cellspacing="0" width="100%"></table>
+
+</div> 
+ </div>
+ 
+ <div class="row">
+
+         <div class="form-group" id="radiogroup">
+         <div class="radio">
+          <label>审核结果：</label>
+          <label>            
+            <input type="radio" name="resultMinute"  value="1">
+            好评
+          </label>
+          <label>
+            <input type="radio" name="resultMinute" value="2">
+            一般
+          </label>
+          <label>
+            <input type="radio" name="resultMinute" value="3">
+            差评
+          </label>
+          </div>                         
+        </div> 
+        
+        <div class="form-group">
+            <label class="col-sm-1 control-label">备注：</label>
+            <div class="col-sm-10">
+              <textarea class="textarea" style="width:80%; height:100px;" placeholder="差评备注不为空，200字以内" id="remark" name="remark"></textarea>
+            </div>
+            <label class="col-sm-2 control-label" id="textCount"></label>
+          </div>
+
+</div>
+</form>
+
+<script type="text/javascript">
+
+$("#remark").keydown(function(){  
+    var curLength=$(this).val().length;   
+    if(curLength>=200){  
+        var num=$(this).val().substr(0,199);  
+        $(this).val(num);  
+        alert("超过字数限制，多出的字将被截断！" );  
+    }  
+    else{
+        var tip ='你还可以输入'+(200-$(this).val().length)+'字'  
+        $("#textCount").html(tip)  
+    }  
+});  
+
+
+
+$(function(){
+	   
+	   var FaultList=null;
+	   $.ajax({
+	   		url:contextPath+"/soa/task/taskOrg/fault/datas/search",    
+	   		type:"post",
+	   		dataType:"json",
+	   		async:false,
+	   		success: function(result){
+	   			FaultList=result.data;
+	   			
+	   		} 
+	   	});
+
+	    // 初始化表格
+	   var table2 = $('#table2').DataTable({
+		  ajax: {
+				"url":contextPath + "/soa/task/taskOrg/executedevice/datas/search",
+				"type": "post",
+				"dataType":"json",
+				"data":function(d){
+					d.orgId = ${taskOrg.id!};
+				}
+			},
+	     columns: [
+	         { 
+	             title: '序号',
+	             data: 'id',
+				 align: 'center',
+	             valign: 'middle'
+	             
+	         },
+	         {
+	        	 title:'设备编号',
+	             data: 'deviceCode',
+	    		 align: 'center',
+	             valign: 'middle'
+	             
+	         },
+	         {   
+	            title:'设备型号',
+	            data: 'deviceModelName',
+	        	align: 'center',
+	            valign: 'middle'
+	         },           
+	         {   
+		            title:'是否正常',
+		            data: 'isError',
+		    		align: 'center',
+		            valign: 'middle'
+		         },
+		         { 
+		        	title:'故障现象',
+		            data: 'falutList',
+		    		align: 'center',
+		            valign: 'middle'
+		         }          
+
+		      ],columnDefs: [{
+		         targets: 3,
+		         render: function (data, type, full, meta){          
+		        	 var html= parseInt(data)==1?'是':'否';
+		             
+		             return html;     
+		       		
+		            return html;
+		         }
+		      },{
+		         targets: 4,
+		         width:300,         
+		         render: function (data, type, full, meta){         
+		        	 
+		            var html = '<select class="form-control select2" multiple="multiple" data-placeholder="请选择" disabled="disabled"  style="width: 100%;"></select>';                
+		       
+		            return html;
+
+		         }
+		      }],     
+
+	      scrollY:"400px",
+	      scrollCollapse:true,
+	      paging:false,
+	      info: false,
+	      lengthChange: false, 
+	      bFilter:false,           
+	      order:[[1, 'dsc']],
+	      ordering:false,
+	      rowCallback: function(row, data, dataIndex){
+	                  
+	    	  var option = null;
+		         for(var i=0;i<FaultList.length;i++){
+					option+='<option value="'+FaultList[i].id+'">'+FaultList[i].modelFaultName+'</option>';
+		         }
+
+
+		         if(data['falutList']!='null' && data['falutList']!=null){
+		
+		        	 var $select = $(row).find('.select2').html(option);      
+		 	        
+			         $select.select2();
+
+			         var selectedarr = data['falutList'].split(',');         
+			         
+			         setTimeout(function(){           
+			            $select.select2("val",selectedarr);                     
+			         },0);
+			     }else{
+			    	 $(row).find('td').eq(4).html('无');
+				 }
+
+	      }
+	   });
+
+	});
+</script>
+
+
+
+
+

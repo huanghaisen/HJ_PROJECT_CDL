@@ -1,0 +1,56 @@
+<div class="mainpage">
+  <div class="topnavbar">
+    <a href="#" class="topnav-back"><i class="fa fa-fw fa-angle-left"></i></a> 
+    <span class="topnav-check"><i class="fa fa-fw fa-check"></i></span>
+    <div class="topnavtitle">耗材申请</div>   
+    
+  </div>
+ <div class="mainpagecontent">
+  <section class="m-content">   
+    
+    <div class="mbox mt10">
+      <p>请选择工单编号：</p>
+      <div class="mt10">
+        <select class="form-control select2" id="select1">
+            <option></option>         
+            <option value="258999999">258999999</option>
+            <option value="258999999">787988988</option>
+            <option value="258999999">7878789</option>
+            <option value="258999999">88979898</option>
+            <option value="258999999">258999999</option>
+          </select>
+        </div>
+    </div>
+
+    <div class="mbox">
+      <p>请选择配件(可多选)：</p>
+      <div class="mt10">
+        <select class="form-control select2" multiple="multiple" id="select2">
+            <optgroup label="集团总部">              
+                <option value="AK">诺恩维保员</option>
+                <option value="HI">中晶维保员</option> 
+                <option value="HI">海信维保员</option>          
+            </optgroup>
+            <optgroup label="维保厂商">
+              <option value="AK">深圳凯欣达公司</option>
+              <option value="HI">凯欣达上海分公司</option>
+            </optgroup>            
+          </select>
+        </div>    
+    </div>
+     
+    
+
+  </section>
+</div> 
+</div>
+
+<script src="plugins/select2/select2.full.min.js"></script>
+<script>
+  
+  $(function(){
+       $("#select1").select2({placeholder: "选择工单编号",minimumResultsForSearch: -1});
+       $("#select2").select2({placeholder: "选择配件"});
+  });
+
+</script>

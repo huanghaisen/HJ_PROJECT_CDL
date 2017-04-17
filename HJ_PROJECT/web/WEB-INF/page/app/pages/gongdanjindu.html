@@ -1,0 +1,252 @@
+<div class="mainpage">
+      <div class="topnavbar">
+        <a href="#" class="topnav-back"><i class="fa fa-fw fa-angle-left"></i></a> 
+        <!--  <span class="topnav-search-btn"><i class="fa fa-fw fa-search"></i></span> -->      
+        <div class="topnavtitle">我的工单</div>     
+        <div class="box-tools pull-right">
+          <div class="has-feedback">
+            <input type="text" class="form-control input-sm" placeholder="Search Mail">
+            <span class="glyphicon glyphicon-search form-control-feedback"></span>
+          </div>
+        </div>
+      </div>
+     <div class="mainpagecontent" id="mainpagecontent">
+      <div id="scroller">
+      <div class="pullDown flip">
+        <span class="pullDownIcon">&nbsp;</span>
+        <span class="pullDownLabel">下拉刷新</span>
+      </div>
+      <div class="content"  id="worksContent">
+        
+
+      </div>
+      <div class="pullUp"></div>
+    </div>
+    </div> 
+    </div>
+    
+    
+    <script src='${request.contextPath}/applib/plugins/iscroll/iscroll-probe.js'></script>
+    <script>
+    app.currentCompleted = true;
+    var contextPath='${request.contextPath}';  //获取服务请求路径前半段
+               
+   function format(data){ //拼接工单
+       
+	   var htmlobj = '<div class="box box-default"  data-pageview="'+contextPath+'/soa/webapp/progress/view?id='+data.id+'" >'
+       +'<div class="box-header with-border" >'
+       +'<h3 class="box-title">'+data.orgName+'</h3>'
+       +'<div class="box-tools pull-right">'
+       +'<span class="label label-info" " >报</span>'
+       +'</div>'
+       +'</div>'
+       +'<div class="box-body">'
+       +'<p>工单编号：<span class="text-muted">'+data.workCode+'</span></p>'
+       +'<p>工单状态：<span class="text-red">'+data.statusStr+'</span></p>'
+       +'</div>'
+       +'<div class="box-footer">'
+       +'<small class="text-muted">'+data.lastModifiedTime+'</small>'
+       +' <div class="box-tools pull-right">'
+       +'  <i class="fa fa-list-ul pull-right text-aqua"></i>'
+       +'</div>'
+       +'</div>'
+       +'</div>'
+       ;
+       
+       return htmlobj;
+       
+   };         
+    </script>
+    <script>
+  
+  $(function(){
+
+    var items_per_page = 1;
+    var scroll_in_progress = false;
+    var myScroll;
+    var start=0;  //工单从第几个开始生成，请求必须参数   
+           
+    function load_content(refresh, next_page){//获取工单数据，固定每次取8个，传入开始取的序号值
+ 	   
+    	$.ajax({	
+ 	    	url:contextPath+"/soa/asmp/asmpWork/datas/myWork",
+ 	    	type:"post",
+ 	    	data:{"start":start,"length":8},
+ 	    	dataType:"json",
+ 	    	success: function(obj){
+ 	    		var works=obj.data;
+ 	    		if(start==0){
+ 	    			$("#worksContent").html("");
+ 	    		}    	 	    		
+ 	    		for(var i=0;i<works.length;i++){
+  	    			//console.log(works[i].orgName);
+  	    			var hobj=format(works[i]);
+  	    			$("#worksContent").append(hobj);
+  	    	}	        
+ 	    	
+ 	          if (refresh) {	        		        
+ 	            myScroll.refresh();
+ 	            pullActionCallback();
+ 	            
+ 	          } else {
+ 	            
+ 	            if (myScroll) {
+ 	              myScroll.destroy();
+ 	              $(myScroll.scroller).attr('style', '');
+ 	              myScroll = null;
+ 	            }	            	         
+ 	            trigger_myScroll();	            
+ 	          } 	                  
+ 	         start=start+8;//每次递增8条工单
+ 	        }
+ 	    	 	    	 	    		 	    	
+ 	    }); 	   
+    }
+    
+
+    function pullDownAction() {
+      load_content('refresh');
+      //console.log('pulldown');//////////////////////////////////////////////////////
+      $('#worksContent').data('page', 1);    
+      start=0;
+      $('#scroller').css({top:0});
+      
+    }
+    function pullUpAction(callback) {
+      if ($('#worksContent').data('page')) {
+        var next_page = parseInt($('#worksContent').data('page'), 10) + 1;
+      } else {
+        var next_page = 2;
+      }
+     
+      load_content('refresh', next_page);
+      //console.log('pullUp');//////////////////////////////////////////////////////
+      $('#worksContent').data('page', next_page);
+      
+      if (callback) {
+        callback();
+      }
+    }
+    function pullActionCallback() {
+    	//console.log('pollActionCallback');//////////////////////////////////////////////////////
+      if (pullDownEl && pullDownEl.className.match('loading')) {
+        
+        pullDownEl.className = 'pullDown';
+        pullDownEl.querySelector('.pullDownLabel').innerHTML = '下拉刷新数据';       
+        myScroll.scrollTo(0, parseInt(pullUpOffset)*(-1), 200);
+        
+      } else if (pullUpEl && pullUpEl.className.match('loading')) {
+        
+        $('.pullUp').removeClass('loading').html('');
+        
+      }
+    }
+    
+    var pullActionDetect = {
+      count:0,
+      limit:3,
+      check:function(count) {
+        if (count) {
+          pullActionDetect.count = 0;
+        }        
+        setTimeout(function() {
+          if (myScroll.y <= (myScroll.maxScrollY + 200) && pullUpEl && !pullUpEl.className.match('loading')) {
+            $('.pullUp').addClass('loading').html('<span class="pullUpIcon">&nbsp;</span><span class="pullUpLabel">Loading...</span>');
+            pullUpAction();
+          } else if (pullActionDetect.count < pullActionDetect.limit) {
+            pullActionDetect.check();
+            pullActionDetect.count++;
+          }
+        }, 100);
+      }
+    }
+
+    //-----------------------------------------------myScroll------------------------------------------------
+    function trigger_myScroll(offset) {
+      pullDownEl = document.querySelector('.pullDown');
+      if (pullDownEl) {
+        pullDownOffset = pullDownEl.offsetHeight;
+      } else {
+        pullDownOffset = 0;
+      }
+      pullUpEl = document.querySelector('.pullUp');  
+      if (pullUpEl) {
+        pullUpOffset = pullUpEl.offsetHeight;
+      } else {
+        pullUpOffset = 0;
+      }
+      
+      if ($('#worksContent >.box').length < items_per_page) {        
+        $('.pullDown').hide();
+        $('.pullUp span').hide();
+        offset = 0;
+      } else if (!offset) {
+        
+        offset = pullUpOffset;
+      }
+      
+      myScroll = new IScroll('#mainpagecontent', { 
+        probeType:1,
+        tap:true, 
+        click:true,
+        preventDefault:false,
+        preventDefaultException:{tagName:/.*/}, 
+        mouseWheel:true,     
+        deceleration:0.0002,
+        startY:(parseInt(offset)*(-1))
+      });
+      
+      myScroll.on('scrollStart', function () {
+        scroll_in_progress = true;
+      });
+      myScroll.on('scroll', function () {
+        
+        scroll_in_progress = true;
+        
+        if ($('#worksContent >.box').length >= items_per_page) {
+          if (this.y >= 5 && pullDownEl && !pullDownEl.className.match('flip')) {
+            pullDownEl.className = 'pullDown flip';
+            pullDownEl.querySelector('.pullDownLabel').innerHTML = '放开刷新';
+            this.minScrollY = 0;
+          } else if (this.y <= 5 && pullDownEl && pullDownEl.className.match('flip')) {
+            pullDownEl.className = 'pullDown';
+            pullDownEl.querySelector('.pullDownLabel').innerHTML = '下拉刷新数据';
+            this.minScrollY = -pullDownOffset;
+          }
+        
+          pullActionDetect.check(0);
+          
+        }
+      });
+
+      myScroll.on('scrollEnd', function () {
+        
+        setTimeout(function() {
+          scroll_in_progress = false;
+        }, 100);
+        if ($('#worksContent >.box').length >= items_per_page) {
+          if (pullDownEl && pullDownEl.className.match('flip')) {
+            pullDownEl.className = 'pullDown loading';
+            pullDownEl.querySelector('.pullDownLabel').innerHTML = 'Loading...';
+            pullDownAction();
+          }
+         
+          pullActionDetect.check(0);
+        }
+      });
+           
+      setTimeout(function() {
+        $('#mainpagecontent').css({left:0});
+      }, 100);
+
+    }
+  //-----------------------------------------------myScroll------------------------------------------------ 
+  
+  
+  document.addEventListener('touchmove', function (e) { e.preventDefault(); }, false);
+  load_content();//初始调用
+   
+     
+  })
+
+</script>

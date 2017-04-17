@@ -1,0 +1,111 @@
+<div class="mainpage">
+  <div class="topnavbar">
+    <a href="#" class="topnav-back"><i class="fa fa-fw fa-angle-left"></i></a> 
+    <span class="topnav-check"><i class="fa fa-fw fa-check"></i></span>
+    <div class="topnavtitle">撤单</div>
+    <div class="box-tools pull-right">
+          <div class="has-feedback">
+            <input type="text" class="form-control input-sm" placeholder="Search Mail">
+            <span class="glyphicon glyphicon-search form-control-feedback"></span>
+          </div>
+        </div>   
+    
+  </div>
+ <div class="mainpagecontent">
+  <section class="m-content">
+    <div class="mbox bor-b">
+    <input class="hidden" id="workId" value=${work.id!} />      
+       <p>提单人：${work.creatorName!}</p>
+       <p>联系方式：${work.creatorTel!}</p>  
+       <p>提单时间：${work.createTime!} </p>        
+    </div>
+    <div class="mbox bor-b">      
+       <p>撤单原因：</p> 
+       <div class="form-group" id="cancelType">
+       <div class="radio">  
+        <label>            
+          <input type="radio" name="options3" checked="checked" value="1">
+          故障已手工修复
+        </label>
+        <label>
+          <input type="radio" name="options3" value="2">
+          信息录入错误 
+        </label>
+        <label>
+          <input type="radio" name="options3" value="3">
+          其他 
+        </label>
+        </div>                         
+      </div>
+      <textarea class="form-control" rows="3" id="remarkText" placeholder="请输入备注"></textarea>            
+    </div>
+    <div class="m-title bor-b">工单信息：</div>
+    <div class="mbox bor-b">      
+       <p>设备编号：${work.deviceCode!}</p>
+       <p>设备类型：${device.deviceTypeName!}</p>  
+       <p>出厂编号：${device.factoryCode!}</p>
+    </div>   
+    <div class="m-title bor-b">故障信息：</div> 
+    <div class="mbox bor-b">      
+       <p>故障类型：${work.modelFaultNameList!}</p>
+       <p>报障级别：${work.workGradeStr!}</p>  
+       <p>状态描述：${work.modelFaultRemark!}</p>      
+       
+    </div> 
+
+  </section>
+</div> 
+</div>
+
+<script>
+app.currentCompleted = true;
+var contextPath='${request.contextPath}';
+$('.fa-check').on('click',function(){
+	var workId = $('#workId').val();
+	var cancelType=$('#cancelType').find('input:checked').attr('value');
+	var remark=$('#remarkText').val();
+	var data = {
+		"id" : workId,
+		"cancelType":cancelType,
+		"remark":remark
+	};
+	if(!remark==""){
+		
+		 $.ajax({
+			   	url:contextPath+"/soa/asmp/asmpWork/datas/revokeStep",    
+			   	type:"post",
+			   	dataType:"json",
+			   	data: data,
+			   	success: function(obj){ 
+			   		var msg=eval(obj).msg;
+			   		var d = dialog({
+						title:'提示',
+						zIndex:1080,
+						content : msg
+					});
+					d.show();
+					setTimeout(function() {
+						d.close().remove();
+					}, 1500);
+			   		
+			   	   } 
+			     });   
+		              
+			     //console.log(data);
+		   			setTimeout(function() {
+		   				$(".topnav-back").trigger("click");
+		   			}, 1500);	
+	 }else{
+		 var d = dialog({
+				title:'提示',
+				zIndex:1080,
+				content : '撤单请在备注填写原因，并控制在100字以内！'
+			});
+			d.show();
+			setTimeout(function() {
+				d.close().remove();
+			}, 1500);
+	 }
+
+});
+</script>

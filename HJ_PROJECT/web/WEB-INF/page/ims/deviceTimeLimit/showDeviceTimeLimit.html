@@ -1,0 +1,48 @@
+<style>
+.ims{padding-top: 7px;}
+</style>
+
+    <form class="form-horizontal" method="post" name="form_user" id="form_user" action="">         
+      <div class="modal-body">
+      	<div class="form-group">
+                <div>
+                  <label class="col-sm-4 control-label">方案名称：</label>
+                  <div class="col-sm-8">
+                  	<div class="ims">${deviceTimeLimit.limitName!}</div>
+                  </div>
+                </div>
+      	</div>
+      	<div class="form-group">         
+                <div>               
+                  <label class="col-sm-4 control-label">工作时间分类：</label>
+                  <div class="col-sm-8">
+                  	<div class="ims">${deviceTimeLimit.timeTypeName!}</div>
+                  </div>
+                </div>
+        </div>
+      	<div class="form-group">        
+                <div>
+                  <label class="col-sm-4 control-label">终端工作时间：</label>
+                  <div class="col-sm-8">	
+                  	<div class="ims">${deviceTimeLimit.limtTime!}</div>
+                  </div>
+                </div>
+        </div>
+      	<div class="form-group">        
+                <div>
+                  <label class="col-sm-4 control-label">创建人员：</label>
+                  <div class="col-sm-8">
+                  	<div class="ims">${deviceTimeLimit.creatName!}</div>
+                  </div>
+                </div>
+        </div>
+      	<div class="form-group">        
+                <div>
+                  <label class="col-sm-4 control-label">最后修改时间：</label>
+                  <div class="col-sm-8">	
+                  	<div class="ims">${deviceTimeLimit.lastupdateTime!}</div>
+                  </div>
+                </div>
+        </div>
+      </div>
+     </form>	

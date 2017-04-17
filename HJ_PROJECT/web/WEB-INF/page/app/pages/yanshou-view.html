@@ -1,0 +1,137 @@
+<div class="mainpage">
+  <div class="topnavbar">
+    <a href="#" class="topnav-back"><i class="fa fa-fw fa-angle-left"></i></a> 
+    <span class="topnav-check"><i class="fa fa-fw fa-check"></i></span>
+    <div class="topnavtitle">验收</div>   
+    
+  </div>
+ <div class="mainpagecontent">
+  <section class="m-content">
+    <div class="mbox">
+       <div class="form-group" id="radiogroup1">
+       <div class="radio" id="checkResult">
+         <label class="t" >验收结果：</label>  
+        <label>            
+          <input type="radio" name="options1" checked="checked" value="1">
+          同意验收
+        </label>
+        <label>
+          <input type="radio" name="options1" value="2">
+          返回重新处理 
+        </label>        
+        </div>                         
+      </div>
+       <div class="form-group" id="radiogroup2">
+       <div class="radio" id="satisfaction"> 
+       <label class="t">满意度：</label>  
+        <label>            
+          <input type="radio" name="options2" checked="checked" value="0">
+          好评
+        </label>
+        <label>
+          <input type="radio" name="options2" value="1">
+          一般 
+        </label>
+        <label>
+          <input type="radio" name="options2" value="2">
+          差评 
+        </label>
+        </div>                         
+      </div>
+      <textarea class="form-control" rows="3" id="remark" placeholder="请输入备注"></textarea> 
+      <div class="row mt10">
+        <div class="col-xs-6">
+          <input class="hidden" id="workId" value=${work.id!} />
+          <p>报障人：${work.creatorName!}</p>
+        </div>
+        <div class="col-xs-6"><p>报障人电话：${work.creatorTel!}</p></div>
+      </div>
+      <p>维保厂商：${work.manufName!}</p>
+    </div>
+    <div class="m-title bor-b">工单信息：</div>
+    <div class="mbox bor-b">      
+       <p>设备编号：${work.deviceCode!}</p>
+       <p>设备类型：${device.deviceTypeName!}</p>  
+       <p>出厂编号：${device.factoryCode!}</p>
+    </div>   
+    <div class="m-title bor-b">故障信息：</div> 
+    <div class="mbox bor-b">      
+       <p>故障类型：${work.modelFaultNameList!}</p>
+       <p>报障级别：${work.workGradeStr!}</p>  
+       <!-- <p>状态码：${work.statusStr!}</p>  -->
+       <p>状态描述：${work.modelFaultRemark!}</p>   
+       
+    </div> 
+
+  </section>
+</div> 
+</div>
+
+<script>
+app.currentCompleted = true;
+var contextPath='${request.contextPath}';
+
+$('.fa-check').on('click',function(){
+
+	var checkResult=$("#checkResult").find('input:checked').attr('value');
+	var satisfaction=$("#satisfaction").find('input:checked').attr('value');
+	var checkRemark=$("#remark").val();
+	var workId=$("#workId").val();
+	//alert("workId:"+workId);
+	var params=null;
+	 if(checkResult==1){
+		 var satisfaction=$('#satisfaction').find('input:checked').attr('value');
+		 
+		 //alert("check:"+checkResult+"===满意度："+satisfaction+"===备注："+checkRemark);
+		 params={"workId":workId,"satisfaction":satisfaction,"remark":checkRemark};
+		 
+	 }else if(checkResult==2){
+		 //alert("退回");
+		 params={"workId":workId,"remark":checkRemark};		 
+	 }
+	
+	var data={"isRepulse":checkResult,"params":params};
+	 if(checkResult==1||checkResult==2&&(checkRemark!=null&&checkRemark!=""&&checkRemark.length<200)){
+		
+		 $.ajax({
+			   	url:contextPath+"/soa/asmp/asmpWork/datas/checkStep",    
+			   	type:"post",
+			   	dataType:"json",
+			   	data: data,
+			   	success: function(obj){ 
+			   		var msg=eval(obj).msg;
+			   		var d = dialog({
+						title:'提示',
+						zIndex:1080,
+						content : msg
+					});
+					d.show();
+					setTimeout(function() {
+						d.close().remove();
+					}, 800);
+
+			   		
+			   	   } 
+			     });    
+		              //alert("提交 ");
+		   			setTimeout(function() {
+		   				$(".topnav-back").trigger("click");
+		   			}, 1200);	
+	 }else{
+		 var d = dialog({
+				title:'提示',
+				zIndex:1080,
+				content : '打回处理请在备注填写原因，并控制在100字以内！'
+			});
+			d.show();
+			setTimeout(function() {
+				d.close().remove();
+			}, 2000);
+	 }
+	
+  
+		
+
+});
+
+</script>

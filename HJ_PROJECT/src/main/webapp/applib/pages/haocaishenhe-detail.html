@@ -1,0 +1,57 @@
+<link rel="stylesheet" href="plugins/datatables/dataTables.bootstrap.css">
+<div class="mainpage">
+  <div class="topnavbar">
+    <a href="#" class="topnav-back"><i class="fa fa-fw fa-angle-left"></i></a>  
+    <div class="topnavtitle">设备配件更换记录</div>   
+    
+  </div>
+ <div class="mainpagecontent">
+  <section class="m-content">
+    <div class="m-title bor-b">西关大街营业厅：</div>
+    <div class="mbox bor-b">
+       <p>营业厅负责人：李大刚</p>
+       <p>申请人电话：1356895623</p>
+       <p>地址：广东西关大街101号</p>        
+    </div>
+    <div class="m-title bor-b">营业厅配件更换记录</div>
+    <div class="bg-w" id="tableview">
+      <table id="example" class="table" cellspacing="0" width="100%">        
+      </table>
+    </div>    
+    
+
+  </section>
+</div> 
+</div>
+<script src="plugins/datatables/jquery.dataTables.min.js"></script>
+<script src="plugins/datatables/dataTables.bootstrap.min.js"></script>
+<script>
+  
+  $(function(){
+
+    var dataSet = [
+    ['201609090001','KXD212006','凭条打印机',1],    
+    ['201609090001','KXD212006','二代身份证扫描仪',1],
+    ['201609090001','KXD212006','凭条打印机',1],
+    ['201609090001','KXD212006','凭条打印机',1]
+
+    ];
+
+   $('#example').dataTable( {
+        "data": dataSet,
+        "columns": [
+            { "title": "业务编号" },
+            { "title": "设备编号" },
+            { "title": "配件名称" },
+            { "title": "数量" }
+            
+        ],
+        "info": false,
+        "lengthChange": false,
+        "ordering": false,
+        "searching": false,
+        "bPaginate": false,
+    });
+  });
+
+</script>

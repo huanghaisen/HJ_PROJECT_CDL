@@ -1,0 +1,199 @@
+ <link rel="stylesheet" href="${request.contextPath}/lib/plugins/zTree3/css/zTreeStyle/zTreeStyle.css">
+ <link rel="stylesheet" href="${request.contextPath}/lib/asmpWorkCss/ZtreeInput.css">
+
+<!-- 用户编辑模态框 -->
+    <form class="form-horizontal"  method="post" name="form_timeLimit" id="form_timeLimit" action="${request.contextPath}/soa/asmpwork/timelimit/datas/save">
+      <input type="hidden" id="id" name="id" value="${model.id!}">
+      <input type="hidden" id="creater" name="creater" value="${model.creater!}">
+      <input type="hidden" id="isDeleted" name="isDeleted" value="0">
+      <input type="hidden" id="orgId" name="orgId" value="${model.orgId!}">
+      <input type="hidden" id="workType" name="workType" value="${model.workType!}">
+      <div class="box-body">
+               
+               <div class="form-group" id="orgdiv" >
+					<label class="col-lg-4 control-label">机构</label>
+				      <div class="col-lg-8">
+                        <input type="text" class="form-control" id="ztreeInputOrg" name="ztreeInputOrg">
+                        <div class="zTreeDemo" style="width: 325px; left: 0px; display: none;">
+                         <ul class="ztree" id="ztree1"></ul>
+                       </div>
+                   </div>
+				</div>
+                
+               <div class="form-group">
+                <label for="partTypeSelect" class="col-lg-4 control-label">工单类别：</label>
+                 <div class="col-lg-8">
+	                 <select id="timeTypeSel"  class="form-control select2" name="timeTypeSel" style="width:100%" aria-describedby="sizing-addon2">
+	                   	<option> <option>
+				        <option value="0">报障</option>
+	                 </select>
+                 </div>
+               </div>
+                
+               <div class="form-group">
+                  <label for="exampleInputPassword1" class="col-lg-4 control-label">派单时限：</label>
+                <div class="col-lg-8">
+                  <input type="text" class="form-control" id="acceptTimeLimit" name="acceptTimeLimit" value="${model.acceptTimeLimit!}">
+                </div>
+               </div>
+               <div class="form-group">
+                  <label for="exampleInputPassword1" class="col-lg-4 control-label">结单时限：</label>
+                <div class="col-lg-8">
+                  <input type="text" class="form-control" id="singleTimeLimit" name="singleTimeLimit" value="${model.singleTimeLimit!}">
+                </div>
+               </div>
+               <div class="form-group">
+                  <label for="exampleInputPassword1" class="col-lg-4 control-label">验收时限：</label>
+                <div class="col-lg-8">
+                  <input type="text" class="form-control" id="checkTimeLimit" name="checkTimeLimit" value="${model.checkTimeLimit!}">
+                </div>
+               </div>
+               <div class="form-group">
+                  <label for="exampleInputPassword1" class="col-lg-4 control-label">工单时限：</label>
+                <div class="col-lg-8">
+                  <input type="text" class="form-control" id="workTimeLimit" name="workTimeLimit" value="${model.workTimeLimit!}">
+                </div>
+               </div>
+               <div class="form-group">
+                  <label for="exampleInputPassword1" class="col-lg-4 control-label">超时短信发送时间：</label>
+                <div class="col-lg-8">
+                  <input type="text" class="form-control" id="messageTimeLimit" name="messageTimeLimit" value="${model.messageTimeLimit!}">
+                </div>
+               </div>
+                
+                
+     
+      </div>
+     </form>	
+<script src="${request.contextPath}/lib/plugins/zTree3/js/jquery.ztree.core.js"></script>
+<script src="${request.contextPath}/lib/plugins/zTree3/js/jquery.ztree.excheck.js"></script>
+<script src="${request.contextPath}/lib/plugins/zTree3/js/jquery.ztree.exedit.js"></script>
+<script type="text/javascript" src="${request.contextPath}/js/orgTreeInput.js"></script> 
+ <script type="text/javascript">
+var zNodes1={};
+var flag=1;//flag不为0时可以选择所有机构
+addTree($('#ztree1'),zNodes1,flag);
+</script>	      
+     <script>
+    $(function(){
+    	$("#timeTypeSel").select2({
+ 			placeholder: "请选择",
+ 			allowClear: false
+ 		}).change(function(){
+ 			var hiddenTimeTypeId=$("#workType");
+			var zhi=$("#timeTypeSel").val();
+			hiddenTimeTypeId.attr("value",zhi);
+ 		});
+	 	var timeTypeVal=$("#workType").val();
+	 	if(timeTypeVal!=null&&timeTypeVal!=""){
+	 		$("#timeTypeSel").val(timeTypeVal).trigger("change");
+	 	}
+	 	//营业厅下拉框
+		var orgSelectedVal=$("#orgId").val();
+	 	//var orgSelectedVal=$("#ztreeInputOrg").attr("data_id");
+	 	if(orgSelectedVal!=null&&orgSelectedVal!=""){
+	 		var zTree = $.fn.zTree.getZTreeObj("ztree1");
+			var node = zTree.getNodeByParam("id",orgSelectedVal);
+			$("#ztreeInputOrg").val(node.name);
+	 	}
+
+$('#form_timeLimit').bootstrapValidator({
+    message: 'This value is not valid',
+    container: 'tooltip',
+    feedbackIcons: {
+        valid: 'glyphicon glyphicon-ok',
+        invalid: 'glyphicon glyphicon-remove',
+        validating: 'glyphicon glyphicon-refresh'
+    },
+    fields: {
+    	ztreeInputOrg: {
+            validators: {
+                notEmpty: {
+                    message: '请选择机构'
+                }
+            }
+        },
+        timeTypeSel: {
+            validators: {
+                notEmpty: {
+                    message: '请选择类型'
+                }
+            }
+        },
+        acceptTimeLimit: {
+        	container: 'popover',
+            message: 'The name is not valid',
+            validators: {
+                notEmpty: {
+                    message: '派单时限不能为空！'
+                }
+            }
+        },
+        singleTimeLimit: {
+        	container: 'popover',
+            validators: {
+                notEmpty: {
+                    message: '结单时限不能为空！'
+                }
+            }
+        },
+        checkTimeLimit: {
+        	container: 'popover',
+            validators: {
+                notEmpty: {
+                    message: '验收时限不能为空！'
+                }
+            }
+        },
+        workTimeLimit: {
+        	container: 'popover',
+            validators: {
+                notEmpty: {
+                    message: '工单时限不能为空！'
+                }
+            }
+        },
+        messageTimeLimit: {
+        	container: 'popover',
+            validators: {
+                notEmpty: {
+                    message: '超时短信发送时间不能为空！'
+                }
+            }
+        }
+
+
+    }
+}).on('success.form.bv', function(e) {
+	var orgId=$("#ztreeInputOrg").attr("data_id");
+	if(orgId!=null){
+		$('#orgId').val(orgId);
+	}
+	ajaxSubmit($('#form_timeLimit')[0], function(data){
+			if(data.status==0){
+				var d = dialog({
+					content : data.msg
+				});
+					d.show();
+					setTimeout(function() {
+					d.close().remove();
+					that.close().remove();
+				}, 2000); 
+					
+					table.ajax.reload(null,false);//刷新表格
+			}else{
+				var d = dialog({
+					content : data.msg
+				});
+					d.show();
+					setTimeout(function() {
+					d.close().remove();
+					that.close().remove();
+				}, 2000);
+			} 
+		});
+	
+    }); 
+
+ }); 
+</script>

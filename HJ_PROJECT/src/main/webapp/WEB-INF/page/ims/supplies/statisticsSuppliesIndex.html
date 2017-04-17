@@ -1,0 +1,358 @@
+<link rel="stylesheet" href="${request.contextPath}/lib/plugins/zTree3/css/zTreeStyle/zTreeStyle.css" type="text/css">
+<link rel="stylesheet" href="${request.contextPath}/lib/plugins/zTree3/css/zTreeStyle/ztreeSelect.css">
+
+<style>
+.showTip { width:300px; border-radius: 5px; background: #000; opacity:0.8;}
+.showTipcon { padding:5px; }
+.showTipcon p {color: #fff; }
+#example_wrapper { margin-top: 30px; }  
+#example_wrapper .btn-group .btn { margin-right: 15px; border-radius: 3px; color: #fff }
+.wb-col { float: left; width:60%; }
+.n-tect { float: left; line-height: 34px; }
+
+/* dataTables列内容居中 */
+.table>tbody>tr>td{
+        text-align:center;
+}
+
+/* dataTables表头居中 */
+.table>thead:first-child>tr:first-child>th{
+        text-align:center;
+}
+
+table.dataTable thead > tr > th{
+	padding-right: 0px;
+}
+.sdown { position: absolute; right:10px; top: 6px; }
+.pre { position: relative; }
+</style>
+
+<div class="box box-primary">
+<!-- 第一个 -->
+<div class="box-body"> 
+<div class="box-body"> 
+    <div class="row">  
+
+    <div class="col-xs-3">
+      <label class="n-tect">选择区域：</label>
+      <div class="wb-col pre">  
+      	<i class="fa fa-sort-desc sdown"></i>
+        <input type="text" class="form-control" id="quanxian" value="请选择" thevalue="" readonly="readonly" >
+        <input type="hidden" id="orgId" value=""/>
+        <div class="zTreeDemo" id="zTreeDemo">
+          <ul id="treeDemo" class="ztree"></ul>
+        </div> 
+      </div>
+    </div>
+    <div class="col-xs-3" >
+      <label class="n-tect">选择时间：</label>
+      <div class="wb-col">  
+        <select class="form-control" id="dates" name="dates" data-bv-field="country" >
+        	<option value="">全部</option>
+        	<option value="1">近一个月</option>
+        	<option value="2">近二个月</option>
+        	<option value="3">近三个月</option>
+        	<option value="6">近半年</option>
+        	<option value="12">近一年</option>
+   		</select>
+      </div>
+    </div>
+    
+    <div class="col-xs-1" style="width:100px;" id="excel">      
+      
+    </div>
+    
+    <div class="col-xs-1" style="width:100px;">      
+      <button type="button" class="btn btn-block btn-primary" onclick="condictionsSearch()"><i class="fa fa-search"></i> 搜索</button>
+    </div>
+    
+    <div class="col-xs-1" style="width:100px;">      
+      <button type="button" class="btn btn-block btn-primary" onclick="emptyCondition()"><i class="fa fa-trash"></i> 清空</button>
+    </div>
+  </div>
+      <table id="maintable" class="table table-bordered table-hover" cellspacing="0" width="100%">        
+           <tfoot><tr><td colspan="4"></td></tr></tfoot>   
+      </table>
+</div>
+</div>
+</div>
+
+<script src="${request.contextPath}/lib/plugins/datatables/extensions/TableTools/js/dataTables.tableTools.min.js"></script>
+<script type="text/javascript" src="${request.contextPath}/js/aboutForm.js"></script>
+<script src="${request.contextPath}/lib/plugins/datatables/jquery.dataTables.min.js"></script>
+<script src="${request.contextPath}/lib/plugins/datatables/dataTables.bootstrap.min.js"></script>
+<script src="${request.contextPath}/lib/plugins/select2/select2.full.min.js"></script>
+<script src="${request.contextPath}/lib/plugins/zTree3/js/jquery.ztree.core.js"></script>
+<script src="${request.contextPath}/lib/plugins/zTree3/js/jquery.ztree.excheck.js"></script>
+<script src="${request.contextPath}/lib/plugins/zTree3/js/jquery.ztree.exedit.js"></script>
+
+
+<script type="text/javascript">
+
+
+
+//初始化表格 一级
+var mtable = $('#maintable').DataTable({
+	    ajax: {
+			"url":contextPath+"/soa/supplies/statistics/datas/search",
+			"type": "post",
+			"dataType":"json",
+			"data":function(d){
+				
+			}
+		},
+		sPaginationType: "full_numbers",
+      	ordering: false,
+		info: false,
+		processing: false,
+      	serverSide: true,
+      	scrollY: '50vh',
+		paging: true,
+		pageLength: 1,
+		lengthChange: false,  
+      	searching: false,
+      	language: {
+          sProcessing: "正在加载中......",
+          sLengthMenu: "每页显示 _MENU_ 条记录",
+          sInfo: "从 _START_ 到 _END_ /共 _TOTAL_ 条数据",
+          sZeroRecords: "对不起，查询不到相关数据！",
+          sEmptyTable: "表中无数据存在！",
+          search: "查询:",
+          paginate: {
+             previous: "上一页",
+             next: "下一页",
+             first: "第一页",
+             last: "最后一页"
+          }
+       },
+      columns: [
+					{ 
+						title: '地市',
+						width:"10%",
+						data: 'city',
+						align: 'center',
+	                    valign: 'middle'
+					},
+					{ 
+						title: '区县',
+						width:"10%",
+						data: 'district',
+						align: 'center',
+	                    valign: 'middle'
+					},
+					{ 
+						title: '营业厅',
+						width:"10%",
+						data: 'orgName',
+						align: 'center',
+	                    valign: 'middle'
+					},
+					{ 
+						title: '设备名称',
+						width:"10%",
+						data: 'deviceName',
+						align: 'center',
+	                    valign: 'middle'
+					},
+					
+					{ 
+						title: '设备编号',
+						width:"8%",
+						data: 'deviceCode',
+						align: 'center',
+	                    valign: 'middle'
+					},
+					{ 
+						title: '维保厂商',
+						width:"15%",
+						data: 'maintenanceName',
+						align: 'center',
+	                    valign: 'middle'
+					},
+					{ 
+						title: '耗材名称',
+						width:"10%",
+						data: 'partName',
+						align: 'center',
+	                    valign: 'middle'
+					},
+					{ 
+						title: '费用(元)',
+						width:"8%",
+						data: 'partPrice',
+						align: 'center',
+	                    valign: 'middle'
+					},
+					{ 
+						title: '申请时间',
+						width:"15%",
+						data: 'createTime',
+						align: 'center',
+	                    valign: 'middle'
+					}
+			    ],
+			    footerCallback: function ( row, data, start, end, display ) {
+			    	var orgId = $("#orgId").val();
+			    	var dates = $("#dates").val();
+			    	var params= {};
+				    params.orgId = orgId;
+				    params.dates = dates;
+		            var html=null;
+		        	$.ajax({
+		           		url:contextPath+"/soa/supplies/statistics/count/datas/search",    
+		           		type:"post",
+		           		dataType:"json",
+		           		data:{"params":params},
+		           		async:false,
+		           		success: function(result){
+		           			var d =result.data;
+		           			var partcount = d.partCount==null?0:d.partCount;
+		           			html="备注：截止 当前时间共有"+d.orgCount+"个营业厅更换耗材，共更换"+partcount+"个耗材，总费用为"+d.partPriceCount+"元。";
+		           		    		
+		           		} 
+		            });
+
+		        	//左下角备注
+		        	var api = this.api(), data;
+		            $( api.column(3).footer() ).html(
+		                html
+		            );
+		        }
+	});
+
+	//导出控件
+	var tableTools = new $.fn.dataTable.TableTools( mtable, {
+    	aButtons: [    
+        	{
+        		"sExtends": "xls",
+                "sButtonText": "导出"
+            }        
+    	],
+    	sSwfPath: "${request.contextPath}/lib/plugins/datatables/extensions/TableTools/swf/copy_csv_xls_pdf.swf"
+	});
+  
+	$( tableTools.fnContainer() ).prependTo('#excel');
+
+	
+	//查询
+  function condictionsSearch(){
+		var orgId = $("#orgId").val();
+		var dates = $("#dates").val();
+		var url=contextPath+"/soa/supplies/statistics/datas/search";
+	    var params= {};
+	    params.orgId = orgId; 
+	    params.dates = dates;
+	    mtable.settings()[0].ajax.url = url;   
+	    mtable.settings()[0].ajax.data = {"params":params};
+	    mtable.ajax.reload();
+	  }
+
+	//清空
+	function emptyCondition(){
+		$('#quanxian').val('请选择').attr('thevalue','');
+		$("#orgId").val("");
+		$("#dates").val("");
+		condictionsSearch();
+	}
+
+
+
+	//下拉树机构
+  
+  var curMenu = null, zTree_Menu = null;
+    var setting = {
+      view: {
+        showLine: false,
+        showIcon: false,
+        selectedMulti: false,
+        dblClickExpand: false,
+        addDiyDom: addDiyDom
+      },
+      data: {
+        simpleData: {
+          enable: true
+        }
+      },
+      callback: {
+        beforeClick: beforeClick,
+        onClick:zTreeOnClick
+      }
+    };
+
+    var orgData = null;
+	$.ajax({
+   		url:contextPath+"/soa/supplies/org/datas/search",    
+   		type:"post",
+   		dataType:"json",
+   		async:false,
+   		success: function(result){
+   			orgData=result.data;
+   		    		
+   		} 
+    });
+    
+	
+    function addDiyDom(treeId, treeNode) {
+      var spaceWidth = 10;
+      var switchObj = $("#" + treeNode.tId + "_switch"),
+      icoObj = $("#" + treeNode.tId + "_ico");
+      
+      switchObj.remove();
+      icoObj.before(switchObj);
+
+      if (treeNode.level > 0) {
+        var spaceStr = "<span style='display: inline-block;width:" + (spaceWidth * treeNode.level)+ "px'></span>";
+        switchObj.before(spaceStr);
+      } 
+      
+    }
+
+    function beforeClick(treeId, treeNode) {
+      return true;
+    }
+    
+    function zTreeOnClick(event, treeId, treeNode) {
+      $('#quanxian').val(treeNode.name);
+      $('#orgId').val(treeNode.id);
+      $('#zTreeDemo').hide();
+      
+    };
+   
+    var thewidth = $('#quanxian').width();
+
+    $('#zTreeDemo').css({width:thewidth+'px'});
+
+    var treeObj = $("#treeDemo");
+    $.fn.zTree.init(treeObj, setting, orgData);
+    zTree_Menu = $.fn.zTree.getZTreeObj("treeDemo");
+
+    treeObj.hover(function () {
+      if (!treeObj.hasClass("showIcon")) {
+        treeObj.addClass("showIcon");
+      }
+    }, function() {
+      treeObj.removeClass("showIcon");
+    });
+
+
+    $('#quanxian').on('mouseenter',function(){
+      var width = $(this).outerWidth();
+      var left = $(this).position().left;
+
+      $('#zTreeDemo').css({width:width+'px',left:left}).show();
+
+    });
+
+    $('#quanxian').parent().on('mouseleave',function(){
+    	$('#zTreeDemo').hide();
+
+      });
+    
+
+    $('#zTreeDemo').mouseleave(function(event) {
+      $(this).hide();
+    });
+    
+
+</script>
+

@@ -1,0 +1,27 @@
+<!-- 用户编辑模态框 -->
+    <form class="form-horizontal"  method="post" name="form_user" id="form_part" action="${request.contextPath}/soa/device/model/datas/save">
+      <input type="hidden" id="id" name="id" value="${model.id!}">
+      <input type="hidden" id="depath" name="depath" value="${model.depath!}">
+      <input type="hidden" id="parentId" name="parentId" value="${model.parentId!}">
+      <input type="hidden" id="ident" name="ident" value="${model.ident!}">
+      <input type="hidden" id="orderNo" name="orderNo" value="${model.orderNo!}">
+      <input type="hidden" id="status" name="status" value="${model.status!}">
+      <input type="hidden" id="modifier" name="modifier" value="${model.modifier!}">
+      <input type="hidden" id="endIdent" name="endIdent" value="${model.endIdent!}">
+      <div class="modal-body">
+      <div class="form-group">
+     <#if pdepath < 2> 
+ 			
+            <div>
+		 		<label for="deviceModelName">设备型号分类：</label>
+	            <input type="text" class="form-control" id="deviceModelName" name="deviceModelName"  value="${model.deviceModelName!}">
+            </div>
+	<#else>  
+			<div>               
+               	<label for="deviceModelName">设备型号：</label>
+               	<input type="text" class="form-control" id="deviceModelName" name="deviceModelName"  value="${model.deviceModelName!}">
+            </div>
+	</#if>
+     </div>
+    </div>
+   </form>

@@ -1,0 +1,452 @@
+
+ <link rel="stylesheet" href="${request.contextPath}/lib/plugins/select2/select2.min.css">
+ <link rel="stylesheet" href="${request.contextPath}/lib/asmpWorkCss/asmpWorkIndex.css">
+ <link rel="stylesheet" href="${request.contextPath}/lib/plugins/zTree3/css/zTreeStyle/zTreeStyle.css">
+ <link rel="stylesheet" href="${request.contextPath}/lib/asmpWorkCss/ZtreeInput.css">
+
+<div class="box box-primary">
+ <div class="box-header with-border">
+  <div id="mainpanel" style="margin: 0px 0px 0px 0px;">
+   <div id="mapcontent" style="width: 100%;position: relative;">
+   <div class="box-body" style="width: 100%">
+   <div class="row">    
+    <div class="col-xs-3">
+    <div class="input-group">
+      <span class="input-group-addon" id="sizing-addon1">工单编号</span>
+        <input id="workCode" type="text" class="form-control" aria-describedby="sizing-addon1">
+      </div>
+    </div>
+    
+    <!--   
+      <div class="col-xs-3">
+      <div class="input-group">
+      <span class="input-group-addon" id="sizing-addon2">营业厅</span>
+          <select class="js-example-placeholder-single form-control select2 orgSelect" id="orgSelect"  aria-describedby="sizing-addon2">
+                  <option></option>
+          </select>
+         </div>
+      </div>
+     -->
+       
+    <div class="col-xs-3">
+     <label class="n-tect">机构：</label>
+      <div class="wb-col pre">
+        <input type="text" class="form-control" id="ztreeInputOrg">
+        <div class="zTreeDemo" style="width: 325px; left: 0px; display: none;">
+        <ul class="ztree" id="ztree1"></ul>
+         </div>
+        </div>
+     </div>
+    
+   <div class="col-xs-3">
+      <div class="input-group">
+      <span class="input-group-addon" id="sizing-addon2">故障来源</span>
+          <select class="form-control" id="workSource"  aria-describedby="sizing-addon2">
+                  <option value="0">所有来源</option>
+                  <option value="1">网页</option>
+                  <option value="2">监控系统</option>
+                  <option value="3">手机App</option>
+          </select>
+         </div>
+      </div>
+
+    <div class="col-xs-2">      
+      <button type="button" class="btn btn-default " onclick="condictionsSearch()"><i class="fa fa-search"></i> 搜索</button>
+      <!-- 
+            <button type="button" class="btn btn-success" data-toggle="modal" data-target="#addWork"><i class="fa fa-plus-circle"></i> 报障</button>
+       -->
+    <!--   <button type="button" class="btn btn-success" id="addWork"><i class="fa fa-plus-circle"></i> 报障</button> -->
+    </div>
+    
+   </div>
+   </div>
+   
+   <div class="box-header with-border">
+				  <div class="box-body" style="width: 100%">
+					<div class="row">
+						<#list btnlist as items>
+							<button class="${items.funcBg!}" id="${items.funcCode!}">
+							<i class="${items.funcIcon!}"></i> ${items.funcName!}</button>
+						
+						</#list>
+						
+					</div>
+				</div>	
+				</div>
+	<!-- DataTable主体 -->
+	<div class="box-body" style="width: 100%">
+	<table id="table_form" class="table table-bordered table-striped table-hover"
+		cellspacing="0" width="100%">
+	</table>
+    </div>
+	</div>
+  </div>
+ </div>
+</div>
+
+<!-- 报障模态框 -->
+<div class="modal fade" id="addWorkModel"  role="dialog" aria-labelledby="myModalLabel">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+        <h4 class="modal-title" id="myModalLabel">报障</h4>
+      </div>
+      <div class="modal-body">
+               
+                <div><label >营业厅：</label></div>         
+                <!--  <div class="wb-col pre" >
+                  <select class="js-example-placeholder-single form-control select2 orgSelect" id="msOrg"  style="width: 100%;">
+                  <option></option>
+                   </select>
+                </div> -->
+                
+                 <div class="wb-col pre">
+        <input type="text" class="form-control" id="ztreeInputOrg2">
+        <div class="zTreeDemo" style="width: 325px; left: 0px; display: none;">
+        <ul class="ztree" id="ztree2"></ul>
+         </div>
+        </div>
+                <br/><br/>
+                
+                 <div><label >设备编码：</label></div>         
+                 <div class="wb-col pre" >
+                    <select class="js-example-placeholder-single form-control select2" id="msDevice"  style="width: 100%;">
+                  <option></option>
+                    </select>
+                  </div>     
+                <br/><br/>
+                
+                <div>
+                <div><label for="fault" >故障：</label></div>
+                  <div id="fault" class=></div>              
+                </div>
+                <br/>
+                <div>               
+                  <label for="modelFaultRemark">故障描述：</label>
+                  <textarea id="modelFaultRemark" class="form-control" rows="3" placeholder="请填写 。。。"  name="modelFaultRemark"></textarea>
+                </div>
+                <br/>
+
+  
+                <div>
+                  <input type="file" id="file" onchange="UploadFile()" name="file" class="hidden">
+				<button type="button" class="btn btn-block btn-primary" id="upload" style="width:100px;">
+					<i class="fa fa-arrow-up"></i> 附件上传
+				</button>  
+                </div>
+                
+                <br/>
+                
+                <iframe name="aa" src="" style="display:none"></iframe>
+
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-default" data-dismiss="modal">取消</button>
+        <button type="button" class="btn btn-primary" id="sumbit" >确认</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+
+<!-- dataTable及浮态框相关js -->
+<script type="text/javascript">
+var orginUrl="/soa/asmp/asmpWork/datas/search";
+</script>
+
+<script type="text/javascript" src="${request.contextPath}/js/aboutForm.js"></script>
+<script type="text/javascript" src="${request.contextPath}/js/ajaxfileupload.js"></script>
+<script type="text/javascript" src="${request.contextPath}/js/asmp/asmpWork/work_tableCreation.js"></script>
+<!-- 
+<script type="text/javascript" src="${request.contextPath}/js/asmp/asmpWork/work_buttons.js"></script>
+ -->
+<script src="${request.contextPath}/lib/plugins/select2/select2.full.min.js"></script>
+<script src="${request.contextPath}/lib/plugins/zTree3/js/jquery.ztree.core.js"></script>
+<script src="${request.contextPath}/lib/plugins/zTree3/js/jquery.ztree.excheck.js"></script>
+<script src="${request.contextPath}/lib/plugins/zTree3/js/jquery.ztree.exedit.js"></script>
+<script type="text/javascript" src="${request.contextPath}/js/orgTreeInput.js"></script>
+<script type="text/javascript" src="${request.contextPath}/js/asmp/asmpWork/addwork_orgTree.js"></script>
+
+<script type="text/javascript">
+
+$('#upload').on('click',function(){ 
+	  $('#file').trigger('click')  
+});
+
+
+function UploadFile(){
+	$.ajaxFileUpload({
+		url : contextPath + '/soa/files/upload',
+		secureuri : false,
+		fileElementId : 'file',
+		dataType : 'text/html',
+		success : function(data, status) {
+			data = $.parseJSON(data.replace(/<.*?>/ig,""));
+
+
+			console.log(data);  //上传返回数据
+
+			if(data.status==0){
+				var s = dialog({
+					title:'提示',
+					zIndex:1080,
+					content : data.msg
+				});
+				s.show();
+				setTimeout(function() {
+					s.close().remove();
+				}, 2000);
+			}else{
+				var e = dialog({
+					title:'提示',
+					zIndex:1080,
+					content : data.msg
+				});
+				e.show();
+				setTimeout(function() {
+					e.close().remove();
+				}, 2000);
+
+			}
+			
+			$("#file").change(function(){
+				UploadFile();
+			});
+		},
+		error : function(data, status, e) {
+			alert('上传出错!');
+		}
+	});
+	
+}
+
+
+//机构树方法，true是可以选所有节点
+var zNodes1={};
+addTree($('#ztree1'),zNodes1,true);
+
+var zNodes2={};
+addWorkTree($('#ztree2'),zNodes2,0);
+
+
+</script>
+
+<script type="text/javascript">
+//生成按钮栏工具(调js里的已定义变量生成按钮，必须放在html)
+//new $.fn.dataTable.Buttons(table, {
+//	buttons : buttonsActiondata
+//});
+//作用不明，问兴斌
+//table.buttons(0, null).container().prependTo(table.table().container());
+
+function condictionsSearch(){
+
+	//var orgId=$("#orgSelect").val();
+	var orgId=$("#ztreeInputOrg").attr("data_id");
+	var workCode=$("#workCode").val();
+	var workSource=$("#workSource").val();
+		
+	console.log("orgId:"+orgId);
+	var url=contextPath + "/soa/asmp/asmpWork/datas/search";
+    var params= {};
+       if(workSource!=0){
+    	   params.orgId = orgId; 
+           params.workCode = workCode; 
+           params.workSource = workSource; 
+       }else{
+    	   params.orgId = orgId; 
+           params.workCode = workCode; 
+       }
+       
+      //aboutForm。js里
+      refreshData(url,params);
+  }
+</script>
+<script>
+    
+var orgUrl=contextPath+"/soa/asmp/datas/org4list";
+var orgTarget="#orgSelect";
+var model="#msOrg";
+//营业厅下拉框
+orgSelect(orgUrl,orgTarget);
+//带回调函数下拉
+modalOrg(orgUrl,model);
+//为防止多次循环，单独在外面定义change方法
+
+//故障名改颜色样式
+$("#fault").delegate('button','click',function(){
+	
+	if($(this).hasClass('btn-info')){
+		$(this).removeClass('btn-info').addClass('btn-danger');
+	}else {
+		$(this).removeClass('btn-danger').addClass('btn-info');
+	}		
+	
+});
+/* 
+$("#msOrg").select2().change(function(){
+	var orgId=$("#msOrg").val();
+		if(orgId!=""){
+			var deviceUrl=contextPath+"/soa/asmp/datas/deviceList";
+			var msDevice="#msDevice";
+				modalDevice(deviceUrl,msDevice,orgId);
+		}
+			
+	}); */
+
+$("#msDevice").select2().change(function(){
+		var deviceId=$("#msDevice").val();		
+					
+			$.ajax({
+			   	url:contextPath+"/soa/asmp/datas/DModelFaultList",    
+			   	type:"post",
+			   	dataType:"json",
+			   	data:{id:deviceId},
+			   	success: function(result){ 
+			   		var html='';
+			   		for(var i=0;i<result.length;i++){
+			   			
+			   			html +='<button type="button" class="btn btn-info" value='+result[i].id+'>'+result[i].modelFaultName+'</span>';
+			   			
+			   		}
+			   		$("#fault").html(html);
+			   		
+			   	} 
+			     });
+									
+	});
+
+//生成营业厅下拉框，选中某一项后调change再调用生成设备下拉框，为防止联动多次触发，change具体定义写在外面
+function modalOrg1(comboxUrl,SelectTarget){
+	$.ajax({
+   	url:comboxUrl,    
+   	type:"post",
+   	dataType:"json",
+   	async:false,
+   	success: function(result){  		
+   		for(var i = 0;i<result.length;i++){    	
+   			var $option = $('<option/>').attr('value',result[i].id).html(result[i].orgName);
+   			$option.appendTo($(SelectTarget));
+   		}
+
+   		$(SelectTarget).select2({
+   			placeholder: "请选择",
+   			allowClear: true
+   		}).change();
+   		   		    		
+   	} 
+     });
+}
+
+function modalOrg(comboxUrl,SelectTarget){
+	$.ajax({
+   	url:comboxUrl,    
+   	type:"post",
+   	dataType:"json",
+   	async:false,
+   	success: function(result){  		
+   		//combxListData=result;
+   		//alert(fOrgs);
+   		for(var i = 0;i<result.length;i++){    	
+   			var $option = $('<option/>').attr('value',result[i].id).html(result[i].orgName);
+   			$option.appendTo($(SelectTarget));
+   		}
+
+   		$(SelectTarget).select2({
+   			placeholder: "请选择",
+   			allowClear: true
+   		}).change();
+   		    		
+   	} 
+     });
+}
+
+
+//生成设备下拉框，change方法在外面定义
+function modalDevice(comboxUrl,SelectTarget,orgId){
+	$.ajax({
+   	url:comboxUrl,    
+   	type:"post",
+   	dataType:"json",
+   	async:false,
+   	data:{id:orgId},
+   	success: function(result){ 
+   		
+   		$(SelectTarget).html('');
+   		
+   		for(var i = 0;i<result.length;i++){    	
+   			var $option = $('<option/>').attr('value',result[i].id).html(result[i].deviceCode);
+   			$option.appendTo($(SelectTarget));
+   		}
+   		  
+   		$(SelectTarget).change();
+   	} 
+     });
+}
+
+
+
+</script>
+<script type="text/javascript">
+
+
+
+
+
+   $('#addWork').click(function(){ 
+	   $('#addWorkModel').modal('show');
+   });
+
+  //sumbit提交报障
+      $("#sumbit").click(function(){
+
+    	  
+    	  var btns=[];
+		  $('#fault').find('.btn-danger').each(function(){
+			  var value = $(this).attr('value');
+			  btns.push(value);
+		  });
+		  
+		  var faultList=btns.join(",");
+		 // var orgId=$("#msOrg").val();
+		 var orgId=$("#ztreeInputOrg2").attr("data_id");
+		  var deviceId=$("#msDevice").val();
+		  var remark=$("#modelFaultRemark").val();
+          //alert("orgId: "+orgId  +" deviceId: "+deviceId +"remark: "+remark+"faultList: "+faultList);
+		  
+          var work={
+        	"modelFaultList":faultList,
+        	"orgId":orgId ,
+        	"deviceId":deviceId ,
+        	"modelFaultRemark":remark 
+          };
+          
+			$.ajax({
+			   	url:contextPath+"/soa/asmp/asmpWork/addWork",    
+			   	type:"post",
+			   	dataType:"json",
+			   	data: work,
+			   	success: function(result){ 
+			   		var d = dialog({
+						title:'提示',
+						zIndex:1080,
+						content : result.msg
+					});
+					d.show();
+					setTimeout(function() {
+						d.close().remove();
+					}, 500);
+
+			   		
+			   	   } 
+			     });
+			setTimeout(function() {
+				$('#addWorkModel').modal('hide')
+			}, 800);
+			
+		});
+
+	 	    
+</script>

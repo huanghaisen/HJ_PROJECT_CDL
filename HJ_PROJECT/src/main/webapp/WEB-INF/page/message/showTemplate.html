@@ -1,0 +1,57 @@
+
+
+  <form class="form-horizontal">
+    <div class="box-body">
+      <div class="form-group">
+        <label class="col-sm-2 control-label">模板名称：</label>
+        <div class="col-sm-10">
+          <span class="nobor">${msgTemplate.msgTemplateName!}</span>
+        </div>
+      </div>
+      
+      <div class="form-group">
+        <label class="col-sm-2 control-label">消息类型：</label>
+        <div class="col-sm-10">
+          <span class="nobor" id="MsgType"></span>
+        </div>
+      </div>
+      <div class="form-group">
+        <label class="col-sm-2 control-label">模板描述：</label>
+        <div class="col-sm-10">
+          <span class="nobor">${msgTemplate.remark!}</span>
+        </div>
+      </div>
+      
+      
+      <div class="form-group">
+        <label class="col-sm-2 control-label">消息内容：</label>
+
+        <div class="col-sm-10">
+          <textarea class="textarea" id="textarea" style="width:90%; height:125px; resize: none;" readonly="readonly">${msgTemplate.msgTemplateContent!}</textarea>
+        </div>
+      </div>
+     
+    </div>
+  </form>  
+
+<style type="text/css">  
+ .form-group label { font-size: 12px; font-weight: normal; }
+ .theTarea { height: 34px;  font-size: 0; }
+ .theTarea > span { display: inline-block; padding: 0 15px;border: 1px solid #ccc; margin:0 0 0 -1px; line-height: 34px; font-size: 12px; border-right: 1px solid #ccc; cursor: pointer; }
+ .theTarea > span:nth-child(0) {margin:0;}
+ .theTarea > span.hover,.theTarea > span:hover { background-color:#f1f9f9  }
+ .nobor { display: inline-block; width: 90%;  border:0; border-bottom: 1px solid #ccc; line-height: 34px;  }
+
+</style>
+
+<script>
+	var msgType = ${msgTemplate.msgType!};
+	if(msgType==0){
+		$("#MsgType").html("短信");
+	}
+	else{
+		$("#MsgType").html("手机通知");
+	}
+
+</script>
+

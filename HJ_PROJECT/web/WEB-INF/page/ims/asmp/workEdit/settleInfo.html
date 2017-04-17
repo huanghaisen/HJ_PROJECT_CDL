@@ -1,0 +1,546 @@
+
+
+    <div class="box " >
+            <div class="box-header">
+              <h3 class="box-title">工单详情</h3>
+            </div>
+            <div id="workId" hidden>${TAsmpWork.id!}</div>
+            <!-- /.box-header -->
+            <div class="box-body no-padding">
+              <table class="table table-striped">
+             <tbody>        <tr>
+            <td>工单编号：</td>
+            <td>${TAsmpWork.workCode!}</td>
+            <td>工单状态：</td>
+            <td>${TAsmpWork.statusStr!}</td>
+            <td>营业厅：</td>
+            <td>${TAsmpWork.orgName!}</td>
+        </tr>
+        <tr>
+            <td>报障人：</td>
+            <td>${TAsmpWork.creatorName!}</td>
+            <td>手机号码：</td>
+            <td>${TAsmpWork.telphone!}</td>
+            <td>报障时间：</td>
+            <td>${TAsmpWork.createTime!}</td>
+        </tr>
+        
+        <tr>
+            <td>设备编号：</td>
+            <td>${TAsmpWork.deviceCode!}</td>
+            <td>故障现象：</td>
+            <td>${TAsmpWork.modelFaultNameList!}</td>
+            <td>维保厂商：</td>
+            <td>${TAsmpWork.manufName!}</td>
+       </tr>
+       <tr>            
+            <td>附件：</td>
+            <td id="filetd"></td>
+            <td>故障描述：</td>
+            <td>${TAsmpWork.modelFaultRemark!}</td>
+        </tr>
+    </tbody></table>
+            </div>
+            <!-- /.box-body -->
+          </div>
+
+
+
+<div class="box">
+<div class="box-header with-border">
+  
+</div>
+<div class="box-body">
+  <div class="row">
+   <!--  <div class="col-xs-2">      
+      <button type="button" class="btn btn-block btn-default"><i class="fa fa-plus-circle fz"></i> 查询</button>
+    </div>  -->
+    <div class="col-md-6">
+      <div class="box-body">
+        <div class="form-group" id="radiogroup" >
+          <label>
+            <input type="radio" name="optionsRadios" checked="checked" value="1" >
+            处理
+          </label>
+          <label>
+            <input type="radio" name="optionsRadios" value="0">
+            打回
+          </label>
+         
+        </div>
+      </div>
+    </div>
+   
+  </div>
+
+  <div class="row" id="jddetail" status=1>    
+    <div class="box-header with-border">      
+      <h3 class="box-title">结单明细</h3>
+    </div>
+
+    <div class="box-body">
+      <div class="col-md-8">
+        <div class="tbbody clearfix">
+          
+          <div class="tbtool">
+            <h4>处理故障描述:</h4>
+            <button type="button" class="btn btn-default" id="addgz"><i class="fa fa-plus-circle fz"></i> 新增</button>
+          </div>
+        </div>
+        <table class="table table-bordered" id="gztable">
+          <tr>
+            <th width="40%">故障描述</th>
+            <th width="40%">处理方法</th>
+            <th width="20%">操作</th>            
+          </tr>         
+          
+        </table>
+        <div class="tbbody clearfix">         
+          <div class="tbtool">
+            <h4>具体配件:</h4>
+            <button type="button" class="btn btn-default" id="addpj"><i class="fa fa-plus-circle fz"></i> 新增</button>
+          </div>
+        </div>
+        <table class="table table-bordered" id="pjtable">
+          <tr>
+            <th width="40%">配件名称</th>
+            <th width="40%">数量</th>
+            <th width="20%">操作</th>            
+          </tr>
+                   
+        </table>
+        <div class="form-group" id="radiogroup2">
+          <label><p class="text-red">判定结果：</p></label>
+          <label>            
+            <input type="radio" name="options1" checked="checked" value="0">
+            没有损坏
+          </label>
+          <label>
+            <input type="radio" name="options1" value="1">
+            人为损坏 
+          </label>
+          <label>            
+            <input type="radio" name="options1" value="2">
+            非人为损坏 
+          </label>
+          <label>
+            <input type="radio" name="options1" value="3">
+            其他
+          </label>         
+        </div>
+        <div class="form-group" id="radiogroup3">
+          <label><p class="text-red">结单方式：</p></label>
+          <label>            
+            <input type="radio" name="options2" checked="checked" value="0">
+            现场结单
+          </label>
+          <label>
+            <input type="radio" name="options2" value="1">
+            电话处理  
+          </label>
+          <label>            
+            <input type="radio" name="options2" value="2">
+            其他 
+          </label>                   
+        </div>
+        <div class="form-group" id="radiogroup4">
+          <label><p class="text-red">是否修复：</p></label>
+          <label>            
+            <input type="radio" name="options3" checked="checked" value="0">
+            已修复
+          </label>
+          <label>
+            <input type="radio" name="options3" value="1">
+            未修复 
+          </label>
+          <label>            
+            <input type="radio" name="options3" value="2">
+            待观察 
+          </label>                   
+        </div>
+
+      </div>
+    </div>
+  </div>
+
+  <div class="row">
+    <div class="box-header with-border">      
+      <h3 class="box-title">备注</h3>
+    </div>    
+    <div class="box-body">
+      <div class="col-md-8">
+        <textarea class="textarea" style="width:80%; height:125px;" placeholder="请输入200字以内的内容" id="modelFaultRemark"></textarea>     
+      </div>
+    </div>  
+
+  </div>  
+  </div>
+
+
+</div>
+
+
+<script>
+
+  var treenum=0;
+
+  //面板处理 打回切换
+  $('#radiogroup').delegate('input', 'click', function(event) {
+      
+      var thevalue = $(this).val();
+
+      if(thevalue == 1){
+    	$('#jddetail').attr("status",1)
+        $('#jddetail').show();
+       
+        
+      }else{
+    	$('#jddetail').attr("status",2)
+        $('#jddetail').hide();
+
+      }
+
+  });
+
+  //增加故障行
+  $('#addgz').on('click',function(){
+
+    var selectvalue = false;
+
+    if($('#gztable').find('input').length>0){
+
+      $('#gztable').find('input').each(function(index, el) {
+        
+        if($(this).val()=='请选择'){
+          selectvalue = false; 
+        }else{
+
+          selectvalue = true; 
+        }
+
+        
+
+      });
+    }else{
+
+      var selectvalue = true;
+    }
+    
+
+    if(selectvalue==true){
+
+      addgzRow($('#gztable'));
+   
+      var $treeId1 = $('#'+'ztree'+treenum+'1');
+      var $treeId2 = $('#'+'ztree'+treenum+'2');
+     
+      addTree($treeId1,zNodes1);
+      addTree($treeId2,zNodes2);
+
+      treenum++ ; 
+      
+    }else{
+
+      //alert('请选择')
+    }
+
+
+  });
+
+  //删除故障当前行
+  $('#gztable').delegate('button', 'click', function(event) {
+
+      var $this = $(this);
+      
+      $this.parent().parent().remove();
+
+  });  
+
+  //增加故障行html
+  function addgzRow(obj){
+
+   var n1 = 'ztree'+treenum+'1';
+   var n2 = 'ztree'+treenum+'2'; 
+   var tr = '<tr>'
+            +'<td width="40%">'
+            +'<div class="wb-col pre">'  
+                +'<input type="text" class="form-control description" value="请选择" >'
+                +'<div class="zTreeDemo">'
+                 +'<ul class="ztree" id='+n1+'></ul>'
+                +'</div>' 
+              +'</div>'
+            +'</td>'
+            +'<td width="40%">'
+              +'<div class="wb-col pre">'  
+                +'<input type="text" class="form-control method" value="请选择">'
+                +'<div class="zTreeDemo">'
+                  +'<ul class="ztree" id='+n2+'></ul>'
+                +'</div>' 
+              +'</div>'
+            +'</td>'
+            +'<td width="20%">'
+                +'<button type="button" class="btn btn-danger"><i class="fa fa-times"></i> 删除</button>'                
+            +'</td>'
+            +'</tr>'
+            ;
+
+    $(tr).appendTo(obj); 
+        
+  }  
+
+  //处理结单问题下拉树数据
+  var zNodes1 =[];
+  $.ajax({
+	  type:"post",
+	  data:"json",
+	  url:contextPath+"/soa/asmp/commonFault/datas/simpleBox",
+	  success:function (result){
+		  var newResult=[];
+		  for(var i=0;i<result.length;i++){
+			  newResult.push({"id":result[i].id,"pId":result[i].parentId,"name":result[i].faultName});
+			  }
+		  zNodes1=newResult;
+		  }
+		  
+  });
+  
+ //处理结单处理方法下拉树数据
+  var zNodes2 =[];
+  $.ajax({
+	  type:"post",
+	  data:"json",
+	  url:contextPath+"/soa/asmp/commonMethod/datas/simpleBox",
+	  success:function (result){
+		  var newResult=[];
+		  for(var i=0;i<result.length;i++){
+			  newResult.push({"id":result[i].id,"pId":result[i].parentId,"name":result[i].commonMethodName});
+			  }
+		  zNodes2=newResult;
+		  }
+		  
+  });
+  
+  //实例树
+  function addTree(obj,nodes){
+     var treeObj = obj;
+     var zNodes =  nodes;  
+     var setting = {
+      view: {
+        showLine: false,
+        showIcon: false,
+        selectedMulti: false,
+        dblClickExpand: false,
+        addDiyDom: addDiyDom
+      },
+	  data: {
+		  simpleData: {
+				enable: true,
+				idKey: "id",
+				pIdKey: "pId",
+				rootPId: 0
+			},
+	  		key:{
+	  			name:"name"
+	  		}
+	  },
+      callback: {
+        beforeClick: beforeClick,
+        onClick: zTreeOnClick
+      }
+    };
+    
+
+    function addDiyDom(treeId, treeNode) {
+      var spaceWidth = 10;
+      var switchObj = $("#" + treeNode.tId + "_switch"),
+      icoObj = $("#" + treeNode.tId + "_ico");
+
+      //console.log(treeNode.tId)
+      
+      switchObj.remove();
+      icoObj.before(switchObj);
+
+      if (treeNode.level > 0) {
+        var spaceStr = "<span style='display: inline-block;width:" + (spaceWidth * treeNode.level)+ "px'></span>";
+        switchObj.before(spaceStr);
+      } 
+      
+    }
+
+    function beforeClick(treeId, treeNode) {
+      // if (treeNode.level == 0 ) {
+      //   var zTree = $.fn.zTree.getZTreeObj("treeDemo");
+      //   zTree.expandNode(treeNode);
+      //   return false;
+      // }
+      return true;
+    }
+    
+    function zTreeOnClick(event, treeId, treeNode) {
+      treeObj.parent().parent().find('>input').val(treeNode.name).attr('data_id',treeNode.id).attr('pId',treeNode.pId);
+
+    };
+   
+    var thewidth = treeObj.parent().parent().find('>input').width();   
+
+    treeObj.parent().css({width:thewidth+'px'});    
+
+    var $zTreeDemo = treeObj.parent();
+
+    //console.log(treeObj.parent().parent())
+   
+    var thetree = $.fn.zTree.init(treeObj, setting, zNodes);
+
+   // zTree_Menu = $.fn.zTree.getZTreeObj("treeDemo");
+    // curMenu = zTree_Menu.getNodes()[0].children[0].children[0];
+    // zTree_Menu.selectNode(curMenu);
+
+    treeObj.hover(function () {
+      if (!treeObj.hasClass("showIcon")) {
+        treeObj.addClass("showIcon");
+      }
+    }, function() {
+      treeObj.removeClass("showIcon");
+    });
+
+
+    treeObj.parent().parent().find('>input').on('mouseover',function(){
+
+      var width = $(this).outerWidth();
+      var left = $(this).position().left;
+
+      $zTreeDemo.css({width:width+'px',left:left}).show();
+
+    });
+    
+
+    treeObj.parent().parent().mouseleave(function(event) {
+      treeObj.parent().hide();
+    });
+
+  }   
+    
+
+</script>
+<script>
+
+ var selectnum=0;
+ var selectHtml = '<option></option>'
+                  +'<option value="0">头部配件</option>'
+                  +'<option value="1">中部配件</option>'
+                  +'<option value="2">尾部配件</option>'
+                  ;
+                  
+var selectHtml2='<option></option>';
+$.ajax({
+   	url:contextPath+"/soa/parts/datas/partsBox",    
+   	type:"post",
+   	dataType:"json",
+   	async:false,
+   	success: function(result){  		
+          
+   		for(var i = 0;i<result.length;i++){    	
+   			selectHtml2 +='<option value="'+result[i].id+'">'+result[i].devicePartName+'</option>'
+   		}
+   	   }
+     });
+
+  //增加配件行
+  $('#addpj').on('click',function(){
+
+    var selectvalue = false;
+    var inputvalue = false;
+
+    if($('#pjtable').find('input').length>0){
+      
+
+      $('#pjtable').find('input.inw').each(function(index, el) {
+        
+        if($(this).val()===''){
+          inputvalue = false; 
+        }else{
+
+          inputvalue = true; 
+        }        
+
+      });
+
+      var selectId = '#select'+(selectnum-1);
+      if($(selectId).val()===''){
+        selectvalue = false;
+      }else{
+
+        selectvalue = true;
+      };
+
+    }else{
+
+      selectvalue = true;
+      inputvalue = true; 
+   }
+    
+
+    if(selectvalue===true&&inputvalue ===true){
+
+      addpjRow($('#pjtable'));
+
+      var selectId = '#select'+selectnum;
+     
+      $(selectId).html(selectHtml2).select2();
+
+      selectnum++ ; 
+      
+    }else{
+      //alert('请选择')
+    }
+
+
+  });
+
+  //删除配件当前行
+  $('#pjtable').delegate('button', 'click', function(event) {
+
+      var $this = $(this);
+      
+      $this.parent().parent().remove();
+
+  });  
+  
+  //增加配件行html
+  function addpjRow(obj){
+   var sid = 'select'+selectnum;
+   var tr = '<tr>'
+            +'<td width="40%">'
+            +'<div class="wb-col pre">'  
+                +'<select class="form-control select2 parts" id='+sid+' data-placeholder="请选择" style="width: 100%;"></select>'
+              +'</div>'
+            +'</td>'
+            +'<td width="40%">'
+              +'<div class="wb-col pre">'  
+                +'<input type="text" class="form-control inw "  disabled="disabled" value="1">'                
+              +'</div>'
+            +'</td>'
+            +'<td width="20%">'
+                +'<button type="button" class="btn btn-danger"><i class="fa fa-times"></i> 删除</button>'                
+            +'</td>'
+            +'</tr>'
+            ;
+
+    $(tr).appendTo(obj); 
+        
+  }  
+
+
+</script>
+
+<script>
+
+//附件下载链接js
+var fileIdList='${TAsmpWork.attachList!}';
+if(fileIdList!=0&&fileIdList!=-1){
+	var fileIdArry=fileIdList.split(',');
+	for (var i = 0; i < fileIdArry.length; i++) {
+			 $('#filetd').append('<a href="'+contextPath+'/soa/files/file/download?id='+fileIdArry[i]+'">附件'+(i+1)+'</a>&nbsp');
+		}	
+}
+</script>

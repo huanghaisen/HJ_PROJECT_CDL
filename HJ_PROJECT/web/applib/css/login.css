@@ -1,0 +1,10 @@
+body,button, input, select, textarea,h1 ,h2, h3, h4, h5, h6 { font-family: Microsoft YaHei,'宋体' , Tahoma, Helvetica, Arial, "\5b8b\4f53", sans-serif;}
+.login-page { background-color: #eff3f4 }
+.login-box { padding-top:40px;  }
+.login-box-body { padding: 10px 0; background-color: #eff3f4 }
+.form-control { border:0; border-bottom: 1px solid #b1bec6; background:none; color: #b1bec6 }
+.ligthlogo {background: url(images/ligthlogo.png) no-repeat center center; }
+
+
+
+

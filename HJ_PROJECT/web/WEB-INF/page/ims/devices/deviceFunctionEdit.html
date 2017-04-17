@@ -1,0 +1,19 @@
+<!-- 编辑模态框 -->
+   <div class="modal-body">
+    <form class="form-horizontal" method="post" name="form_submit" id="form_submit" action="${request.contextPath}/soa/device/function/datas/save">
+       <input type="hidden" id="id" name="id" value="${model.id!}"> 
+       <input type="hidden" id="isDeleted" name="isDeleted" value="0"> 
+       <!--  -->    
+       <div class="box-body">
+            
+               <div class="form-group">
+                  <label for="deviceFunctionName" class="col-sm-3 control-label">用途</label>
+                   <div class="col-sm-9">
+                  <input type="text" class="form-control" id="deviceFunctionName" name="deviceFunctionName" value="${model.deviceFunctionName!}">
+                </div>
+                </div>                
+      <!--  -->
+      </div>
+     </form>	
+    </div>
+   

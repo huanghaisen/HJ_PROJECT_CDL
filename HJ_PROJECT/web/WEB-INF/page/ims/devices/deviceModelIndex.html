@@ -1,0 +1,399 @@
+ <link rel="stylesheet" href="${request.contextPath}/lib/plugins/select2/select2.min.css">
+<link rel="stylesheet" href="${request.contextPath}/lib/plugins/zTree3/css/zTreeStyle/zTreeStyle.css">
+<link rel="stylesheet" href="${request.contextPath}/lib/plugins/zTree3/css/zTreeStyle/ztreeTable.css">
+<style>
+.w1 {
+	width: 120px;
+	text-align: center;
+}
+
+.w2 {
+	width: 140px;
+	text-align: center;
+}
+
+.w3 {
+	width: 120px;
+	text-align: center;
+}
+
+.w4 {
+	width: 100px;
+	text-align: center;
+}
+
+.w5 {
+	width: 80px;
+	text-align: center;
+	
+.select2-container--default .select2-selection--single {border-radius:0}
+.select2-container .select2-selection--single {height:34px}
+	
+}
+</style>
+<div class="box box-primary">
+<div class="box-body">
+	<!-- <div class="box-body">
+		<div class="row">
+			<div class="rowtoolbar">
+				<button type="button" class="btn btn-success" id="add">
+					<i class="fa fa-plus-circle fz"></i> 新增
+				</button>
+				<button type="button" class="btn btn-warning" disabled="disabled"
+					id="edit">
+					<i class="glyphicon glyphicon-pencil"></i> 编辑
+				</button>
+				<button type="button" class="btn btn-danger" disabled="disabled"
+					id="del">
+					<i class="fa fa-trash"></i> 删除
+				</button>
+				<button type="button" class="btn btn-info" id="status"
+					disabled="disabled">
+					<i class="glyphicon glyphicon-ok-sign"></i> 是否有效
+				</button>
+				<button type="button" class="btn btn-default" disabled="disabled" id="addParts">
+					<i class="fa fa-plus-circle fz"></i> 添加配件
+				</button>
+				<button type="button" class="btn btn-default" disabled="disabled" id="partsInfo">
+					<i class="fa fa-book"></i> 查看配件
+				</button>
+			</div>
+		</div>
+		</div> -->
+			<div class="box-header with-border">
+				  <div class="box-body" style="width: 100%">
+					<div class="row">
+						<#list btnlist as items>
+							<button class="${items.funcBg!}" id="${items.funcCode!}">
+							<i class="${items.funcIcon!}"></i> ${items.funcName!}</button>
+						
+						</#list>
+						
+					</div>
+				</div>	
+				</div>
+		<div class="box-body">
+		<div class="row">
+			<div class="rowTitle">
+				<span class="t">设备型号</span> 
+				<span class="wr">
+					<span class="w1">
+						<span class="tfield">属性</span>
+					</span>
+					<span class="w1">
+						<span class="tfield">是否有效</span>
+					</span>
+					<span class="w1">
+						<span class="tfield">配件数量</span>
+					</span>
+					<span class="w1">
+						<span class="tfield">设备数量</span>
+					</span>
+				</span>
+			</div>
+			<div class="zTreeDemoBackground">
+				<ul id="treeGride" class="ztree"></ul>
+			</div>
+		</div>
+        </div>
+    
+	</div>
+</div>
+
+
+
+<!--Add Parts Modal -->
+<div class="modal fade" id="addPartsModal" tabindex="-1" role="dialog" aria-labelledby="AddPartsModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+        <h4 class="modal-title" id="AddPartsModalLabel">设备型号添加配件</h4>
+      </div>
+      <div class="modal-body" id="addPartsModalBody">
+           <title>添加配件模态框</title>     
+            <div id="deviceModelIdDiv" value=''></div>
+		    
+		    <div class="form-group">
+      		<button type="button" class="btn btn-default" id="addpj"><i class="fa fa-plus-circle fz"></i> 新增配件</button>
+      		</div>
+      		<form class="form-horizontal" id="myform">
+                                  
+            </form>
+        
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-default" data-dismiss="modal">取消</button>
+        <button type="button" class="btn btn-primary" onclick="addPartSumbit()">保存</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!--Parts Info Modal -->
+<div class="modal fade" id="partsInfoModal" role="dialog" aria-labelledby="PartsInfoModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+        <h4 class="modal-title" id="PartsInfoModalLabel">查看配件</h4>
+      </div>
+      <div class="modal-body">
+      <div class="box-body">
+              <table class="table table-bordered">
+                <tbody id="partsSimpleTable"><tr>
+                  <th style="width: 10px">#</th>
+                  <th id="modalNameDiv">生成配件名</th>
+                </tr>
+                <tr>
+                  <td>生成序号</td>
+                  <td>生成内容</td>
+                </tr>
+
+              </tbody></table>
+        </div>  				
+        				
+        				
+     
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-default" data-dismiss="modal">返回</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script type="text/javascript" src="${request.contextPath}/js/Form_data_Submit.js"></script> 
+<script src="${request.contextPath}/lib/plugins/zTree3/js/jquery.ztree.core.js"></script>
+<script src="${request.contextPath}/lib/plugins/zTree3/js/jquery.ztree.excheck.js"></script>
+<script src="${request.contextPath}/lib/plugins/zTree3/js/jquery.ztree.exedit.js"></script>
+<script type="text/javascript" src="${request.contextPath}/js/ims/devices/treegride.js"></script>
+<script src="${request.contextPath}/lib/plugins/select2/select2.full.min.js"></script>
+
+
+<script type="text/javascript">
+
+
+//操作方法
+$(function(){
+	$('#addParts').attr("disabled",true);
+	$('#partsInfo').attr("disabled",true);
+	//查看
+	$('#partsInfo').on('click',function(){
+			treeObj = $.fn.zTree.getZTreeObj("treeGride");
+			var nodes = treeObj.getSelectedNodes();
+			var selectedNode=nodes[0];
+			var deviceName=selectedNode.deviceModelName;
+			var deviceModelId=selectedNode.id;
+//			alert("deviceModelId:"+deviceModelId);
+//			alert("deviceName:"+deviceName);
+			$('#modalNameDiv').html("型号："+deviceName);
+			$.ajax({
+				url:contextPath+"/soa/device/model/datas/deviceModelParts",
+				type:"post",
+				dataType:"json",
+				data:{"deviceModelId":deviceModelId},
+				success:function (result){
+					if(result.length>0){
+						$("#partsSimpleTable").find("tr:gt(0)").remove();
+						for(var i=0;i<result.length;i++){
+							var $tr=$('<tr/>');
+							var $td1=$('<td/>').html(i+1+".")
+							//var $td2=$('<td/>').html(result[i].partName);
+							var $td2=$('<td/>').html((result[i].partName==null)?"配件Id关联不到对应配件名":result[i].partName);
+							$td1.appendTo($tr);
+							$td2.appendTo($tr);
+							$tr.appendTo($("#partsSimpleTable"));
+						}
+					}else{
+						$("#partsSimpleTable").find("tr:gt(0)").remove();
+						var $tr=$('<tr/>');
+						var $td1=$('<td/>').html(1);
+						var $td2=$('<td/>').html("该设备型号尚未添加配件");
+						$td1.appendTo($tr);
+						$td2.appendTo($tr);
+						$tr.appendTo($("#partsSimpleTable"));
+					}
+					
+				}
+			});
+			
+			
+			
+			$('#partsInfoModal').modal('show');
+		
+	});
+
+	//添加配件
+	$('#addParts').on('click',function(){
+		var treeObj = $.fn.zTree.getZTreeObj("treeGride");
+		var nodes = treeObj.getSelectedNodes();
+		var deviceModelId=nodes[0].id;
+		$("#deviceModelIdDiv").attr('value',deviceModelId);
+
+		$('#addPartsModal').modal('show');
+		
+	});
+
+	
+});
+
+
+
+function addPartSumbit(){
+	var zhi=$('#partSelect').val();
+	var deviceModelId=$('#deviceModelIdDiv').attr('value');
+	var partIdArray=[];
+	$('#myform').find('select.select2').each(function(){			
+		partIdArray.push($(this).val());
+	});
+	if(partIdArray.length<1){
+		var d = dialog({
+			title:'提示',
+			zIndex:1080,
+			content : "请选配件"
+		});
+		d.show();
+		setTimeout(function() {
+			d.close().remove();
+		}, 1000);
+		
+	}else{
+		var partIdStr=partIdArray.join(',');
+		//alert('配件id:'+partIdArray[0]+'，设备id:'+deviceModelId+'，设备id:'+partIdStr);
+		var partIdArray3=partIdArray;
+		
+		$.ajax({
+			Type:"json",
+			url:contextPath+"/soa/device/model/datas/addParts",
+			data:{"partIdStr":partIdStr,"deviceModelId":deviceModelId},
+			success:function (obj){
+				var d = dialog({
+					title:'提示',
+					zIndex:1080,
+					content : obj.msg
+				});
+				d.show();
+				setTimeout(function() {
+					d.close().remove();
+				}, 1000);
+			}
+			
+		});
+		
+		$('#addPartsModal').modal('hide');
+	}
+	
+	
+}
+
+
+</script>
+
+<script>
+var optionZoom;
+$.ajax({
+   	url:contextPath+"/soa/parts/datas/partsBox",    
+   	type:"post",
+   	dataType:"json",
+   	async:false,
+   	success: function(result){  		
+   		//combxListData=result;
+   		//alert(fOrgs);
+   		for(var i = 0;i<result.length;i++){    	
+   			//optionZoom += $('<option/>').attr('value',result[i].id).html(result[i].devicePartName);
+   			optionZoom += "<option value='"+result[i].id+"'>"+result[i].devicePartName+" </option>";
+   		}
+
+   		    		
+   	} 
+     });
+
+
+$(function(){
+
+	var addsindex = 1;
+	var selectIndex = 1;
+	var selectId = 'select' + addsindex;
+
+	//单行的模板
+	function createSelect(){
+		var $selecthtml = '<div class="form-group">'
+                    +'<div class="col-sm-8">'
+                    +'<select class="form-control js-example-basic-multiple select2" id="'+selectId+'"  data-placeholder="Select a State">'
+          +''+optionZoom+''
+          +'</select>'
+          +'</div>'
+          +'<div class="col-sm-2">'
+				+'<button type="button" class="btn btn-danger" data-mname="del"><i class="fa fa-times"></i> 删除</button>'
+	        +'</div>'
+	        +'</div>'
+          ;
+
+		
+	        
+        $($selecthtml).appendTo($('#myform'));  
+  
+         
+		}
+
+
+	//新增select2
+	function addselecNew(){
+		selectIndex = getSelectindex();
+
+		if(selectIndex<10){
+			selectId = 'select' + addsindex;
+			createSelect();			
+			$('#'+selectId).select2();					
+			selectIndex++;
+			addsindex++;
+		}
+	}
+
+	//获取行数 即select2个数
+	function getSelectindex(){
+		var index = $('#myform').find('.form-group').length;
+		return index;		
+	}
+
+	//重置
+	function resetmodel(){
+		$('#myform').html('');
+		addsindex = 1;
+		selectIndex = 1;
+		selectId = 'select' + addsindex;
+	}
+	
+	//删除
+	$("#addPartsModalBody").delegate("button[data-mname='del']","click",function(){
+	  $(this).parent().parent().remove();
+	});
+
+	//增减配件(模态框内的按钮)
+	$('#addpj').on('click',function(){
+
+		addselecNew();
+
+	});
+
+//调用
+//	$('#themodal').on('click',function(){
+//		$('#addPartsModal').modal('show');
+//		addselecNew();
+//	});
+
+
+	//模态框关闭后
+	$('#addPartsModal').on('hidden.bs.modal', function (e) {	  	
+		resetmodel();
+	});
+
+
+});
+
+   
+</script>
+
+
+

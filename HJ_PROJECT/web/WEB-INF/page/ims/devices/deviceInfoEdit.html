@@ -1,0 +1,483 @@
+<!-- 编辑模态框 -->
+<div class="modal-body">
+    <form class="form-horizontal" style="height:480px;overflow:scroll;overflow-x:hidden" method="post" name="form_submit" id="form_submit" action="${request.contextPath}/soa/device/info/datas/save">
+       <input type="hidden" id="id" name="id" value="${deviceInfo.id!}">     
+       <div class="box-body">
+                <div style="display:none">
+                 <div>
+                  <label for="provinceId">省ID</label>
+                  <input type="text" class="form-control" id="provinceId" name="provinceId" value="${deviceInfo.provinceId!}">
+                </div>               
+                <div>
+                  <label for="cityId">市ID</label>
+                  <input type="text" class="form-control" id="cityId" name="cityId" value="${deviceInfo.cityId!}">
+                </div>
+                <div>
+                  <label for="districtId">区县</label>
+                  <input type="text" class="form-control" id="districtId" name="districtId" value="${deviceInfo.districtId!}">
+                </div>                
+                </div>
+     
+                <div style="display:none">
+                  <label for="orgId" >所属营业厅</label>
+                  <input type="text" class="form-control" id="orgId" name="orgId" value="${deviceInfo.orgId!}" > 
+                  <label for="maintenanceId">设备维保厂商</label>
+                  <input type="text" class="form-control" id="maintenanceId" name="maintenanceId" value="${deviceInfo.maintenanceId!}">
+                  <label for="manufId">设备生产厂商</label>
+                  <input type="text" class="form-control" id="manufId" name="manufId" value="${deviceInfo.manufId!}">                   
+                  <label for="deviceModelId" >设备型号</label>
+                  <input type="text" class="form-control" id=deviceModelId name="deviceModelId"  value="${deviceInfo.deviceModelId!}">
+                  <label for="deviceTypeId">设备类型</label>
+                  <input type="text" class="form-control" id="deviceTypeId" name="deviceTypeId" value="${deviceInfo.deviceTypeId!}">    
+                  <label for="deviceFunctionId">设备用途</label>
+                  <input type="text" class="form-control" id="deviceFunctionId" name="deviceFunctionId" value="${deviceInfo.deviceFunctionId!}">
+                  <label for="isDeleted">是否删除</label>
+                  <input type="text" class="form-control" id="isDeleted" name="isDeleted" value="0"> 
+                  <label for="deviceStatus">设备状态</label>
+                  <input type="text" class="form-control" id="deviceStatusInput" name="deviceStatus" value="${deviceInfo.deviceStatus!}">   
+                </div>
+
+                <div style="display:none">               
+                  <label for="operationWayId">运营方式：用途不明，先闲置 "${deviceInfo.operationWayId!}"</label>
+                  <input type="text" class="form-control" id="operationWayId" name="operationWayId" value="3">
+                </div>
+                
+               <div class="form-group">
+					<label for="orgIdSel" class="col-sm-3 control-label">所属营业厅</label>
+					 <div class="col-sm-9">
+					<select class="js-example-placeholder-single form-control select2" style="width:100%" id="orgIdSel" name="orgIdSel">
+						<option></option>
+					</select>
+				</div>
+				</div>
+                
+                <div class="form-group">
+					<label for="deviceModelSel" class="col-sm-3 control-label">设备型号</label>
+					 <div class="col-sm-9">
+					<select class="js-example-placeholder-single form-control select2" style="width:100%" id="deviceModelSel" name="deviceModelSel">
+						<option></option>
+					</select>
+				</div>
+				</div>
+              
+               <div class="form-group">
+                  <label for="deviceCode" class="col-sm-3 control-label">设备编号</label>
+                   <div class="col-sm-9">
+                  <input type="text" class="form-control" id="deviceCode" name="deviceCode" value="${deviceInfo.deviceCode!}">
+                </div>
+                </div>
+                
+                <div class="form-group">
+                 <label for="deviceTypeSel" class="col-sm-3 control-label">设备类型</label>
+                  <div class="col-sm-9">
+                  <select id="deviceTypeSel" name="deviceTypeSel" class="js-example-placeholder-single form-control select2 " style="width:100%" >
+                   <option></option>
+                   <option value="1">大堂式单屏</option>
+                   <option value="2">大堂式双屏</option>
+                   <option value="3">壁挂</option>
+                   <option value="4">穿墙</option>
+                   <option value="5">便携式</option>
+                   <option value="6">空充机</option>
+                  </select>
+                </div>
+                </div>
+                
+                <div class="form-group">
+                 <label for="deviceFunctionSel" class="col-sm-3 control-label">设备用途</label>
+                  <div class="col-sm-9">
+                  <select id="deviceFunctionSel" name="deviceFunctionSel" class="js-example-placeholder-single form-control select2 " style="width:100%" >
+                  <option></option>
+                   <option value="1">缴费终端</option>
+                   <option value="2">营业PC</option>
+                   <option value="3">便民终端</option>
+                   <option value="4">排队机</option>
+                   <option value="5">空充机</option>
+                  </select>
+                </div>
+                </div>
+                 
+                 <div class="form-group">             
+                 <label for="deviceStatusSel" class="col-sm-3 control-label">设备状态</label>
+                  <div class="col-sm-9">
+                  <select id="deviceStatusSel" name="deviceStatusSel" class="js-example-placeholder-single form-control select2 " style="width:100%" >
+                  <option></option>
+                   <option value="0">未安装</option>
+                   <option value="1">上线</option>
+                   <option value="2">禁用</option>
+                  </select>
+                </div>
+                </div>
+
+                <div class="form-group">
+					<label for="manufSel" class="col-sm-3 control-label">设备生产厂商</label>
+					 <div class="col-sm-9">
+					<select class="js-example-placeholder-single form-control select2 " style="width:100%" id="manufSel" name="manufSel">
+						<option></option>
+					</select>
+				</div>
+                </div>
+
+                <div class="form-group">
+					<label for="maintenanceSel" class="col-sm-3 control-label">设备维保厂商</label>
+					 <div class="col-sm-9">
+					<select class="js-example-placeholder-single form-control select2 " style="width:100%" id="maintenanceSel" name="maintenanceSel" >
+						<option></option>
+					</select>
+				</div>
+                </div>
+                
+                <div class="form-group">
+                  <label for="factoryCode" class="col-sm-3 control-label">出厂编号</label>
+                   <div class="col-sm-9">
+                  <input type="text" class="form-control" id="factoryCode" name="factoryCode" value="${deviceInfo.factoryCode!}">
+                </div>
+                </div>
+                
+                <div class="form-group">
+                  <label for="ip" class="col-sm-3 control-label">终端IP</label>
+                   <div class="col-sm-9">
+                  <input type="text" class="form-control" id="ip" name="ip" value="${deviceInfo.ip!}">
+                </div>
+                </div>
+                
+                 <div class="form-group">
+                  <label for="bankCode" class="col-sm-3 control-label">终端银联编号</label>
+                   <div class="col-sm-9">
+                  <input type="text" class="form-control" id="bankCode" name="bankCode" value="${deviceInfo.bankCode!}">
+                </div>
+                </div>
+                
+                <div class="form-group">
+                  <label for="mac" class="col-sm-3 control-label">MAC地址</label>
+                   <div class="col-sm-9">
+                  <input type="text" class="form-control" id="mac" name="mac" value="${deviceInfo.mac!}">
+                </div>
+                </div>
+                
+                <div class="form-group">
+                  <label for="workNo" class="col-sm-3 control-label">工号</label>
+                   <div class="col-sm-9">
+                  <input type="text" class="form-control" id="workNo" name="workNo" value="${deviceInfo.workNo!}">
+                </div>
+                </div>
+                
+                 <div class="form-group">
+                  <label for="guid" class="col-sm-3 control-label">终端GUID</label>
+                   <div class="col-sm-9">
+                  <input type="text" class="form-control" id="guid" name="guid" value="${deviceInfo.guid!}">
+                </div>
+                </div>
+                
+                 <div class="form-group">
+                  <label for="remark" class="col-sm-3 control-label">备注</label>
+                   <div class="col-sm-9">
+                  <input type="text" class="form-control" id="remark" name="remark" value="${deviceInfo.remark!}">
+                </div>
+                </div>
+                
+   
+      </div>
+     </form>	
+     </div>
+<script>
+        
+ 	//机构下拉框 js
+ 	var orgUrl=contextPath+"/soa/asmp/datas/org4list";
+ 	var orgTarget="#orgIdSel";
+ 	
+ 	//营业厅下拉框
+ 	orgSelectChange(orgUrl,orgTarget);
+ 	var orgSelectedVal=$("#orgId").val();
+ 	if(orgSelectedVal!=null&&orgSelectedVal!=""){
+ 		$("#orgIdSel").val(orgSelectedVal).trigger("change");
+ 	}
+ 		
+ 	function orgSelectChange(comboxUrl,SelectTarget){
+ 		$.ajax({
+ 	   	url:comboxUrl,    
+ 	   	type:"post",
+ 	   	dataType:"json",
+ 	   	async:false,
+ 	   	success: function(result){  		
+ 	   		//combxListData=result;
+ 	   		//alert(fOrgs);
+ 	   		for(var i = 0;i<result.length;i++){    	
+ 	   			var $option = $('<option/>').attr('value',result[i].id).html(result[i].orgName);
+ 	   			$option.appendTo($(SelectTarget));
+ 	   		}  
+
+ 	   		$(SelectTarget).select2({
+ 	   			placeholder: "请选择",
+ 	   			allowClear: false
+ 	   		}).change(function(){
+ 	   			var selectedValue=$("#orgIdSel").val();
+ 	   		    $("#orgId").val(selectedValue);
+ 	   		});
+ 	   		    		
+ 	   	} 
+ 	     });
+ 	}
+ 	
+ 	var deviceModelUrl=contextPath+"/soa/device/model/datas/combox";
+ 	var deviceModel="#deviceModelSel";
+ 	
+ 	//设备型号下拉框
+ 	deviceModelSelect(deviceModelUrl,deviceModel);
+ 	//console.log(${deviceInfo.deviceModelId!});
+ 	var deviceModelSelVal=$("#deviceModelId").val();
+ 	if(deviceModelSelVal!=null&&deviceModelSelVal!=""){
+ 		$("#deviceModelSel").val(deviceModelSelVal).trigger("change");
+ 	}
+ 		
+ 	//设备型号下拉框function
+ 	function deviceModelSelect(comboxUrl,SelectTarget){
+ 		$.ajax({
+ 	   	url:comboxUrl,    
+ 	   	type:"post",
+ 	   	dataType:"json",
+ 	   	async:false,
+ 	   	success: function(result){ 
+ 	   		//combxListData=result;
+ 	   		//alert(fOrgs);
+ 	   		for(var i = 0;i<result.length;i++){    	
+ 	   			var $option = $('<option/>').attr('value',result[i].id).html(result[i].deviceModelName);
+ 	   			$option.appendTo($(SelectTarget));
+ 	   		}
+
+ 	   		$(SelectTarget).select2({
+ 	   			placeholder: "请选择",
+ 	   			allowClear: false
+ 	   		}).change(function(){
+ 	   		var selectedValue=$("#deviceModelSel").val();
+	   		    $("#deviceModelId").val(selectedValue);
+ 	   		});
+ 	   		    		
+ 	   	} 
+ 	     });
+ 	}
+ 	
+ 	var manuflUrl=contextPath+"/soa/device/info/datas/manufCombox";
+ 	var manuf="#manufSel";
+ 	var manufInput="#manufId";
+ 	
+ 	//厂商下拉框调用生成（配件和终端）
+ 	manufSelect(manuflUrl,manuf,manufInput);
+ 	//$("#manufSel").val(${deviceInfo.manufId!}).trigger("change");
+ 	var manufSelVal=$("#manufId").val();
+ 	if(manufSelVal!=null&&manufSelVal!=""){
+ 		$("#manufSel").val(manufSelVal).trigger("change");
+ 	}
+ 	
+ 	//维保厂商下拉框
+ 	var maintenancelUrl=contextPath+"/soa/device/info/datas/maintenanceCombox";
+ 	var maintenance="#maintenanceSel";
+ 	var maintenanceInput="#maintenanceId";
+ 	manufSelect(maintenancelUrl,maintenance,maintenanceInput);
+ 	
+ 	var maintenanceSelVal=$("#maintenanceId").val();
+ 	if(maintenanceSelVal!=null&&maintenanceSelVal!=""){
+ 		$("#maintenanceSel").val(maintenanceSelVal).trigger("change");
+ 	}
+ 	
+ 	//厂商下拉框
+ 	function manufSelect(comboxUrl,SelectTarget,inputTarget){
+ 		$.ajax({
+ 	   	url:comboxUrl,    
+ 	   	type:"post",
+ 	   	dataType:"json",
+ 	   	async:false,
+ 	   	success: function(result){ 
+ 	   		alert
+ 	   		//combxListData=result;
+ 	   		//alert(fOrgs);
+ 	   		for(var i = 0;i<result.length;i++){    	
+ 	   			var $option = $('<option/>').attr('value',result[i].id).html(result[i].manufName);
+ 	   			$option.appendTo($(SelectTarget));
+ 	   		}
+
+ 	   		$(SelectTarget).select2({
+ 	   			placeholder: "请选择",
+ 	   			allowClear: false
+ 	   		}).change(function(){
+ 	   		var selectedValue=$(SelectTarget).val();
+   		    $(inputTarget).val(selectedValue);
+ 	   		});
+ 	   		    		
+ 	   	    } 
+ 	     });
+ 	}
+     
+     </script>
+<script>
+ 		$("#deviceTypeSel").select2({
+	   			placeholder: "请选择",
+	   			allowClear: false
+	   		}).change(function(){
+	   			var selectedValue=$("#deviceTypeSel").val();
+	   		    $("#deviceTypeId").val(selectedValue);
+	   		});
+     
+ 		var deviceTypeSelVal=$("#deviceTypeId").val();
+ 	 	if(deviceTypeSelVal!=null&&deviceTypeSelVal!=""){
+ 	 		$("#deviceTypeSel").val(deviceTypeSelVal).trigger("change");
+ 	 	}
+ 		
+ 		$("#deviceFunctionSel").select2({
+   			placeholder: "请选择",
+   			allowClear: false
+   		}).change(function(){
+   			var selectedValue=$("#deviceFunctionSel").val();
+   		    $("#deviceFunctionId").val(selectedValue);
+   		});
+     
+ 		var deviceFunctionSelVal=$("#deviceFunctionId").val();
+ 	 	if(deviceFunctionSelVal!=null&&deviceFunctionSelVal!=""){
+ 	 		$("#deviceFunctionSel").val(deviceTypeSelVal).trigger("change");
+ 	 	}
+     
+ 	 	$("#deviceStatusSel").select2({
+   			placeholder: "请选择",
+   			allowClear: false
+   		}).change(function(){
+   			var selectedValue=$("#deviceStatusSel").val();
+   		    $("#deviceStatusInput").val(selectedValue);
+   		});
+ 
+		var deviceStatusVal=$("#deviceStatusInput").val();
+	 	if(deviceStatusVal!=null&&deviceStatusVal!=""){
+	 		$("#deviceStatusSel").val(deviceStatusVal).trigger("change");
+	 	}
+     </script>
+     
+     <script>
+     $('#form_submit').bootstrapValidator({
+    	    message: 'This value is not valid',
+    	    container: 'tooltip',
+    	    feedbackIcons: {
+    	        valid: 'glyphicon glyphicon-ok',
+    	        invalid: 'glyphicon glyphicon-remove',
+    	        validating: 'glyphicon glyphicon-refresh'
+    	    },
+    	    fields: {
+    	    	orgIdSel: {
+    	            validators: {
+    	                notEmpty: {
+    	                    message: '请选择一项'
+    	                }
+    	            }
+    	        },
+    	        deviceModelSel: {
+    	            validators: {
+    	                notEmpty: {
+    	                    message: '请选择一项'
+    	                }
+    	            }
+    	        },
+    	        deviceCode: {
+    	            validators: {
+    	                notEmpty: {
+    	                    message: '不能为空！'
+    	                }
+    	            }
+    	        },
+    	        deviceTypeSel: {
+    	            validators: {
+    	                notEmpty: {
+    	                    message: '请选择一项'
+    	                }
+    	            }
+    	        },
+    	        deviceFunctionSel: {
+    	            validators: {
+    	                notEmpty: {
+    	                    message: '请选择一项'
+    	                }
+    	            }
+    	        },
+    	        deviceStatusSel: {
+    	            validators: {
+    	                notEmpty: {
+    	                    message: '请选择一项'
+    	                }
+    	            }
+    	        },
+    	        manufSel: {
+    	            validators: {
+    	                notEmpty: {
+    	                    message: '请选择一项'
+    	                }
+    	            }
+    	        },
+    	        maintenanceSel: {
+    	            validators: {
+    	                notEmpty: {
+    	                    message: '请选择一项'
+    	                }
+    	            }
+    	        },
+    	        factoryCode: {
+    	        	container: 'popover',
+    	            validators: {
+    	                notEmpty: {
+    	                    message: '不能为空！'
+    	                }
+    	            }
+    	        }, 
+    	        ip: {
+    	        	container: 'popover',
+    	            validators: {
+    	                notEmpty: {
+    	                    message: '不能为空！'
+    	                },
+    	                regexp: {
+    	                    regexp: /^\d+\.\d+\.\d+\.\d+/,
+    	                    message: '请输入正确的ip格式'
+    	                }
+    	            }
+    	        }, 
+    	        bankCode: {
+    	        	container: 'popover',
+    	            validators: {
+    	                notEmpty: {
+    	                    message: '不能为空！'
+    	                }
+    	            }
+    	        }, 
+    	        guid: {
+    	        	container: 'popover',
+    	            validators: {
+    	                notEmpty: {
+    	                    message: '不能为空！'
+    	                }
+    	            }
+    	        }, 
+    	        remark: {
+    	        	container: 'popover',
+    	            validators: {
+    	                
+    	                regexp: {
+    	                    regexp: /[^(and|or| |exec|insert|select|union|update|count|*|%)]/,
+    	                    message: '请移除非法字符！'
+    	                }
+    	            }
+    	        }
+
+    	    }
+    	}).on('success.form.bv', function(e) {
+			that.title('正在提交..');
+			ajaxSubmit($('#form_submit')[0], function(data){
+	            //alert(data);
+	        });
+						
+			 //updateUser(id);
+			setTimeout(function() {
+				DTrefresh();
+				//table.ajax.reload(null,false);//刷新datatable页面  table对应建表的var 命名
+				that.close().remove();
+			}, 100);
+			return false;
+		 cancel: false
+    	});
+
+     
+     </script>

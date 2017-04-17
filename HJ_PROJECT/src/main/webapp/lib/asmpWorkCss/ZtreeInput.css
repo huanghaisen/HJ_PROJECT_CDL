@@ -1,0 +1,37 @@
+.ztree li ul{ margin:0; padding:0; }
+.ztree li { width: 120%; line-height:30px; margin: 0; padding: 0;white-space: nowrap;}
+.ztree li a { display: block;width: 120%;  height:30px;margin: 0; padding: 0px;}
+.ztree li a:hover {background-color:#D4D4D4;text-decoration:none;}
+
+.ztree li a span.button.switch {visibility:visible}
+.ztree.showIcon li a span.button.switch {visibility:visible}
+.ztree li a.curSelectedNode {background-color:#E7E7E7;border:0;height:30px;}
+.ztree li span {  line-height:30px;}
+.ztree li span.button {margin-top: -7px;}
+.ztree li span.button.switch {width: 16px;height: 16px;}
+
+.ztree li a.level0 span {/*font-size: 150%;font-weight: bold;*/}
+
+  .ztree li span.button { min-width:0; min-height:0}
+
+.ztree li span.button {background-image:url("left_menuForOutLook.png"); *background-image:url("left_menuForOutLook.gif")}
+.ztree li span.button.switch.level0 {width: 20px; height:20px}
+.ztree li span.button.switch.level1 {width: 20px; height:20px}
+.ztree li span.button.noline_open {background-position: 0 2px;}
+.ztree li span.button.noline_close {background-position: -20px 2px;}
+.ztree li span.button.noline_open.level0 {background-position: 0 2px;}
+.ztree li span.button.noline_close.level0 {background-position: -20px 2px;}
+.zTreeDemo { display: none; width:200px; height: 300px; overflow:auto; background-color: #fff; border: 1px solid #ccc;  position: absolute; left: 0; top: 33px; z-index: 1000 }
+.ztree li span.wr { float: right; width:60%; text-align: right; }
+.ztree li span.wr span { display: inline-block; margin: 0; text-align: center;} 
+
+
+.rowtoolbar { padding:10px; }
+.rowTitle { margin:0 10px; height: 31px; background-color:#f0f0f0; border-bottom: 1px solid #D1D1D1}
+.rowtoolbar .btn { margin-right: 10px; }
+.rowTitle span { line-height: 30px; font-size: 12px; }
+.rowTitle .wr { float: right; width:60%; text-align: right; }
+.rowTitle .t { float: left; width: 40%;  font-weight: bold; }
+.rowTitle .t b { padding: 5px; }
+.rowTitle .tfield { display: block; border-left: 1px solid #fff;border-right: 1px solid #dbdbdb }
+.w1 {width: 160px; text-align: center; }

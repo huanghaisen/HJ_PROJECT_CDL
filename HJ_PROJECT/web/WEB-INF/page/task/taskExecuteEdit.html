@@ -1,0 +1,212 @@
+<style>
+   .innbr { display:block; height: 34px; line-height: 34px; border-bottom:1px solid #d2d6de }
+   .nbr {border-left:0;border-top:0; border-right:0;}
+</style>
+
+<div class="box-body">
+<div class="row">
+  <div class="col-md-6">
+   <div class="form-horizontal">
+      <div class="form-group">
+        <label for="inputName" class="col-sm-4 control-label">任务编号：</label>
+        <div class="col-sm-5">
+          <span class="innbr">${taskOrg.taskCode!}</span>
+        </div>
+      </div>                 
+      <div class="form-group">
+        <label for="inputName" class="col-sm-4 control-label">维保厂商：</label>
+        <div class="col-sm-5">
+          <span class="innbr">${taskOrg.manufName!}</span>
+        </div>
+      </div>
+      
+      <div class="form-group">
+        <label for="inputName" class="col-sm-4 control-label">任务开始时间：</label>
+        <div class="col-sm-5">
+          <span class="innbr">${taskOrg.beginTime!}</span>
+        </div>
+      </div>
+      
+      
+   </div>
+  </div>
+  <div class="col-md-6">
+     <div class="form-horizontal">
+                    
+      <div class="form-group">
+        <label for="inputName" class="col-sm-4 control-label">申请人：</label>
+        <div class="col-sm-5">
+          <span class="innbr">${taskOrg.initiatorName!}</span>
+        </div>
+      </div>
+      <div class="form-group">
+        <label for="inputName" class="col-sm-4 control-label">申请人电话：</label>
+        <div class="col-sm-5">
+          <span class="innbr">${taskOrg.phone!}</span>
+        </div>
+      </div>
+      
+      <div class="form-group">
+        <label for="inputName" class="col-sm-4 control-label">任务结束时间：</label>
+        <div class="col-sm-5">
+          <span class="innbr">${taskOrg.endTime!}</span>
+        </div>
+      </div>
+   </div> 
+  </div>
+</div>     
+ 
+</div>
+
+<div class="box-body">
+<div class="row">
+<label for="inputName" class="control-label">巡检设备信息</label>
+</div> 
+<div class="row">
+<table id="table2" class="table table-bordered table-striped" cellspacing="0" width="100%"></table>
+
+</div> 
+ </div>
+
+<script type="text/javascript">
+
+
+
+
+
+$(function(){
+	   
+	   var opt = 0;
+
+	   var FaultList=null;
+	   $.ajax({
+	   		url:contextPath+"/soa/task/taskOrg/fault/datas/search",    
+	   		type:"post",
+	   		dataType:"json",
+	   		async:false,
+	   		success: function(result){
+	   			FaultList=result.data;
+	   			
+	   		} 
+	   	});
+
+	    // 初始化表格
+	   var table2 = $('#table2').DataTable({
+		  ajax: {
+				"url":contextPath + "/soa/task/taskOrg/executedevice/datas/search",
+				"type": "post",
+				"dataType":"json",
+				"data":function(d){
+					d.orgId = ${taskOrg.id!};
+				}
+			},
+	     columns: [
+	         { 
+	             title: '序号',
+	             data: 'id',
+				 align: 'center',
+	             valign: 'middle'
+	             
+	         },
+	         {
+	        	 title:'设备编号',
+	             data: 'deviceCode',
+	    		 align: 'center',
+	             valign: 'middle'
+	             
+	         },
+	         {   
+	            title:'设备型号',
+	            data: 'deviceModelName',
+	        	align: 'center',
+	            valign: 'middle'
+	         },           
+	         {   
+	            title:'是否正常',
+	            data: '是否正常',
+	    		align: 'center',
+	            valign: 'middle'
+	         },
+	         { 
+	        	title:'故障现象',
+	            data: '故障现象',
+	    		align: 'center',
+	            valign: 'middle'
+	         }          
+
+	      ],columnDefs: [{
+	         targets: 3,
+	         render: function (data, type, full, meta){          
+	            opt++;
+	            var html = '<div class="form-group">'
+	               +'<div class="radio">'         
+	                +'<label>'            
+	                  +'<input type="radio" name="options'+opt+'" value="1">是 '
+	                +'</label> '
+	                +'<label>'
+	                  +' <input type="radio" name="options'+opt+'" value="0">否 ' 
+	                +'</label>'
+	                +'</div>'                        
+	              +'</div>';                
+	       		
+	            return html;
+	         }
+	      },{
+	         targets: 4,
+	         width:300,         
+	         render: function (data, type, full, meta){         
+	            
+	            var html = '<select class="form-control select2" multiple="multiple" data-placeholder="请选择" disabled="disabled"  style="width: 100%;"></select>';                
+	       
+	            return html;
+
+	         }
+	      }],     
+
+	      scrollY:"400px",
+	      scrollCollapse:true,
+	      paging:false,
+	      info: false,
+	      lengthChange: false, 
+	      bFilter:false,           
+	      order:[[1, 'dsc']],
+	      ordering:false,
+	      rowCallback: function(row, data, dataIndex){
+	                  
+	         var $radio = $(row).find('.radio');
+	         var option = null;
+	         for(var i=0;i<FaultList.length;i++){
+				option+='<option value="'+FaultList[i].id+'">'+FaultList[i].modelFaultName+'</option>';
+	         }
+	          
+	         var $select = $(row).find('.select2').html(option);      
+	        
+	         $select.select2();
+	         
+	         setTimeout(function(){           
+	            $select.select2("val",'');                     
+	         },0);
+
+	         $radio.find('input:radio').on('click',function(){
+	           var isr = $(this).val();
+
+	           if(isr==0){                         
+	               $select.val('').trigger('change.select2').prop("disabled", false);              
+	           }else{                            
+	               $select.val('').trigger('change.select2').prop("disabled", true);                          
+	               
+	           }
+
+	         });
+
+
+	      }
+	   });
+
+	});
+</script>
+
+
+
+
+

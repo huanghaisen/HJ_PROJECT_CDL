@@ -1,0 +1,17 @@
+<style type="text/css">
+.select2-container--default .select2-results>.select2-results__options{
+max-height:150px;
+}
+</style>
+<form class="form-horizontal"  method="post" name="form_Survey" id="form_Survey" action="${request.contextPath}/soa/survey/datas/inst">
+    	<input type="hidden" value="" name="manufIdList" id="manufIdList"/>
+      <div class="modal-body">
+      <div class="form-group">
+      <div>
+      	<label for="exampleInputPassword1">选择维保厂商：</label>
+      		<select class="form-control select2" name="select2" id="select2" multiple="multiple" data-placeholder="Select Manuf" style="width: 100%;">
+			</select>
+      </div>
+     </div>
+    </div>
+   </form>	

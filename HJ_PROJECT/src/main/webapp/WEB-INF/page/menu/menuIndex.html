@@ -1,0 +1,125 @@
+<style>
+.button{
+	min-width: 0px;
+    min-height: 0px;
+}
+</style>
+<link rel="stylesheet" href="${request.contextPath}/css/metro.css">
+<link rel="stylesheet" href="${request.contextPath}/lib/plugins/zTree3/css/ztreetect.css">
+<link rel="stylesheet" href="${request.contextPath}/lib/plugins/zTree3/css/metroStyle/metroStyle.css">
+
+
+<div class="box box-primary">
+ <div class="box-header with-border">
+  <div id="mainpanel" style="margin: 0px 0px 0px 0px;">
+  
+  <div class="box-body" style="width: 100%">
+   <div class="row">    
+    
+    <div class="col-xs-3">
+    <div class="input-group">
+      <span class="input-group-addon" id="sizing-addon2">场景查询</span>
+        <select class="form-control" name="menuType" id="menuType"   data-bv-field="country" onchange="Refresh();" aria-describedby="sizing-addon2">
+         <option value="soa">soa</option>
+         <option value="coa">coa</option>
+         <option value="moa">moa</option>
+        </select>
+      </div>
+    </div>
+    
+    <div class="col-xs-4">      
+      <a href="javascript:void(0);" class="btn btn-success" onclick="addParentMenu();">
+      <i class="fa fa-plus-circle"></i> 添加功能菜单</a>
+      <a href="javascript:void(0);" class="btn btn-primary" onclick="refresh();">
+     <i class="fa fa-refresh"></i> 刷新菜单</a>
+    </div>
+
+   </div> 
+  </div>
+  
+  <!-- 
+  
+    <label style="float: left;margin-top: 8px;margin-right: 3px;">场景查询：</label>
+  	<select class="form-control" name="menuType" id="menuType" data-bv-field="country" onchange="Refresh();" style="width: 200px; float:left;margin-right:10px;">
+  		<option value="soa">soa</option>
+        <option value="coa">coa</option>
+        <option value="moa">moa</option>
+    </select>
+    <a href="javascript:void(0);" class="btn btn-success" onclick="addParentMenu();"><i class="fa fa-plus-circle"></i> 添加功能菜单</a>
+    <a href="javascript:void(0);" class="btn btn-primary" onclick="refresh();"><i class="fa fa-refresh"></i> 刷新菜单</a>
+  
+   -->
+
+    
+    
+    <div id="mapcontent" style="width: 100%;position: relative; height:480px;overflow:scroll;overflow-x:hidden">
+		<div class="box-body">
+			<div class="content_wrap">
+   				<div class="zTreeDemoBackground left">
+      				<ul id="treeDemo" class="ztree"></ul>
+   				</div>  
+			</div>
+		</div>
+	</div>
+  </div>
+ </div>
+</div>
+<script src="${request.contextPath}/lib/plugins/zTree3/js/jquery.ztree.core.js"></script>
+<script src="${request.contextPath}/lib/plugins/zTree3/js/jquery.ztree.excheck.js"></script>
+<script src="${request.contextPath}/lib/plugins/zTree3/js/jquery.ztree.exedit.js"></script>
+<script type="text/javascript" src="${request.contextPath}/js/menu/soa_menu_data.js"></script>
+<script type="text/javascript" src="${request.contextPath}/js/menu/soa_menu_tree.js"></script>
+
+<script>
+   //初始化调用
+   $(document).ready(function(){
+	   initZtree($("#menuType").val());
+
+   });
+</script>
+<script>
+//---------------添加父菜单-----------------//
+
+function addParentMenu(){
+	var data={"parentId":0,"tier":0,"code":100000,"sence":$("#menuType").val()};
+    post("/soa/menu/inst","html",data,function(obj){
+			var d = dialog({
+				title : '添加菜单',
+				content :obj,					
+				width : 550,
+				height : 500,
+				okValue: '保存',
+				zIndex:1080,
+				ok:function() {
+					this.title('正在提交..');
+					ajaxSubmit($('#form_menu')[0], function(data){
+						if(data.status==0){
+						var d = dialog({
+   						content : data.msg
+   					});
+   						d.show();
+   						setTimeout(function() {
+   						d.close().remove();
+   					}, 3000); 
+   					Refresh();//刷新缓存
+					}else{
+						var d = dialog({
+   						content : data.msg
+   					});
+   						d.show();
+   						setTimeout(function() {
+   						d.close().remove();
+   					}, 3000);
+					} 
+					});
+				 	cancel: false
+				},
+		     	cancelValue:'取消',
+			 	cancel: function(){
+			  	}
+			});
+			d.showModal();
+		});
+}
+
+</script>

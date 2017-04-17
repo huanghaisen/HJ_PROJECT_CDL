@@ -1,0 +1,250 @@
+<!-- 用户编辑模态框 -->
+<link rel="stylesheet"
+	href="${request.contextPath}/lib/plugins/select2/select2.min.css">
+<link rel="stylesheet"
+	href="${request.contextPath}/lib/plugins/daterangepicker/daterangepicker-bs3.css">
+<style>
+<!--
+.table>tbody>tr>td,.table>tbody>tr>th,.table>tfoot>tr>td,.table>tfoot>tr>th,.table>thead>tr>td,.table>thead>tr>th
+	{
+	border-top: 0px;
+}
+.info-box-icon
+{
+  border-top-left-radius: 2px;
+  border-top-right-radius: 0;
+  border-bottom-right-radius: 0;
+  border-bottom-left-radius: 2px;
+  display: block;
+  float: left;
+  height: 90px;
+  width: 90px;
+  text-align: center;
+  font-size: 20px;
+  line-height: 90px;
+  background: rgba(0,0,0,0);
+}
+.info-box{
+	min-height: 90px;
+}
+
+.info-box .progress .progress-bar{
+	background: #00c0ef;
+}
+-->
+</style>
+<div class="row">
+	<div class="col-md-12">
+		<div class="box box-solid">
+			<div class="box-header with-border">
+				<table id="tabletitle" class="table dataTable">
+					<tbody>
+						<tr>
+							<td><i class="glyphicon glyphicon-hdd"></i>
+								${model.factoryCode!}</td>
+							<td>运行状态:(${gdevice.statusstr!})</td>
+							<td>开机时间: ${model.onlineTime!}</td>
+						</tr>
+					</tbody>
+				</table>
+				<div class="box-tools">
+					<button type="button" class="btn btn-box-tool"
+						data-widget="collapse">
+						<i class="fa fa-minus"></i>
+					</button>
+				</div>
+			</div>
+			<!-- /.box-header -->
+			<div class="box-body">
+				<table id="tablebox" class="table dataTable ">
+					<tbody>
+						<tr>
+							<td>设备编码: ${model.deviceCode!}</td>
+							<td>出厂编码: ${model.factoryCode!}</td>
+							<td>生产厂商: ${model.manufName!}</td>
+							<td>类型: ${model.deviceTypeName!}</td>
+						</tr>
+						<tr>
+							<td>省份: ${model.provinceStr!}</td>
+							<td>地市: ${model.cityStr!}</td>
+							<td>区县: ${model.districtStr!}</td>
+							<td>营业厅: ${model.orgName!}</td>
+						</tr>
+					</tbody>
+				</table>
+			</div>
+			<!-- /.box-body -->
+		</div>
+		<!-- /.box -->
+	</div>
+</div>
+<div class="row">
+	<div class="col-md-12">
+		<div class="box box-solid">
+			<div class="box-header with-border">
+				<i class="glyphicon glyphicon-tasks"></i>
+				<h3 class="box-title">终端详情</h3>
+				<div class="box-tools">
+					<button type="button" class="btn btn-box-tool"
+						data-widget="collapse">
+						<i class="fa fa-minus"></i>
+					</button>
+				</div>
+			</div>
+			<!-- /.box-header -->
+			<div class="box-body">
+				<!--  -----------内容 --------------  -->
+				<div class="nav-tabs-custom">
+					<ul class="nav nav-tabs">
+						<li class="active"><a href="#partsinfo" data-toggle="tab"
+							aria-expanded="true">模块信息</a></li>
+						<li class=""><a href="#deviceinfo" data-toggle="tab"
+							aria-expanded="false">基本信息</a></li>
+						<li class=""><a href="#resources" data-toggle="tab"
+							aria-expanded="false">资源信息</a></li>
+						<li class=""><a href="#softinfo" data-toggle="tab"
+							aria-expanded="false">硬件软件信息</a></li>
+					</ul>
+					<div class="tab-content">
+						<!-- tab-partsinfo -->
+						<div class="tab-pane active" id="partsinfo">
+							<div class="row">
+									<#list gdevice.hList as items>
+									<#if items_index%4 = 0> 
+										</div>
+									   <div class="row">
+									 </#if>
+									  <div class="col-md-3 col-sm-6 col-xs-12">
+											<div class="info-box">
+												<span class="info-box-icon">
+													<img height="80" src="${request.contextPath}/images/parts/${items.img!}.png">
+												</span>
+												<div class="info-box-content">
+													<span class="info-box-text">${items.name!}</span> <span
+														class="info-box-number">${items.statusstr!}</span>
+													<div class="progress">
+														<div class="progress-bar" style="width: 10%"></div>
+													</div>
+													<span class="progress-description">${items.modelname!}</span>
+												</div>
+												<!-- /.info-box-content -->
+											</div>
+											<!-- /.info-box -->
+										</div>
+										<!-- /.col -->
+									</#list>
+									</div>
+						</div>
+						<!-- /.tab-info -->
+						<div class="tab-pane" id="deviceinfo">
+							<table id="tablebox" class="table dataTable ">
+								<tbody>
+									<tr>
+										<td>GUID: ${model.guid!}</td>
+										<td>设备编码: ${model.deviceCode!}</td>
+										<td>注册时间: ${model.createTime!}</td>
+									</tr>
+									<tr>
+										<td>上线时间: ${model.onlineTime!}</td>
+										<td>设备ip: ${model.ip!}</td>
+										<td>银联编码: ${model.bankCode!}</td>
+									</tr>
+								</tbody>
+							</table>
+						</div>
+						<!-- /.tab-resources -->
+						<div class="tab-pane" id="resources">
+							<div class="row">
+					        <div class="col-md-3 col-sm-6 col-xs-12">
+					          <div class="info-box">
+					            <span class="info-box-icon">CPU</span>
+					            <div class="info-box-content">
+					            	<span class="info-box-text">温度${gdevice.resources.cpu_temprature!}℃</span>
+						            <div class="progress">
+										<div class="progress-bar"style="width:${gdevice.resources.cpu_temprature!}%"></div>
+									</div>
+									<span class="info-box-text">占用率${gdevice.resources.cpu_usage!}%</span>
+					            </div>
+					            <!-- /.info-box-content -->
+					          </div>
+					          <!-- /.info-box -->
+					        </div>
+					        <!-- /.col -->
+					        <div class="col-md-3 col-sm-6 col-xs-12">
+					          <div class="info-box">
+					            <span class="info-box-icon">内存</span>
+					            <div class="info-box-content">
+					            	<span class="info-box-text">进程数${gdevice.resources.processes_number!}</span>
+						            <div class="progress">
+										<div class="progress-bar"style="width:${gdevice.resources.mem_usage!}%"></div>
+									</div>
+									<span class="info-box-text">比例${gdevice.resources.mem_usage!}%</span>
+					            </div>
+					            <!-- /.info-box-content -->
+					          </div>
+					          <!-- /.info-box -->
+					        </div>
+					        <!-- /.col -->
+					        <div class="col-md-3 col-sm-6 col-xs-12">
+					          <div class="info-box">
+					            <span class="info-box-icon">磁盘</span>
+					            <div class="info-box-content">
+					            	<span class="info-box-text">${(gdevice.resources.harddisk_left!/1024/1024)?string("#.##")}G</span>
+						            <div class="progress">
+										<div class="progress-bar"style="width:${gdevice.resources.harddisk_usage!}%"></div>
+									</div>
+									<span class="info-box-text">比例${gdevice.resources.harddisk_usage!}%</span>
+					            </div>
+					            <!-- /.info-box-content -->
+					          </div>
+					          <!-- /.info-box -->
+					        </div>
+					        <!-- /.col -->
+					      </div>
+						</div>
+						<!-- /.tab-pane -->
+						<div class="tab-pane" id="softinfo">
+							<div class="box">
+					            <div class="box-body no-padding">
+					              <table class="table table-striped">
+					                <tbody><tr>
+					                  <th style="width: 5%">序号</th>
+					                  <th style="width: 20%">进程名称</th>
+					                  <th style="width: 30%">内存占用量</th>
+					                  <th style="width: 45%">进程描述</th>
+					                </tr>
+					                <#list gdevice.sList as items>
+					                <tr>
+					                  <td>${items_index+1}</td>
+					                  <td>${items.name}</td>
+					                  <td>
+					                    <div class="progress progress-xs">
+					                      <div class="progress-bar progress-bar-danger" style="width: ${items.value}%"></div>
+					                    </div>
+					                  </td>
+					                  <td>${items.desc}</td>
+					                </tr>
+					                </#list>
+					              </tbody>
+					              </table>
+					            </div>
+					            <!-- /.box-body -->
+					          </div>
+						</div>
+					</div>
+					<!-- /.tab-content -->
+				</div>
+				<!--  -----------内容 --------------  -->
+			</div>
+		</div>
+		<!-- /.box-body -->
+	</div>
+	<!-- /.box -->
+</div>
+<script
+	src="${request.contextPath}/lib/plugins/select2/select2.full.min.js"></script>
+<script type="text/javascript"
+	src="${request.contextPath}/js/aboutForm.js"></script>
+<script
+	src="${request.contextPath}/lib/plugins/daterangepicker/moment.min.js"></script>
+

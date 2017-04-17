@@ -1,0 +1,112 @@
+<div class="modal-body"  >
+    <form class="form-horizontal" method="post" name="form_release" id="form_release" action="${request.contextPath}/soa/driver/version/datas/save">
+       <input type="hidden" id="id" name="id" value="${model.id!}">              
+       <div class="box-body">
+       			<div class="form-group">
+					<label for="dtypeSel" class="col-sm-5 control-label">设备型号</label>
+					 <div class="col-sm-7">
+					 <input type="hidden" value="${model.dtype!}" id="dtype" name="dtype">
+					<select class="js-example-placeholder-single form-control select2" style="width:100%" id="dtypeSel" name="dtypeSel">
+						<option></option>
+					</select>
+				</div>
+				</div>
+				<div class="form-group">
+					<label for="relTypeSel" class="col-sm-5 control-label">是否包含监控程序</label>
+					 <div class="col-sm-7">
+					 <input type="hidden" value="${model.relType!}" id="relType" name="relType">
+					<select class="js-example-placeholder-single form-control select2" style="width:100%" id="relTypeSel" name="relTypeSel">
+						<option></option>
+						<option value="0">否</option>
+						<option value="1">是</option>
+					</select>
+				</div>
+				</div>
+      </div>
+     </form>
+</div>
+<script type="text/javascript">
+//场景套select2样式以及编辑联动
+	var deviceModelUrl=contextPath+"/soa/device/model/datas/combox";
+ 	var deviceModel="#dtypeSel";
+ 	
+ 	//设备型号下拉框
+ 	deviceModelSelect(deviceModelUrl,deviceModel);
+ 	var deviceModelSelVal=$("#dtype").val();
+ 	if(deviceModelSelVal!=null&&deviceModelSelVal!=""){
+ 		$("#dtypeSel").val(deviceModelSelVal).trigger("change");
+ 	}
+ 	$(function(){
+ 		$("#relTypeSel").select2({
+			placeholder: "请选择",
+			allowClear: false
+		}).change(function(){
+		var selectedValue=$("#relTypeSel").val();
+		    $("#relType").val(selectedValue);
+		});	
+ 	})
+ 	
+ 	//设备型号下拉框function
+ 	function deviceModelSelect(comboxUrl,SelectTarget){
+ 		$.ajax({
+ 	   	url:comboxUrl,    
+ 	   	type:"post",
+ 	   	dataType:"json",
+ 	   	async:false,
+ 	   	success: function(result){ 
+ 	   		//combxListData=result;
+ 	   		//alert(fOrgs);
+ 	   		for(var i = 0;i<result.length;i++){    	
+ 	   			var $option = $('<option/>').attr('value',result[i].id).html(result[i].deviceModelName);
+ 	   			$option.appendTo($(SelectTarget));
+ 	   		}
+
+ 	   		$(SelectTarget).select2({
+ 	   			placeholder: "请选择",
+ 	   			allowClear: false
+ 	   		}).change(function(){
+ 	   		var selectedValue=$("#dtypeSel").val();
+	   		    $("#dtype").val(selectedValue);
+ 	   		});
+ 	   		    		
+ 	   	} 
+ 	     });
+ 	}
+	
+	//表单校验及提交事件
+ 	$('#form_release').bootstrapValidator({
+        message: 'This value is not valid',
+        feedbackIcons: {
+            valid: 'glyphicon glyphicon-ok',
+            invalid: 'glyphicon glyphicon-remove',
+            validating: 'glyphicon glyphicon-refresh'
+        },
+        fields: {
+        	dtypeSel: {
+                message: 'The dtypeSel is not valid',
+                validators: {
+                    notEmpty: {
+                        message: '设备型号不能为空！'
+                    }
+                }
+            },
+            relTypeSel: {
+                message: 'The relTypeSel is not valid',
+                validators: {
+                    notEmpty: {
+                        message: '必须选择是否发布监控程序！'
+                    }
+                }
+            }
+        }
+    }).on('success.form.bv', function(e) {
+		ajaxSubmit($('#form_release')[0], function(data){
+            //alert(data);
+        });
+		showDailog("操作成功",2000);
+		setTimeout(function() {
+			modelThat.close().remove();
+		}, 1000); 
+		return false;
+    });	
+</script>     

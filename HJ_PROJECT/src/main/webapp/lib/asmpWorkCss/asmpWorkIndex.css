@@ -1,0 +1,159 @@
+td.details-control {
+    cursor: pointer;    
+}
+tr.shown td.details-control {
+   
+}
+
+.exTable { width:100%}
+.exTable td { padding:5px;}
+      
+   .showTip { width:300px; border-radius: 5px; background: #000; opacity:0.8;}
+   .showTipcon { padding:5px; }
+   .showTipcon p {color: #fff; }
+
+
+   #example_wrapper { margin-top: 30px; }  
+   #example_wrapper .btn-group .btn { margin-right: 15px; border-radius: 3px; color: #fff }
+
+  .wb-col { float: left; width:70%; }
+  .n-tect { float: left; line-height: 34px; }
+   
+  .sdown { position: absolute; right:10px; top: 6px; }
+  .SelectList { position: absolute; right: 30px; top: 33px; display: none; width: 200px; height:300px;z-index: 999; margin: 0; padding: 0; overflow-y:scroll; background-color: #fff;  border: 1px solid #ccc;}
+  .SelectList li { list-style: none; line-height: 30px; border-bottom:1px dotted #ccc; padding: 0 10px; }
+  .SelectList li:hover { background-color:#f0f0f0  }
+  .pre { position: relative; }
+  
+  
+  .select2-container--default .select2-selection--single {border-radius:0}
+  .select2-container .select2-selection--single {height:34px}
+   
+  /*流程图样式（start）*/   
+
+.pub-wrap {
+  position: relative;
+  padding: 0 30px 10px;
+  margin: 0 auto;  
+  height: 60px;
+  width:600px;
+}
+.pubprocess {
+  position: relative;
+  height: 35px;
+  margin-left: 14px;
+  font-size: 0;
+  color: #fff;
+}
+
+.pubprocess:after {
+  position: absolute;
+  top: 50%;
+  left: 0;
+  z-index: 1;
+  width: 100%;
+  height: 1px;
+  content: "";
+  -webkit-transform: translate(0, -50%);
+  -ms-transform: translate(0, -50%);
+  transform: translate(0, -50%);
+  
+}
+
+.pubprocess li {
+  position: relative;
+  z-index: 5;
+  height: 35px;
+  font-size: .875rem;
+}
+
+.pubprocess li:after {
+  position: absolute;
+  top: 50%;
+  left: 0;
+  z-index: 1;
+  width: 100%;  
+  content: "";
+  border-bottom:2px solid #d9d9d9;
+}
+
+.pubprocess li.active:after {
+  position: absolute;
+  top: 50%;
+  left: 0;
+  z-index: 1;
+  width: 100%;  
+  content: "";
+  border-bottom:2px solid #3c8dbc;
+}
+.pubprocess li.done:after {
+  position: absolute;
+  top: 50%;
+  left: 0;
+  z-index: 1;
+  width: 100%;  
+  content: "";
+  border-bottom:2px solid #3c8dbc;
+}
+.pubprocess .ball {
+  position: absolute;
+  top: 10px;
+  right: 0;
+  z-index: 7;
+  width: 14px;
+  height: 14px;
+  line-height: 14px;
+  content: "";
+  text-align: center;
+  border-radius: 50%;
+  background-color: #d9d9d9;
+  border: 2px solid #fff;
+}
+
+.pubprocess .active .ball {
+  background-color: #f49300;
+
+}
+
+.pubprocess .done .ball {
+  background-color: #3c8dbc;
+}
+
+.pubprocess .ball em { display: inline-block; position: absolute; left: 50%; top:10px; width: 140px; margin-left: -70px; font-size:12px; line-height: 30px; font-style: normal;  text-align: center; white-space: nowrap; color: #a19ca0}
+
+.pubprocess .active .ball em { color: #f49300 }
+.pubprocess .done .ball em { color: #3c8dbc }
+
+.pubprocess .active + .active:after {
+  position: absolute;
+  top: 50%;
+  left: 0;
+  z-index: 6;
+  width: 100%;
+  height: 4px;
+  content: "";
+  -webkit-transform: translate(0, -50%);
+  -ms-transform: translate(0, -50%);
+  transform: translate(0, -50%);
+  background-color: #11c2c2;
+}
+
+.process-flex {
+  display: -webkit-box;
+  display: -ms-flexbox;
+}
+.process-flex li {
+  display: list-item;
+  -webkit-box-flex: 1;
+  -ms-flex: 1;
+  width: auto;
+}
+.process-flex li:first-child {
+  width: 14px;
+  margin-left: 0;
+  -webkit-box-flex: 0;
+  -ms-flex: 0;
+}
+
+   
+  //流程图样式（end）  

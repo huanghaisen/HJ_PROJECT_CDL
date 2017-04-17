@@ -1,0 +1,84 @@
+<form class="form-horizontal"  method="post" name="form_action" id="form_action" action="${request.contextPath}/soa/api/datas/save/supplies/check">
+<input type="hidden" name="id" value="${model.id}">
+<div class="mainpage">
+  <div class="topnavbar">
+    <a href="#" class="topnav-back"><i class="fa fa-fw fa-angle-left"></i></a> 
+    
+    <div class="topnavtitle">耗材申请详情</div>   
+  </div>
+ <div class="mainpagecontent">
+  <section class="m-content">
+    <div class="m-title bor-b" id="workDiv" workId=${model.workId}>
+      工单信息：
+      <div class="box-tools pull-right">
+         <i class="fa fa-list-ul pull-right text-aqua mt10" id="workDetail" data-pageview='${request.contextPath}/soa/webapp/progress/viewDetail'></i>
+        </div>
+    </div>
+    <div class="mbox bor-b">      
+       <p>申请编号：${model.workCode}</p>
+       <p>营业厅：${model.orgName}</p>  
+       <p>申请人：${model.proposerName}</p>
+       <p>申请人电话：${model.proposerPhone}</p>
+       <p>申请时间：${model.createTime}</p>        
+    </div>
+    <div class="m-title bor-b">设备相关信息</div> 
+    <div class="mbox bor-b">      
+       <p>设备编号：${model.deviceCode}</p>
+       <p>维保厂商：${model.manufName}</p>
+    </div>
+    <div class="m-title bor-b">审核情况</div> 
+    <div class="mbox bor-b">      
+       <p id="statusp" status=${model.status}></p>
+    </div>
+    <div class="m-title bor-b">更换配件信息</div>
+    <div class="bg-w" id="tableview">
+      <table id="example" class="table" cellspacing="0" width="100%">
+      <thead>
+			<tr>
+				<th>配件序号</th>
+				<th>配件名称</th>
+				<th>配件价格(元)</th>
+			</tr>
+		</thead>
+      <#list model.deviceSuppliesParts as item>
+      		<tr>
+				<td>${item_index+1}</td>
+				<td>${item.partName?string}</td>
+				<td>${item.partPrice?string}</td>
+			</tr>
+      </#list>
+      </table>
+    </div>    
+    
+
+  </section>
+</div> 
+</div>
+<script src='${request.contextPath}/js/aboutForm.js'></script>
+<script>
+  $(function(){
+	  app.currentCompleted = true;
+	  
+	  var status=$("#statusp").attr("status");
+	  var statusStr="";
+	  if(status==0){
+		  statusStr="未审核";
+	  }else if(status==1){
+		  statusStr="审核通过";
+	  }else if(status==2){
+		  statusStr="审核不通过";
+	  } 
+	  var status=$("#statusp").html(statusStr);
+	  var workId=$("#workDiv").attr("workId");
+		 // alert(workId);
+      $('#workDetail').attr('data-pageview',"${request.contextPath}/soa/webapp/progress/viewDetail?id="+workId);  
+	  	  
+   
+  });
+  
+
+	 
+	  
+
+
+</script>

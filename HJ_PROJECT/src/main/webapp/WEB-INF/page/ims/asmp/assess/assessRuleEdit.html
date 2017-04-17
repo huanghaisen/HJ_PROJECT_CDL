@@ -1,0 +1,254 @@
+
+<style type="text/css">  
+ .form-group label { font-size: 12px; font-weight: normal; }
+ .theTarea { height: 34px;  font-size: 0 }
+ .theTarea > span { display: inline-block; padding: 0 15px;border: 1px solid #ccc; margin:0 0 0 -1px; line-height: 34px; font-size: 12px; border-right: 1px solid #ccc; cursor: pointer; }
+ .theTarea > span:nth-child(0) {margin:0;}
+ .theTarea > span.hover,.theTarea > span:hover { background-color:#f1f9f9  }
+ .nobor { display: inline-block; width: 90%;  border:0; line-height: 34px;  }
+</style>
+
+  
+  <form class="form-horizontal" method="post" name="form_submit" id="form_submit" action="${request.contextPath}/soa/assess/datas/save">
+  	<input type="hidden" id="assessRuleId" name="id" value="${assessRule.id!}"> 
+  	<!-- <input type="hidden" id="workState" name="workState" value="${assessRule.workState!}">  -->
+  	<input type="hidden" id="creator" name="creator" value="${assessRule.creator!}"> 
+  	<input type="hidden" id="timeIdList" name="timeIdList" value="${assessRule.timeIdList!}"> 
+  	<!-- <input type="hidden" id="distractId" name="distractId" value="${assessRule.distractId!}">  -->
+  	
+    <div class="box-body" style="height: 500px;overflow-y: auto;overflow-x:hidden; ">
+   		<div class="form-group">
+                <label class="col-sm-3 control-label" for="workStateSel">处理环节:</label>
+               	<div class="col-sm-5">               
+                  <select  id="workStateSel" class="js-example-placeholder-single form-control select2 " name="workState" dataValue="${assessRule.workState!}" style="width:100%">
+	                  <option value=""></option>
+	                  <option value="1">待受理</option>
+	                  <option value="3">待结单</option>
+                  </select>
+                  </div>
+                </div>
+    	<div class="form-group">
+                <label class="col-sm-3 control-label" for="distractSelect">所属地区：</label>
+                <div class="col-sm-5"> 
+                 <select id="distractSelect"  class="js-example-placeholder-single form-control select2 " name="distractId" dataValue="${assessRule.distractId!}" style="width:100%" >
+                   <option value=""></option>
+                   <option value="0">青海</option>
+                 </select>
+                 </div>
+       </div>
+      <div class="form-group">
+        <label class="col-sm-3 control-label">验收打回分值设置：</label>
+        <div class="col-sm-8">
+          <input name="isRollbackScore" value="${assessRule.isRollbackScore!}"/>
+        </div>
+      </div>
+       <div class="form-group">
+        <table class="table table-bordered" id="assessRuleTable">
+                <tr>
+                  <th>满意度分值设置：</th>
+                  <th></th>                  
+                </tr>
+                <tr>
+                  <td>满意度：</td>
+                  <td>分值</td>                  
+                </tr>
+                <tr>
+                  <td>好评</td>
+                  <td> <input name="goodScore" value="${assessRule.goodScore!}"/></td>                  
+                </tr>
+                <tr>
+                  <td>一般</td>
+                  <td><input name="generScore" value="${assessRule.generScore!}"/></td>                  
+                </tr>
+                <tr>
+                  <td>差评</td>
+                  <td><input name="differScore" value="${assessRule.differScore!}"/></td>                  
+                </tr>
+       </table>
+      </div>
+      <div class="form-group">
+        <table class="table table-bordered" id="assessTimeTable">
+                <tr>
+                  <th>响应时间分值设置：</th>
+                  <th><input type="button" value="新增" onclick="addColum()"/></th>                  
+                </tr>
+                <tr>
+                  <td>响应时间（H）</td>
+                  <td>分值</td>                  
+                  <td>操作</td>                  
+                </tr>
+       </table>
+      </div>
+     
+    </div>
+  </form>  
+ 
+<script>
+var assessRuleId= $("#assessRuleId").val();
+var id ={"id":assessRuleId};
+//console.log(id);
+$.ajax({
+	"url":contextPath+"/soa/assess/datas/show",
+		data:id,
+		type:"post",
+		dataType:"json",
+		async:false,
+		success: function(result){
+			var data = result.data;
+			var html = '';
+			console.log(data.length);
+			for(var i=0;i<data.length;i++){
+				html= html+"<tr data-name='asmpAssessTimes'><td>≤&nbsp;&nbsp;<input data-name='timeDegree' value='"+data[i].timeDegree+"'/><input type='hidden' data-name='id' value='"+data[i].id+"'/></td><td><input data-name='timeScore' value='"+data[i].timeScore+"'/></td><td><input type='button' value='删除' onclick='del(this)'/></td></tr>"
+			}
+			$("#assessTimeTable").append(html);
+		    } 
+		});
+function addColum(){
+	var html="<tr data-name='asmpAssessTimes'><td>≤&nbsp;&nbsp;<input data-name='timeDegree' value=''/><input type='hidden' data-name='id' value=''/></td><td><input data-name='timeScore' value=''/></td><td><input type='button' value='删除' onclick='del(this)'/></td></tr>";
+	$("#assessTimeTable").append(html);
+}	
+function del(e){
+	console.log(e);
+	$(e).parent().parent().remove();
+} 
+
+ //校验表单
+$('#form_submit').bootstrapValidator({
+    message: 'This value is not valid',
+    container: 'tooltip',
+    feedbackIcons: {
+        valid: 'glyphicon glyphicon-ok',
+        invalid: 'glyphicon glyphicon-remove',
+        validating: 'glyphicon glyphicon-refresh'
+    },
+    fields: {
+    	isRollbackScore: {
+            validators: {
+                notEmpty: {
+                    message: '请输入打回分数'
+                }
+            }
+        },
+        goodScore: {
+        	container: 'popover',
+            validators: {
+                notEmpty: {
+                    message: '好评分值不能为空！'
+                }
+            }
+        },
+        generScore: {
+        	container: 'popover',
+            validators: {
+                notEmpty: {
+                    message: '中评分值不能为空！'
+                }
+            }
+        }, 
+        differScore: {
+        	container: 'popover',
+            validators: {
+                notEmpty: {
+                    message: '差评分值不能为空！'
+                }
+            }
+        }, 
+        workStateSel: {
+        	container: 'popover',
+            validators: {
+                notEmpty: {
+                    message: '处理环节不能为空！'
+                }
+            }
+        }, 
+        distractSel: {
+        	container: 'popover',
+            validators: {
+                notEmpty: {
+                    message: '区域不能为空！'
+                }
+            }
+        }
+
+    }
+}).on('success.form.bv', function(e) {
+	
+	ajaxSubmit($('#form_submit')[0], function(data){
+			if(data.status==0){
+				var d = dialog({
+					content : data.msg
+				});
+					d.show();
+					setTimeout(function() {
+					d.close().remove();
+					that.close().remove();
+				}, 2000); 
+					
+					table.ajax.reload(null,false);//刷新表格
+			}else{
+				var d = dialog({
+					content : data.msg
+				});
+					d.show();
+					setTimeout(function() {
+					d.close().remove();
+					that.close().remove();
+				}, 2000);
+			} 
+		});
+	
+    }); 
+//区县 
+var Url=contextPath+"/soa/asmp/datas/org4list";
+var Target="#distractSelect";
+SelectDistract(Url,Target);
+
+function SelectDistract(comboxUrl,SelectTarget){
+	$.ajax({
+   	url:comboxUrl,    
+   	type:"post",
+   	data:{"oid":"3"},
+   	dataType:"json",
+   	async:false,
+   	success: function(result){  		
+   		//combxListData=result;
+   		//alert(fs);
+   		for(var i = 0;i<result.length;i++){    	
+   			var $option = $('<option/>').attr('value',result[i].id).html(result[i].orgName);
+   			$option.appendTo($(SelectTarget));
+   		}
+
+   		$(SelectTarget).select2({
+   			placeholder: "请选择",
+   			allowClear: false
+   		}).change(function(){
+   			/* var hiddenPartTypeId=$("#distractId");
+   			var zhi=$("#distractSelect").val();
+   			hiddenPartTypeId.attr("value",zhi); */
+   			//alert(hiddenPartTypeId.val());
+   		});
+   		    		
+   	} 
+     });
+}
+  
+var partTypeIdVal=$("#distractSelect").attr('dataValue');
+if(partTypeIdVal!=null&&partTypeIdVal!=""){
+	$("#distractSelect").val(partTypeIdVal).trigger("change");
+}
+//处理环节
+$("#workStateSel").select2({
+	placeholder: "请选择",
+	allowClear: false
+}).change(function(){
+	/* var selectedValue=$("#workStateSel").val();
+    $("#workState").val(selectedValue); */
+});
+
+var sexStatusVal=$("#workStateSel").attr('dataValue');
+if(sexStatusVal!=null&&sexStatusVal!=""){
+	$("#workStateSel").val(sexStatusVal).trigger("change");
+}
+</script>
+
+

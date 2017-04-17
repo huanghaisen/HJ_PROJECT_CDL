@@ -1,0 +1,231 @@
+<style type="text/css">
+
+.w1 {width: 160px; text-align: center; }
+.pre { position: relative; }
+
+.wb-col { float: left; width:80%; }
+.n-tect { float: left; line-height: 34px; }
+.form-group label { font-size: 12px; font-weight: normal; }
+.inw { width:85%; }
+
+.cent th{text-align:center; }
+
+</style>
+<form class="form-horizontal" method="post" name="form_submit" id="form_submit" action="${request.contextPath}/soa/account/apply/datas/edit">
+<input type='hidden' id="id" name="id" value="${asmpAccount.id!}"/>
+<input type='hidden' id="workId" name="workId" value="${asmpAccount.workId!}"/>
+<div class="box-body" style="height:480px;overflow:scroll;overflow-x:hidden"> 
+ <div class="row" id="jddetail">
+    <div class="form-horizontal">
+             
+      <div class="form-group">
+        <label class="col-sm-1 control-label">工单编号：</label>
+        <div class="col-sm-2" style="margin-top:5px;">
+          <div class="theTarea" id="workCode">
+          	${asmpAccount.workCode!}
+          </div>
+        </div>
+      </div>
+      
+      <div class="form-group">
+        <label class="col-sm-1 control-label">营业厅：</label>
+        <div class="col-sm-2" style="margin-top:5px;">
+          <div class="theTarea" id="orgName">
+          	${asmpAccount.orgName!}
+          </div>
+        </div>
+        <label class="col-sm-1 control-label">申请人：</label>
+        <div class="col-sm-1" style="margin-top:5px;">
+          <div class="theTarea" id="proposerName">
+          	${asmpAccount.proposerName!}
+          </div>
+        </div>
+      </div>
+      
+      <div class="form-group">
+        <label class="col-sm-1 control-label">备注：</label>
+        <div class="col-sm-2" style="margin-top:5px;">
+          <div class="theTarea" id="orgName">
+          	${asmpAccount.remark!}
+          </div>
+        </div>
+        
+      </div>
+    </div>
+  </div>  
+
+    <div class="box-body">
+      
+        <div class="tbbody clearfix">          
+          <div class="tbtool">
+            <h4>具体使用配件:</h4>            
+          </div>
+        </div>
+        <table class="table table-bordered cent" id="workPartList"  align="center">
+          <tr>
+            <th width="15%">配件名称</th>
+            <th width="20%">配件型号</th>
+            <th width="15%">数量</th>
+            <th width="15%">单价</th>
+            <th width="15%">总价</th>
+            <th width="20%">备注</th>            
+          </tr>         
+          
+        </table>
+        <div class="tbbody clearfix">         
+          <div class="tbtool">
+            <h4>基本费用信息:<span style="font-size:12px;font-weight:normal;color:red">(注意：出发地与目的地不允许为空,如未产生费用请填写为0！)</span></h4>
+            <button type="button" class="btn btn-default" id="add" onclick="addAccountBasit()"><i class="fa fa-plus-circle fz"></i> 新增</button>
+          </div>
+        </div>
+        <table class="table table-bordered cent" id="accountBasitList"  align="center">
+          <tr>
+            <th width="15%">出发地</th>
+            <th width="15%">目的地</th>
+            <th width="10%">火车票</th>
+            <th width="10%">公交费</th>
+            <th width="10%">船务费</th>
+            <th width="10%">的士费</th>
+            <th width="10%">工单费</th>
+            <th width="10%">其他费</th>
+            <th width="10%">操作</th>
+          </tr>
+                   
+        </table>
+        </div>
+    </div>
+    </form>
+<script>
+
+
+//增加具体使用配件行
+var workId=$("#workId").val();
+$.ajax({
+	url:contextPath+"/soa/account/workpart/datas/search",    
+	type:"post",
+	dataType:"json",
+	data:{id:workId},
+	success: function(result){
+			var html = $("#workPartList").html();
+			var rowdata=result.data;
+			for(var i=0;i<rowdata.length;i++){
+				var sumCost = rowdata[i].sumCost==null?0:rowdata[i].sumCost;
+				var remark = rowdata[i].remark==null?"":rowdata[i].remark;
+				html= html+"<tr data-name='asmpWorkParts'>"
+				+"<td>"+rowdata[i].partName+"<input type='hidden' data-name='id' value='"+rowdata[i].id+"'/></td>"
+				+"<td>"+rowdata[i].partTypeName+"<input type='hidden' data-name='devicePartId' value='"+rowdata[i].devicePartId+"'/></td>"
+				+"<td>"+rowdata[i].partCount+"<input type='hidden' data-name='workId' value='"+rowdata[i].workId+"'/></td>"
+				+"<td>"+rowdata[i].partPrice+"</td>"
+				+"<td><input data-name='sumCost' type='text' value='"+sumCost+"'></td>"
+				+"<td><input data-name='remark' type='text' value='"+remark+"'></td>"
+				+"</tr>";
+			}
+			$("#workPartList").html(html);
+	}
+			   		
+});
+
+
+//增加基本费用行
+var id=$("#id").val();
+$.ajax({
+	url:contextPath+"/soa/account/accountbasic/datas/search",    
+	type:"post",
+	dataType:"json",
+	data:{id:id},
+	success: function(result){
+			var rowdata=result.data;
+			for(var i=0;i<rowdata.length;i++){
+				var tr = "<tr data-name='asmpAccountBasics'>"
+		            +"<td><input type='text' value='"+rowdata[i].originId+"' data-name='originId' class='inw'/>"
+		            +"<input type='hidden' data-name='id' value='"+rowdata[i].id+"'/>"
+		            +"<input type='hidden' data-name='accountId' value='"+rowdata[i].accountId+"'/></td>"
+		            +"<td><input type='text' value='"+rowdata[i].destinationId+"' data-name='destinationId' class='inw'/></td>"
+		            +"<td><input type='text' value='"+rowdata[i].train+"' data-name='train' class='inw'/></td>"
+		            +"<td><input type='text' value='"+rowdata[i].bus+"' data-name='bus' class='inw'/></td>"
+		            +"<td><input type='text' value='"+rowdata[i].ship+"' data-name='ship' class='inw'/></td>"
+		            +"<td><input type='text' value='"+rowdata[i].taxi+"' data-name='taxi' class='inw'/></td>"
+		            +"<td><input type='text' value='"+rowdata[i].workCost+"' data-name='workCost' class='inw'/></td>"
+		            +"<td><input type='text' value='"+rowdata[i].other+"' data-name='other' class='inw'/></td>"
+		            +"<td><button type='button' class='btn btn-danger' onclick='del(this)'>删除</button></td>"           
+		            +"</tr>";
+				$(tr).appendTo($("#accountBasitList"));
+			}
+	}
+			   		
+});
+
+
+
+
+    //增加基本费用
+	function addAccountBasit(){
+     	var inputvalue = false;
+     	if($('#accountBasitList').find('input').length>0){
+      		$('#accountBasitList').find('input.inw').each(function(index, el) {
+        		if($(this).val()===''){
+          			inputvalue = false; 
+          			var name = $(this).attr('data-name');
+          			var contents;
+          			
+          			if (name === 'originId') {
+						contents="出发地不允许为空！";
+          			}else if(name==='destinationId'){
+        	    		contents="目的地不允许为空！";
+          			}else{
+						contents="如未产生费用请填写为0！";
+          			}
+          			
+          			var d = dialog({
+  						title:'提示',
+  						content : contents
+  					});
+  					d.show();
+  					
+  					setTimeout(function() {
+  						d.close().remove();
+  					}, 3000);
+          			return false;
+          
+        		}else{
+          			inputvalue = true; 
+        		}        
+
+      		});
+      	}else{
+          	inputvalue = true; 
+   		}
+
+    	if(inputvalue ===true){
+	      addRow($('#accountBasitList'));
+	    }
+	}
+
+    
+  //增加基本费用行
+  function addRow(accountBasitList){ 
+		var tr= "<tr data-name='asmpAccountBasics'>"
+            +"<td><input type='text' value='' data-name='originId' class='inw'>"
+            +"<input type='hidden' data-name='id' value=''/></td>"
+            +"<td><input type='text' value='' data-name='destinationId' class='inw'</td>"
+            +"<td><input type='text' value='' data-name='train' class='inw'></td>"
+            +"<td><input type='text' value='' data-name='bus' class='inw'></td>"
+            +"<td><input type='text' value='' data-name='ship' class='inw'></td>"
+            +"<td><input type='text' value='' data-name='taxi' class='inw'></td>"
+            +"<td><input type='text' value='' data-name='workCost' class='inw'></td>"
+            +"<td><input type='text' value='' data-name='other' class='inw'></td>"
+            +"<td><button type='button' class='btn btn-danger' onclick='del(this)'>删除</button></td>"           
+            +"</tr>";
+
+            $(tr).appendTo(accountBasitList);
+        
+  } 
+
+  //删除一行
+  function del(e){
+	  e.parentNode.parentNode.remove();
+  }
+
+</script>
+
+

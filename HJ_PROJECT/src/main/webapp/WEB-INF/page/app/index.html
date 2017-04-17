@@ -1,0 +1,206 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <link rel="dns-prefetch" href="//">
+  <meta content="yes" name="apple-mobile-web-app-capable"/>
+  <meta content="yes" name="apple-touch-fullscreen"/>
+  <meta content="telephone=no,email=no" name="format-detection"/>  
+  <meta content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" name="viewport"> 
+  <link href="${request.contextPath}/applib/touch-icon-iphone-114.png" rel="apple-touch-icon-precomposed">
+  <link href="${request.contextPath}/applib/favicon.ico" rel="Shortcut Icon" type="image/x-icon"/>  
+  <script src="${request.contextPath}/applib/js/web-detector.js"></script> 
+  <title>webapp</title>
+  <link rel="stylesheet" href="${request.contextPath}/lib/plugins/artDialog/ui-dialog.css">  
+  <link rel="stylesheet" href="${request.contextPath}/applib/bootstrap/css/bootstrap.min.css">
+  <link rel="stylesheet" href="${request.contextPath}/applib/css/font-awesome.min.css">
+  <link rel="stylesheet" href="${request.contextPath}/applib/css/ionic.min.css">
+  <link rel="stylesheet" href="${request.contextPath}/applib/plugins/iCheck/all.css">
+  <link rel="stylesheet" href="${request.contextPath}/applib/plugins/select2/select2.min.css">
+  <link rel="stylesheet" href="${request.contextPath}/applib/dist/css/AdminLTE.min.css">
+  <link rel="stylesheet" href="${request.contextPath}/applib/css/index.css">
+  <script type="text/javascript">
+  	var contextPath='${request.contextPath}';
+  </script>
+</head>
+<body class="hold-transition skin-blue">
+<div class="wrapper">
+
+  <!-- <header class="main-header">
+    <h1></h1>
+  </header>   -->
+
+  <!-- Content Wrapper. Contains page content -->
+  <div class="content-wrapper">    
+
+    
+    
+  </div>
+  <!-- /.content-wrapper -->
+
+  <!-- 首页主导航内容 开始 -->
+  <div class="mianwrapper" id="mianwrapper">
+    <div class="mtitle" id="mtitle"><h4>智能报障</h4></div>
+    <div class="mainarea" id="mainarea">
+      <!-- 导航 智能报障板块 开始 -->
+       <div class="maincontent">         
+          <div class="maincon">
+            <div class="thenav">
+              <a href="#baozhang" class="a1" data-pannel-page="${request.contextPath}/soa/webapp/addWork">
+                <i class="ic s1"></i>
+                <span class="tx">
+                  <em>报障</em>
+                  <em>Fault report</em>
+                </span>
+              </a>
+              <a href="#shouli" class="a2" data-pannel-page="${request.contextPath}/soa/webapp/accept">
+                <i class="ic s2"></i>
+                <span class="tx">
+                  <em>受理</em>
+                  <em>Accept</em>
+                </span>
+              </a>
+              <a href="#jiedan" class="a3" data-pannel-page="${request.contextPath}/soa/webapp/settle">
+                <i class="ic s3"></i>
+                <span class="tx">
+                  <em>结单</em>
+                  <em>Report</em>
+                </span>
+              </a>
+              <a href="#gongdanjindu" class="a4" data-pannel-page="${request.contextPath}/soa/webapp/progress">
+                <i class="ic s4"></i>
+                <span class="tx">
+                  <em>工单进度</em>
+                  <em>Progress</em>
+                </span>
+              </a>
+              <a href="#chedan" class="a5" data-pannel-page="${request.contextPath}/soa/webapp/revoke">
+                <i class="ic s6"></i>
+                <span class="tx">
+                  <em>撤单</em>
+                  <em>Cancel</em>
+                </span>
+              </a>
+              <a href="#yanshou" class="a6" data-pannel-page="${request.contextPath}/soa/webapp/check">
+                <i class="ic s5"></i>
+                <span class="tx">
+                  <em>验收</em>
+                  <em>Acceptance</em>
+                </span>
+              </a>
+            </div>
+          </div>
+       </div>
+       <!-- 导航 智能报障板块 结束 -->
+      
+      <!-- 导航 耗材管理板块 开始 -->
+      <div class="maincontent">         
+          <div class="maincon">
+            <div class="thenav">
+              <a href="javaScript:void(0);" class="a1" data-pannel-page="${request.contextPath}/soa/webapp/supplies/apply">
+                <i class="ic s1"></i>
+                <span class="tx">
+                  <em>申请</em>
+                  <em>Apply</em>
+                </span>
+              </a>
+              <a href="javaScript:void(0);" class="a2" data-pannel-page="${request.contextPath}/soa/webapp/supplies/check">
+                <i class="ic s2"></i>
+                <span class="tx">
+                  <em>审核</em>
+                  <em>Auditing</em>
+                </span>
+              </a>              
+              <a href="javaScript:void(0);" class="a4" data-pannel-page="${request.contextPath}/soa/webapp/supplies/search">
+                <i class="ic s5"></i>
+                <span class="tx">
+                  <em>申请查询</em>
+                  <em>Search</em>
+                </span>
+              </a>
+              <a href="javascript:void(0);"></a>              
+            </div>
+          </div>
+       </div>
+       <!-- 导航 耗材管理板块 结束 -->
+
+       <!-- 导航 我 开始 -->
+      <div class="maincontent">        
+          
+            <div class="mearea ftc">
+              <span class="mepic"><img src="${request.contextPath}/applib/images/mnav03.png" alt=""></span>
+              <p>admin</p>
+            </div>
+            
+            <div class="etarea">
+              <button type="button" onclick="quit()" class="btn btn-block btn-default btn-lg" id="exitsys">退出登录</button>
+              <p class="mt20 ftc">当前版本V1.0</p>
+            </div>
+          
+       </div>
+       <!-- 导航 我 结束 -->
+
+    </div>
+    <!-- 首页主导航导航条 开始 -->
+    <div class="mnav" id="mnav">
+      <ul class="themnav" id="themnav">
+        <li class="cur">
+          <a href="#">
+            <span class="n1"></span>
+            <p>智能报障</p>
+          </a>
+        </li>
+        <li>
+          <a href="#">
+            <span class="n2"></span>
+            <p>耗材管理</p>
+          </a>
+        </li>
+        <li>
+          <a href="#">
+            <span class="n3"></span>
+            <p>我</p>
+          </a>
+        </li>
+      </ul>
+    </div>
+    <!-- 首页主导航导航条 结束 -->
+  </div>
+  <!-- 首页主导航内容 结束 -->
+
+  
+
+ <!--  <footer class="main-footer">
+    <div class="pull-right hidden-xs">
+      <b>Version</b> 2.3.3
+    </div>
+    <strong>Copyright &copy; 2016-2018 <a href="#">KXD</a>.</strong> All rights
+    reserved.
+  </footer> -->
+
+  <!-- Control Sidebar -->
+  <aside class="control-sidebar control-sidebar-dark">
+    
+    
+  </aside>
+  <!-- /.control-sidebar -->
+
+  
+</div>
+<!-- ./wrapper -->
+
+<script src="${request.contextPath}/applib/plugins/jQuery/jQuery-2.2.0.min.js"></script>
+<script src="${request.contextPath}/applib/plugins/jQuery/jquery.transit.js"></script>
+<script src="${request.contextPath}/applib/bootstrap/js/bootstrap.min.js"></script>
+<script src="${request.contextPath}/applib/plugins/fastclick/fastclick.js"></script>
+<script src="${request.contextPath}/applib/plugins/touch/hammer.min.js"></script>
+<script src="${request.contextPath}/applib/plugins/touch/jquery.hammer.js"></script>
+<script src="${request.contextPath}/applib/plugins/select2/select2.full.min.js"></script>
+<script src="${request.contextPath}/applib/plugins/iCheck/icheck.min.js"></script>
+<script src="${request.contextPath}/lib/plugins/artDialog/dialog-min.js"></script>
+<script src="${request.contextPath}/applib/js/webapp.js"></script>
+<script src="${request.contextPath}/applib/js/index.js"></script>
+<script src="${request.contextPath}/js/utils.js"></script>
+</body>
+</html>

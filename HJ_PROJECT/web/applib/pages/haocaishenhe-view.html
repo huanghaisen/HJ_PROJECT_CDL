@@ -1,0 +1,65 @@
+<link rel="stylesheet" href="plugins/datatables/dataTables.bootstrap.css">
+<div class="mainpage">
+  <div class="topnavbar">
+    <a href="#" class="topnav-back"><i class="fa fa-fw fa-angle-left"></i></a> 
+    <span class="topnav-check"><i class="fa fa-fw fa-check"></i></span>
+    <div class="topnavtitle">工单详情</div>   
+    
+  </div>
+ <div class="mainpagecontent">
+  <section class="m-content">
+    <div class="m-title bor-b">
+      工单信息：
+      <div class="box-tools pull-right">
+          <i class="fa fa-list-ul pull-right text-aqua" data-pageview="pages/haocaishenhe-detail.html"></i>
+        </div>
+    </div>
+    <div class="mbox bor-b">      
+       <p>申请编号：1180010001</p>
+       <p>营业厅：大堂式单屏</p>  
+       <p>申请人：李大刚</p>
+       <p>申请人电话：1356895623</p>
+       <p>申请时间：2016-09-28 16:20:31</p>        
+    </div>
+    <div class="m-title bor-b">设备相关信息</div> 
+    <div class="mbox bor-b">      
+       <p>设备编号：201654222</p>
+       <p>维保厂商：实达电子</p>
+    </div>
+    <div class="m-title bor-b">更换配件信息</div>
+    <div class="bg-w" id="tableview">
+      <table id="example" class="table" cellspacing="0" width="100%">        
+      </table>
+    </div>    
+    
+
+  </section>
+</div> 
+</div>
+<script src="plugins/datatables/jquery.dataTables.min.js"></script>
+<script src="plugins/datatables/dataTables.bootstrap.min.js"></script>
+<script>
+  
+  $(function(){
+
+    var dataSet = [
+    ['凭条打印机',1],    
+    ['二代身份证扫描仪',2]
+    ];
+
+   $('#example').dataTable( {
+        "data": dataSet,
+        "columns": [
+            { "title": "名称" },
+            { "title": "数量" }
+            
+        ],
+        "info": false,
+        "lengthChange": false,
+        "ordering": false,
+        "searching": false,
+        "bPaginate": false,
+    });
+  });
+
+</script>

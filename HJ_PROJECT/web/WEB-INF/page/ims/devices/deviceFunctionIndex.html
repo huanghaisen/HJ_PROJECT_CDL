@@ -1,0 +1,249 @@
+<!-- 以前的 -->
+ <link rel="stylesheet" href="${request.contextPath}/lib/plugins/datepicker/datepicker3.css">
+ <link rel="stylesheet" href="${request.contextPath}/lib/plugins/datatables/extensions/TableTools/css/dataTables.tableTools.css">
+ <link rel="stylesheet" href="${request.contextPath}/lib/plugins/datatables/dataTables.bootstrap.css">
+
+<div class="box box-primary">
+ <div class="box-header with-border">
+
+
+<!-- --------------------------第一排，，，全局搜索框--------------------------------------------------------- -->
+  <!--  <div class="box-body">
+					<div class="row">
+						<div class="col-xs-6">
+							<button class="btn btn-success" id="add">
+							<i class="fa fa-plus-circle fz"></i> 新增</button>
+							<button class="btn btn-warning" id="edit">
+							<i class="glyphicon glyphicon-pencil"></i> 编辑</button>
+							<button class="btn btn-danger" id="del">
+							<i class="fa fa-trash"></i> 删除</button>
+
+						</div>
+
+						<div  id="excelTarget">
+														
+						</div>  
+					</div>
+				</div>	 -->	
+				
+				<div class="box-header with-border">
+				  <div class="box-body" style="width: 100%">
+					<div class="row">
+						<#list btnlist as items>
+							<button class="${items.funcBg!}" id="${items.funcCode!}">
+							<i class="${items.funcIcon!}"></i> ${items.funcName!}</button>
+						
+						</#list>
+						
+					</div>
+				</div>	
+				</div>
+   <!-----------------------------DT主体------------------- --> 
+  <div class="box-body" id="tableBody">
+   <div class="row"></div>
+	<table id="tableDiv" class="table table-bordered table-striped table-hover" cellspacing="0" width="100%">
+	</table>
+   </div>
+   
+  </div>
+  	
+  </div>
+
+<!-- 表单公用部分 -->
+<script type="text/javascript"src="${request.contextPath}/js/aboutForm.js"></script>
+<!-- 设备相关 -->
+<script type="text/javascript"src="${request.contextPath}/js/ims/devices/device_function_tableCreation.js"></script>
+
+
+<script>
+
+//操作方法
+$(function(){
+
+
+	var that;//全局变量，用来缓存	dialog 对象
+	//新增
+	$('#add').on('click',function(){
+		post("/soa/device/function/datas/edit","html","",function(obj){
+			//console.log(obj);
+			var d = dialog({
+				title : '新增设备',
+				content :obj,					
+				width : 500,
+				okValue: '保存',
+				zIndex:1050,
+				ok : 
+					function() {
+					that = this;
+					this.title('正在提交..');
+					ajaxSubmit($('#form_submit')[0], function(obj){
+						var d = dialog({
+							title:'提示',
+							content : obj.msg
+						});
+						d.show();
+						setTimeout(function() {
+							d.close().remove();
+						}, 2000);
+			           //console.log(obj);
+			        });
+					
+					setTimeout(function() {
+						DTrefresh();
+						that.close().remove();
+					}, 100);
+					return false;
+				 cancel: false
+				},
+		     cancelValue:'取消',
+			 cancel: function() {
+			  }
+			});
+			d.showModal();
+		});
+		
+	});
+
+
+	//编辑
+	$('#edit').on('click',function(){
+
+		var $table = table.table().node();
+		var $chkbox_all = $('tbody input[type="checkbox"]', $table);
+		var $chkbox_checked = $('tbody input[type="checkbox"]:checked', $table);
+		if($chkbox_checked.length<1){
+			var d = dialog({
+				title:'提示',
+				content : '请勾选要修改的记录！'
+			});
+			d.show();
+			setTimeout(function() {
+				d.close().remove();
+			}, 2000);
+		}else
+		if($chkbox_checked.length>1){
+			var d = dialog({
+				title:'提示',
+				content : '请不要勾选多条记录修改！'
+			});
+			d.show();
+			setTimeout(function() {
+				d.close().remove();
+			}, 2000);
+		}else{
+			var data={"id":$chkbox_checked.val()};
+			var id=$chkbox_checked.val();
+			//alert(id);
+			post("/soa/device/function/datas/edit","html",data,function(obj){
+				//console.log(obj);
+				
+				var d = dialog({
+					title : '修改设备用途',
+					content :obj,					
+					width : 500,
+					okValue: '保存',
+					zIndex:1050,
+					ok : 
+						function() {
+						 that = this;
+						 ajaxSubmit($('#form_submit')[0], function(obj){
+								var d = dialog({
+									title:'提示',
+									content : obj.msg
+								});
+								d.show();
+								setTimeout(function() {
+									d.close().remove();
+								}, 2000);
+					           //console.log(obj);
+					        });
+							
+							setTimeout(function() {
+								DTrefresh();
+								that.close().remove();
+							}, 100);
+	                    return false;
+					},
+			     cancelValue:'取消',
+				 cancel: function() {
+					 
+				  }
+				});
+				d.showModal();
+				//*/
+			});
+		}
+	});
+
+	//删除
+	$('#del').on('click',function(){
+		var $table = table.table().node();
+		var $chkbox_all = $('tbody input[type="checkbox"]', $table);
+		var $chkbox_checked = $('tbody input[type="checkbox"]:checked', $table);
+		
+		var data={"id":$chkbox_checked.val()};
+		var objName=$chkbox_checked.parent().parent().find("td").eq(1).html();
+		var id=$chkbox_checked.val();
+		
+		if($chkbox_checked.length<1){
+		var t = dialog({
+			title:'提示',
+			content : '请勾选要删除的记录！'
+		});
+		t.show();
+		setTimeout(function() {
+			t.close().remove();
+		}, 2000);
+	    }else if($chkbox_checked.length>1){
+			var t = dialog({
+				title:'提示',
+				content : '暂无删除多条记录权限！'
+			});
+			t.show();
+			setTimeout(function() {
+				t.close().remove();
+			}, 2000);
+		    }else{
+			//alert(id);//测试可拿到id
+			var d = dialog({
+                 title:'提示',
+                 content:'确认删除这条记录？',
+                 okValue:'确认',
+                 ok:function(){
+                	 var that=this;
+                	 post("/soa/device/function/datas/del","post",data,function(obj){  });
+
+            		 var t = dialog({
+							title:'提示',
+							content :"操作成功！"
+						});
+						t.show();
+            		 setTimeout(function() {
+            			t.close().remove(); 
+  						DTrefresh();
+  						that.close().remove();
+  					}, 2000);
+ 					
+ 					
+                	
+                 },
+                 cancelValue:'取消',
+                 cancel:function(){
+                	 
+                 }
+				
+			});
+			d.showModal();	
+	    }
+
+	});
+
+});
+   
+
+	 
+
+</script>
+
+
+

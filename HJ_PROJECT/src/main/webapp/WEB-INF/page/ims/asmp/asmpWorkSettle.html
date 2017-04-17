@@ -1,0 +1,267 @@
+<link rel="stylesheet" href="${request.contextPath}/lib/plugins/select2/select2.min.css">
+<link rel="stylesheet" href="${request.contextPath}/lib/plugins/zTree3/css/zTreeStyle/zTreeStyle.css">
+<link rel="stylesheet" href="${request.contextPath}/lib/plugins/zTree3/css/zTreeStyle/SettleZtree.css">
+<link rel="stylesheet" href="${request.contextPath}/lib/asmpWorkCss/settleSelect.css">
+<link rel="stylesheet" href="${request.contextPath}/lib/asmpWorkCss/asmpWorkIndex.css">
+<link rel="stylesheet" href="${request.contextPath}/lib/plugins/zTree3/css/zTreeStyle/zTreeStyle.css">
+<link rel="stylesheet" href="${request.contextPath}/lib/asmpWorkCss/ZtreeInput.css">  
+  
+<div class="box box-primary">
+ <div class="box-header with-border">
+  <div id="mainpanel" style="margin: 0px 0px 0px 0px;">
+   <div id="mapcontent" style="width: 100%;position: relative;">
+ 
+ <div class="box-body" style="width: 100%">
+   <div class="row">    
+    <div class="col-xs-3">
+    <div class="input-group">
+      <span class="input-group-addon" id="sizing-addon1">工单编号</span>
+        <input id="workCode" type="text" class="form-control" aria-describedby="sizing-addon1">
+      </div>
+    </div>
+    <div class="col-xs-3">
+     <label class="n-tect">机构：</label>
+      <div class="wb-col pre">
+        <input type="text" class="form-control" id="ztreeInputOrg">
+        <div class="zTreeDemo" style="width: 325px; left: 0px; display: none;">
+        <ul class="ztree" id="ztree1"></ul>
+         </div>
+        </div>
+     </div>
+      
+      <div class="col-xs-1">      
+      <button type="button" class="btn btn-default " onclick="condictionsSearch()"><i class="fa fa-search"></i> 搜索</button>
+    </div>
+    
+    <!-- <div class="col-xs-1">      
+      <button type="button" class="btn btn-success" data-toggle="modal" id="settleWork"><i class="fa fa-edit"></i> 结单</button>
+    </div> -->
+    
+     </div>          
+    </div>
+   <div class="box-header with-border">
+				  <div class="box-body" style="width: 100%">
+					<div class="row">
+						<#list btnlist as items>
+							<button class="${items.funcBg!}" id="${items.funcCode!}">
+							<i class="${items.funcIcon!}"></i> ${items.funcName!}</button>
+						
+						</#list>
+						
+					</div>
+				</div>	
+				</div>
+
+<div class="modal fade bs-example-modal-lg" role="dialog" aria-labelledby="myLargeModalLabel" id="AcceptModal" >
+  <div class="modal-dialog modal-lg">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+        <h4 class="modal-title" id="myModalLabel">报障受理</h4>
+      </div>
+      <div class="modal-body" id="modalBody">
+            
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-default" data-dismiss="modal">取消</button>
+        <button type="button" class="btn btn-primary" onclick="settleSumbit()">确认</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+	<!-- DataTable主体 -->
+	<div class="box-body" style="width: 100%">
+	<table id="table_form" class="table table-bordered table-striped table-hover"
+		cellspacing="0" width="100%">
+	</table>
+    </div>
+	</div>
+  </div>
+ </div>
+</div>
+
+<!-- dataTable及浮态框相关js -->
+
+<script type="text/javascript" src="${request.contextPath}/js/aboutForm.js"></script>
+<script type="text/javascript">
+var orginUrl="/soa/asmp/asmpWork/datas/settle";
+</script>
+<script type="text/javascript" src="${request.contextPath}/js/asmp/asmpWork/work_tableCreation.js"></script>
+
+<script src="${request.contextPath}/lib/plugins/select2/select2.full.min.js"></script>
+//结单模态框用到的js
+<script src="${request.contextPath}/lib/plugins/zTree3/js/jquery.ztree.core.js"></script>
+<script src="${request.contextPath}/lib/plugins/zTree3/js/jquery.ztree.excheck.js"></script>
+<script src="${request.contextPath}/lib/plugins/zTree3/js/jquery.ztree.exedit.js"></script>
+<script type="text/javascript" src="${request.contextPath}/js/orgTreeInput.js"></script>
+<script type="text/javascript">
+var zNodes1={};
+addTree($('#ztree1'),zNodes1,true);
+</script>
+<script>
+//条件搜索
+function condictionsSearch(){
+
+	    var orgId=$("#ztreeInputOrg").attr("data_id");
+		var workCode=$("#workCode").val();
+		var url=contextPath +orginUrl ;
+	    var params= {};
+	       params.orgId = orgId; 
+	       params.workCode = workCode; 
+     //aboutForm。js里
+	      refreshData(url,params);
+	  }
+
+
+//操作方法
+$(function(){
+
+	
+	$('#settleWork').on('click',function(){
+		var $table = table.table().node();
+		var $chkbox_all = $('tbody input[type="checkbox"]', $table);
+		var $chkbox_checked = $('tbody input[type="checkbox"]:checked', $table);
+		if($chkbox_checked.length<1){
+			var d = dialog({
+				title:'提示',
+				content : '请勾选要受理的工单！'
+			});
+			d.show();
+			setTimeout(function() {
+				d.close().remove();
+			}, 2000);
+		}else
+		if($chkbox_checked.length>1){
+			var d = dialog({
+				title:'提示',
+				content : '请不要同时勾选多条工单受理！'
+			});
+			d.show();
+			setTimeout(function() {
+				d.close().remove();
+			}, 2000);
+		}else{
+			var data={"id":$chkbox_checked.val()};
+			var id=$chkbox_checked.val();
+			$('#AcceptModal').find('#modalBody').html('');
+
+			post("/soa/asmp/asmpWork/settleInfo","html",data,function(obj){	
+				//$('#AcceptModal').find('#modalBody').html(obj).end().modal();
+				$('#AcceptModal').find('#modalBody').html(obj);
+			});
+		
+			$('#AcceptModal').modal();
+		}	
+		
+	});
+
+});
+</script>
+
+<script type="text/javascript">
+   //提交结单js
+function settleSumbit(){
+	   
+   var workId=$("#workId").html();
+   var isRepulse=$('#jddetail').attr('status');
+   var remark=$('#modelFaultRemark').val();
+   var data={};
+   
+   if(isRepulse==1){
+	   //alert("结单通过");
+	   var gzDescription=$('#gztable').find('input.description');
+	   var gzMethod=$('#gztable').find('input.method');
+	   //var descriptionList="";
+	   //var methodList="";
+	   var procMethod=""; //对应流水明细的proc_method_list字段
+	   var partIdList=""; //对应流水明细的proc_part_list
+	   for(var i=0;i<gzDescription.length;i++){
+		   var tdArrDes=gzDescription.eq(i).attr("data_id");
+		   var tdArrMethod=gzMethod.eq(i).attr("data_id");
+		  
+		   procMethod+=","+tdArrDes+"|"+tdArrMethod
+		 // descriptionList+=","+tdArrDes;  //单独拿故障描述ID列表，预留，暂无作用
+		 // methodList+=","+tdArrMethod;    //单独拿结单处理方法ID列表，预留，暂无作用
+		   };
+
+	      if (procMethod.substr(0,1)==',') procMethod=procMethod.substr(1); //去掉第一个逗号
+	  
+	   var partsSelect=$('#pjtable').find('select.parts');
+	   var partsNum=$('#pjtable').find('.inw');
+       var partsAndCountList=[];
+       
+//===================================================结算要用这块========================================       
+	   for(var i=0;i<partsSelect.length;i++){
+		   //处理配件id按,拼接成一个字符串
+		   var part=partsSelect.eq(i).val();
+		   var quantity=partsNum.eq(i).val();
+		   partIdList+=","+ part;
+		  // alert("part:"+part+" num:"+quantity);
+		   
+		  //配件id和该配件的数量   ============================settleParts
+		   var pcvalue=part+","+quantity;
+		   partsAndCountList.push(pcvalue);
+	   };
+	   //alert(partsAndCountList);
+	   	   
+		  $.ajax({
+			  url:contextPath+"/soa/asmp/asmpWork/datas/settleParts",    
+				   	type:"post",
+				   	dataType:"json",
+				   	data: partsAndCountList,
+				   	success: function(){				   		
+				   	}
+		  });
+	   
+//==================================================================================================	   
+	   
+	   if (partIdList.substr(0,1)==',') partIdList=partIdList.substr(1); //去掉第一个逗号 
+	   
+	  var judgeResult=$('#radiogroup2').find('input:checked').attr("value");
+	  var settleType=$('#radiogroup3').find('input:checked').attr("value");
+	  var repair=$('#radiogroup4').find('input:checked').attr("value");
+	  //alert("判定结果："+judgeResult+"结单方式"+settleType+"是否修复："+repair);
+	   
+	   
+	   //,"partsAndCountList":partsAndCountList
+	  var params={"id":workId,"remark":remark,"judgeResult":judgeResult,"settleType":settleType,"repair":repair,"procMethod":procMethod,"partIdList":partIdList}; 
+	  data={"isRepulse":isRepulse,"params":params};   
+	 	 
+	  
+//====================================================================================
+	      
+   }else{
+	  // alert("结单打回,"+"id: "+workId+"====remark:"+remark);
+	   var params={"id":workId,"remark":remark};
+	   data={"isRepulse":isRepulse,"params":params};
+   }	
+       
+   $.ajax({
+	   	url:contextPath+"/soa/asmp/asmpWork/datas/settleStep",    
+	   	type:"post",
+	   	dataType:"json",
+	   	data: data,
+	   	success: function(obj){ 
+	   		var msg=eval(obj).msg;
+	   		var d = dialog({
+				title:'提示',
+				zIndex:1080,
+				content : msg
+			});
+			d.show();
+			setTimeout(function() {
+				d.close().remove();
+			}, 800);	   		
+	   	   } 
+	     });    
+   
+   			setTimeout(function() {
+   				$('#AcceptModal').modal('hide');
+   				condictionsSearch();
+   			}, 1200);	  			
+   			
+   }
+   	
+</script>
+

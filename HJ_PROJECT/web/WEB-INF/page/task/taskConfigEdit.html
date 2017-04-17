@@ -1,0 +1,75 @@
+<form class="form-horizontal" method="post" name="form_submit" id="form_submit" action="${request.contextPath}/soa/task/taskConfig/datas/save">
+<input type="hidden" value="" name="districtIdList" id="districtIdList"/>
+  	<div class="box-body">
+      <div class="form-group">
+        <label class="col-sm-3 control-label">任务名称：</label>
+        <div class="col-sm-8">
+         <input class="form-control" type="text" id="taskName" name="taskName" value=""> 
+        </div>
+      </div>
+      
+      
+      
+      <div class="form-group">
+        <label class="col-sm-3 control-label">开始时间：</label>
+        <div class="col-sm-8">
+         <div class="input-group">
+				<div class="input-group-addon">
+					<i class="fa fa-calendar"></i>
+				</div>
+				<input type="text" class="form-control" value="" id="beginTime" name="beginTime">
+			</div>
+        </div>
+      </div>
+      
+      
+      <div class="form-group">
+        <label class="col-sm-3 control-label">结束时间：</label>
+        <div class="col-sm-8">
+         <div class="input-group">
+				<div class="input-group-addon">
+					<i class="fa fa-calendar"></i>
+				</div>
+				<input type="text" class="form-control" value="" id="endTime" name="endTime">
+			</div>
+        </div>
+      </div>
+      
+      <div class="form-group">
+        <label class="col-sm-3 control-label">下一次巡检间隔时间：</label>
+        <div class="col-sm-8">
+          <select class="js-example-placeholder-single form-control select2 partTypeSelect" id="intervalTime" name="intervalTime" style="width: 100%;" aria-describedby="sizing-addon1">
+          	<option value="1">一个月</option>
+          	<option value="2">两个月</option> 
+          	<option value="3">一季度</option>
+          	<option value="6">半年</option>                  
+          </select>
+        </div>
+      </div>
+      
+      
+    </div>
+  </form>  
+ 
+<script type="text/javascript">
+
+
+$('#beginTime').datepicker({format:'yyyy-mm-dd',language: "zh-CN",todayHighlight:true}).on('changeDate', function(e) {
+	   var dd = $('#beginTime').val();  		
+	   $('#endTime').datepicker('show');
+	   $('#endTime').datepicker( "update",dd );
+   	   $('#endTime').datepicker( "setStartDate",dd );
+});
+
+$('#endTime').datepicker({format:'yyyy-mm-dd',language: "zh-CN"});
+
+</script>
+<style type="text/css">  
+ .form-group label { font-size: 12px; font-weight: normal; }
+ .theTarea { height: 34px;  font-size: 0 }
+ .theTarea > span { display: inline-block; padding: 0 15px;border: 1px solid #ccc; margin:0 0 0 -1px; line-height: 34px; font-size: 12px; border-right: 1px solid #ccc; cursor: pointer; }
+ .theTarea > span:nth-child(0) {margin:0;}
+ .theTarea > span.hover,.theTarea > span:hover { background-color:#f1f9f9  }
+ .nobor { display: inline-block; width: 90%;  border:0; line-height: 34px;  }
+</style>
+

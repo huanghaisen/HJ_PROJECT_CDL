@@ -1,0 +1,337 @@
+ <link rel="stylesheet" href="${request.contextPath}/lib/plugins/select2/select2.min.css">
+<style>
+
+  #example_wrapper { margin-top: 30px; }  
+  #example_wrapper .btn-group .btn { margin-right: 15px; border-radius: 3px; color: #fff }
+
+  .wb-col { float: left; width:70%; }
+  .n-tect { float: left; line-height: 34px; }
+   
+  .select2-container--default .select2-selection--single {border-radius:0}
+  .select2-container .select2-selection--single {height:34px}
+</style>
+
+
+<div class="box box-primary">
+ <div class="box-header with-border">
+  <div id="mainpanel" style="margin: 0px 0px 0px 0px;">
+   <div id="mapcontent" style="width: 100%;position: relative;">
+             <div class="box-body" style="width: 100%">
+                  <div class="row">      			
+                       <div class="col-xs-3">
+							<div class="input-group">
+								<span class="input-group-addon" id="sizing-addon1" >型号</span>
+										<select class="js-example-placeholder-single form-control select2 orgSelect input-group-addon" style="width:100%" aria-describedby="sizing-addon1" id="deviceModelId" >
+						                 <option></option>
+				                      	</select>
+							</div>
+						</div>
+						
+						<div class="col-xs-3">
+							<div class="input-group">
+								<span class="input-group-addon" id="sizing-addon2" >故障现象</span>
+								<input type="text" class="form-control" id="modelFaultName"
+									 aria-describedby="sizing-addon2">
+							</div>
+						</div>
+  
+
+                   <div class="col-xs-1">      
+                    <button type="button" class="btn btn-default" onclick="condictionsSearch()">
+                    <i class="fa fa-search"></i> 搜索</button>
+                   </div>
+                  </div>
+               </div>
+   
+             <!-- <div class="box-body">
+					<div class="row">
+						<div class="col-xs-6">
+							<button class="btn btn-success" id="add">
+							<i class="fa fa-plus-circle fz"></i> 新增</button>
+							<button class="btn btn-warning" id="edit">
+							<i class="glyphicon glyphicon-pencil"></i> 编辑</button>
+							<button class="btn btn-danger" id="del">
+							<i class="fa fa-trash"></i> 删除</button>
+							<button class="btn btn-primary" id="status">
+							<i class="fa fa-trash"></i> 更改状态</button>
+						</div>	
+					</div>			
+				</div>  -->  
+				
+				<div class="box-header with-border">
+				  <div class="box-body" style="width: 100%">
+					<div class="row">
+						<#list btnlist as items>
+							<button class="${items.funcBg!}" id="${items.funcCode!}">
+							<i class="${items.funcIcon!}"></i> ${items.funcName!}</button>
+						
+						</#list>
+						
+					</div>
+				</div>	
+				</div>
+
+	<!-- DataTable主体 -->
+	<div class="box-body">
+	<table id="table_form" class="table table-bordered table-striped table-hover"
+		cellspacing="0" width="100%">
+	</table>
+    </div>
+	</div>
+  </div>
+ </div>
+</div>
+
+<!-- dataTable及浮态框相关js -->
+<script type="text/javascript" src="${request.contextPath}/js/aboutForm.js"></script>
+<script src="${request.contextPath}/lib/plugins/select2/select2.full.min.js"></script>
+<script type="text/javascript" src="${request.contextPath}/js/modelFault/mf_tableCreation.js"></script>
+<script type="text/javascript">
+	function DMSelect(comboxUrl,SelectTarget){
+   		$.ajax({
+   	   	url:comboxUrl,    
+   	   	type:"post",
+   	   	dataType:"json",
+   	   	async:false,
+   	   	success: function(result){ 
+   	   		for(var i = 0;i<result.length;i++){    	
+   	   			var $option = $('<option/>').attr('value',result[i].id).html(result[i].deviceModelName);
+   	   			$option.appendTo($(SelectTarget));
+   	   		}
+
+   	   		$(SelectTarget).select2({
+   	   			placeholder: "请选择",
+   	   			allowClear: false
+   	   		}).change(function(){
+   	   		});
+   	   		    		
+   	   	} 
+   	     });
+   	}
+    var deviceModelUrl=contextPath+"/soa/device/model/datas/combox";
+  	var deviceModelSelect="#deviceModelId";
+	
+  	//设备型号下拉框
+  	DMSelect(deviceModelUrl,deviceModelSelect);
+</script>
+<script>
+
+function condictionsSearch(){
+
+		var deviceModelId=$("#deviceModelId").val();
+		var modelFaultName=$("#modelFaultName").val();
+		var url=contextPath + "/soa/asmp/modelFault/datas/search";
+	    var params= {};
+	       params.deviceModelId = deviceModelId; 
+	       params.modelFaultName = modelFaultName; 
+     //aboutForm。js里
+	      refreshData(url,params);
+	  }
+
+
+//操作方法
+$(function(){
+
+	//新增
+	$('#add').on('click',function(){
+		post("/soa/asmp/modelFault/inst","html","",function(obj){
+			//console.log(obj);
+			var d = dialog({
+				title : '新增故障现象',
+				content :obj,					
+				width : 550,
+				height : 500,
+				okValue: '保存',
+				zIndex:1050,
+				ok : 
+					function() {
+					var window = this;
+					this.title('正在提交..');
+					ajaxSubmit($('#form_submit')[0], function(data){
+			            //alert(data);
+			        });
+					
+					setTimeout(function() {
+						DTrefresh();
+						window.close().remove();
+					}, 100);
+					return false;
+				 cancel: false
+				},
+		     cancelValue:'取消',
+			 cancel: function() {
+			  }
+			});
+			d.showModal();
+		});
+		
+	});
+
+	$('#edit').on('click',function(){
+		var $table = table.table().node();
+		var $chkbox_all = $('tbody input[type="checkbox"]', $table);
+		var $chkbox_checked = $('tbody input[type="checkbox"]:checked', $table);
+		if($chkbox_checked.length<1){
+			var d = dialog({
+				title:'提示',
+				content : '请勾选要修改的记录！'
+			});
+			d.show();
+			setTimeout(function() {
+				d.close().remove();
+			}, 2000);
+		}else
+		if($chkbox_checked.length>1){
+			var d = dialog({
+				title:'提示',
+				content : '请不要勾选多条记录修改！'
+			});
+			d.show();
+			setTimeout(function() {
+				d.close().remove();
+			}, 2000);
+		}else{
+			var data={"id":$chkbox_checked.val()};
+			var id=$chkbox_checked.val();
+			post("/soa/asmp/modelFault/edit","html",data,function(obj){
+				//console.log(obj);
+				var d = dialog({
+					title : '编辑故障现象',
+					content :obj,					
+					width : 550,
+					height : 500,
+					okValue: '保存',
+					zIndex:1050,
+					ok : 
+						function() {
+						var that = this;
+						this.title('正在提交..');
+						ajaxSubmit($('#form_submit')[0], function(data){
+				            //alert(data);
+				        });
+						
+						
+						 //updateUser(id);
+						setTimeout(function() {
+							DTrefresh();
+							//table.ajax.reload(null,false);//刷新datatable页面  table对应建表的var 命名
+							that.close().remove();
+						}, 100);
+						return false;
+					 cancel: false
+					},
+			     cancelValue:'取消',
+				 cancel: function() {
+					 
+				  }
+				});
+				d.showModal();
+			});
+		}
+		
+    });
+
+    $('#del').on('click',function(){
+    	var $table = table.table().node();
+		var $chkbox_all = $('tbody input[type="checkbox"]', $table);
+		var $chkbox_checked = $('tbody input[type="checkbox"]:checked', $table);
+		
+		var data={"id":$chkbox_checked.val()};
+		var id=$chkbox_checked.val();
+		var faultName=$chkbox_checked.parent().parent().find("td").eq(1).html();
+		
+		if($chkbox_checked.length<1){
+		var t = dialog({
+			title:'提示',
+			content : '请勾选要删除的记录！'
+		});
+		t.show();
+		setTimeout(function() {
+			t.close().remove();
+		}, 2000);
+	    }else if($chkbox_checked.length>1){
+			var t = dialog({
+				title:'提示',
+				content : '暂无删除多条记录权限'
+			});
+			t.show();
+			setTimeout(function() {
+				t.close().remove();
+			}, 2000);
+		    }else{
+			//alert(id);//测试可拿到id
+			var d = dialog({
+                 title:'提示',
+                 content:'确认删除现象名为：'+faultName+' 的这条记录？',
+                 okValue:'确认',
+                 ok:function(){
+                	 var that=this;
+                	 var url='/soa/asmp/modelFault/datas/del';
+                	 delObject(id,url);
+                	setTimeout(function() {
+						table.ajax.reload(null,false);
+						that.close().remove();
+					}, 100);
+                	
+                 },
+                 cancelValue:'取消',
+                 cancel:function(){
+                	 
+                 }
+				
+			});
+			d.showModal();	
+	    }
+        
+    });
+
+    $('#status').on('click',function(){
+    	var $table = table.table().node();
+		var $chkbox_all = $('tbody input[type="checkbox"]', $table);
+		var $chkbox_checked = $('tbody input[type="checkbox"]:checked', $table);
+		if($chkbox_checked.length<1){
+			var d = dialog({
+				title:'提示',
+				content : '请勾选要更改状态的记录！'
+			});
+			d.show();
+			setTimeout(function() {
+				d.close().remove();
+			}, 2000);
+		}else
+		if($chkbox_checked.length>1){
+			var d = dialog({
+				title:'提示',
+				content : '请不要勾选多条记录操作！'
+			});
+			d.show();
+			setTimeout(function() {
+				d.close().remove();
+			}, 2000);
+		}else{
+			var data={"id":$chkbox_checked.val()};
+			var id=$chkbox_checked.val();
+			$.ajax({
+				   type: "POST",
+				   url: contextPath + "/soa/asmp/modelFault/datas/changeStatus",
+				   data: data,
+				   success: function(obj){
+					   var t = dialog({
+							title:'提示',
+							content : obj.msg
+						});
+						t.show();
+						setTimeout(function() {
+							table.ajax.reload(null,false);
+							t.close().remove();
+						}, 2000);
+				   }
+				});
+		}
+
+        
+    });
+
+
+});
+</script>

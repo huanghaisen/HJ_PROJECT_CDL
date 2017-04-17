@@ -1,0 +1,71 @@
+
+<style type="text/css">  
+ .form-group label { font-size: 12px; font-weight: normal; }
+ .theTarea { height: 34px;  font-size: 0; }
+ .theTarea > span { display: inline-block; padding: 0 15px;border: 1px solid #ccc; margin:0 0 0 -1px; line-height: 34px; font-size: 12px; border-right: 1px solid #ccc; cursor: pointer; }
+ .theTarea > span:nth-child(0) {margin:0;}
+ .theTarea > span.hover,.theTarea > span:hover { background-color:#f1f9f9  }
+ .nobor { display: inline-block; width: 90%;  border:0; border-bottom: 1px solid #ccc; line-height: 34px;  }
+
+</style>
+  <form class="form-horizontal" style="height:480px;overflow:scroll;overflow-x:hidden" >
+  <div style="display: none;" id="assessRuleId">${assessRule.id}</div>
+    <div class="box-body">
+      <table class="table table-bordered" id="dataTable">
+      			<tr>
+                  <th width="50%">满意度分值设置：</th>
+                  <th width="50%"></th>                  
+                </tr>
+                <tr>
+                  <td>满意度</td>
+                  <td>分值</td>                  
+                </tr>
+                <tr>
+                  <td>好评</td>
+                  <td>${assessRule.goodScore}</td>
+                  
+                </tr>
+                <tr>
+                  <td>一般</td>
+                  <td>${assessRule.generScore}</td>
+                  
+                </tr>
+                <tr>
+                  <td>差评</td>
+                  <td>${assessRule.differScore}</td>
+                  
+                </tr>
+                <tr>
+                  <th>满意度分值设置：</th>
+                  <th></th>                  
+                </tr>
+                <tr>
+                  <td>响应时间（H）</td>
+                  <td>分值</td>                  
+                </tr>
+                
+       
+       </table>
+       </div>
+       </form>
+<script>
+var assessRuleId= $("#assessRuleId").html();
+var id ={"id":assessRuleId};
+//console.log(id);
+$.ajax({
+	"url":contextPath+"/soa/assess/datas/show",
+		data:id,
+		type:"post",
+		dataType:"json",
+		async:false,
+		success: function(result){
+			var data = result.data;
+			var html = $("#dataTable").html();
+			for(var i=0;i<data.length;i++){
+				html= html+"<tr><td>≤ "+data[i].timeDegree+"</td><td>"+data[i].timeScore+"</td></tr>"
+			}
+			$("#dataTable").html(html);
+		    } 
+		});
+</script>
+

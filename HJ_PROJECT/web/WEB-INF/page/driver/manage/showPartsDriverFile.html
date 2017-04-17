@@ -1,0 +1,84 @@
+<div class="box box-primary">
+	<div class="box-body">
+		<!-- table -->
+		<div id="theexampleArea">
+			<table id="table_file" class="table table-bordered table-striped table-hover" cellspacing="0" width="100%">
+			</table>
+		</div>
+	</div>
+</div>
+
+<script src="${request.contextPath}/lib/plugins/datatables/jquery.dataTables.min.js"></script>
+<script type="text/javascript" src="${request.contextPath}/js/Form_data_Submit.js"></script>
+<script type="text/javascript" src="${request.contextPath}/js/ajaxfileupload.js"></script>
+
+<script>
+
+	var data = {};
+	data.pid = '${driveParts.id!}';
+
+	var tablefile = $('#table_file').DataTable(
+					{
+						ajax : {
+							"url" : contextPath + "/soa/partsDriver/file/datas/search",
+							"type" : "post",
+							"dataType" : "json",
+							"data" : function(d) {
+								d.params = data;
+
+							}
+						},
+						sPaginationType : "full_numbers",
+						ordering : false,
+						info : false,
+						scrollX : false,
+						scrollY : '270px',
+						processing : false,
+						serverSide : true,
+						paging : true,
+						pageLength : 5,
+						pagingType : "full_numbers",//number simple simple_numbers full 默认full_numbers
+						lengthChange : false, //可变分页组件,下行可规定显示页数，左边是定义，右边是页面显示的效果（如-1就是搜全部，但页面显示的选项是ALL）
+						//"lengthMenu": [[10, 25, 50, -1], [10, 25, 50, "All"]],
+						searching : false,
+						language : {
+							sProcessing : "正在加载中......",
+							sLengthMenu : "每页显示 _MENU_ 条记录",
+							sInfo : "从 _START_ 到 _END_ /共 _TOTAL_ 条数据",
+							sZeroRecords : "对不起，查询不到相关数据！",
+							sEmptyTable : "表中无数据存在！",
+							search : "查询:",
+							paginate : {
+								previous : "上一页",
+								next : "下一页",
+								first : "第一页",
+								last : "最后一页"
+							}
+						},
+						columns : [
+								{
+									title : '驱动版本',
+									width : "10%",
+									data : 'versions',
+									align : 'center',
+									valign : 'middle'
+								},
+								{
+									title : '文件名',
+									width : "15%",
+									data : 'filename',
+									align : 'center',
+									valign : 'middle'
+								},
+								{
+									title : '文件路径',
+									width : "50%",
+									data : 'url',
+									align : 'center',
+									valign : 'middle'
+								}
+								
+								]
+					});
+
+</script>
